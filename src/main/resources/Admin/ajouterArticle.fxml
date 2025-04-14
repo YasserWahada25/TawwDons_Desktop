@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Pos?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.article.AjouterArticleController"
+            prefWidth="1200" prefHeight="700">
+
+    <!-- ✅ SIDEBAR -->
+    <left>
+        <VBox style="-fx-background-color: #f8f9fa;" spacing="15" prefWidth="200" alignment="TOP_LEFT">
+            <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+            <Label text="Creative Tim" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+            <Separator/>
+
+            <Button fx:id="btnDashboard" text="Dashboard" maxWidth="Infinity" />
+            <Button fx:id="btnDonsRequests" text="Dons Requests" maxWidth="Infinity"/>
+
+            <MenuButton text="Gestion Article" maxWidth="Infinity">
+                <items>
+                    <MenuItem fx:id="menuArticleList" text="Article List" />
+                    <MenuItem fx:id="menuArticleForm" text="Article Form" />
+                </items>
+            </MenuButton>
+
+            <Button text="Offre" maxWidth="Infinity"/>
+            <Button text="Condidat" maxWidth="Infinity"/>
+            <Button text="Evenement" maxWidth="Infinity"/>
+            <Button text="Evaluation" maxWidth="Infinity"/>
+            <Button text="Participant" maxWidth="Infinity"/>
+            <Button text="Catégorie" maxWidth="Infinity"/>
+            <Button text="Notifications" maxWidth="Infinity"/>
+
+            <Label text="Account Pages" style="-fx-font-weight: bold; -fx-padding: 10 0 0 0;" />
+            <Button text="Profile" maxWidth="Infinity"/>
+        </VBox>
+    </left>
+
+    <!-- ✅ CONTENU CENTRAL CENTRÉ -->
+    <center>
+        <VBox alignment="CENTER" spacing="20">
+            <AnchorPane maxWidth="700" style="-fx-background-color: #f7f7f7; -fx-padding: 20;">
+                <children>
+                    <Label layoutX="220" layoutY="10"
+                           style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #333;"
+                           text="Ajouter un Article" />
+
+                    <TextField fx:id="titreField" layoutX="88.0" layoutY="68.0" prefHeight="30" prefWidth="522"
+                               promptText="Entrer le titre"
+                               style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-background-color: white; -fx-border-color: #ccc; -fx-padding: 10;" />
+
+                    <TextArea fx:id="contenuField" layoutX="88.0" layoutY="115.0" prefHeight="100" prefWidth="522"
+                              promptText="Citer le contenu de l'article"
+                              style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-background-color: white; -fx-border-color: #ccc; -fx-padding: 10;" />
+
+                    <TextField fx:id="categorieField" layoutX="89.0" layoutY="225.0" prefHeight="30" prefWidth="522"
+                               promptText="Définir la catégorie"
+                               style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-background-color: white; -fx-border-color: #ccc; -fx-padding: 10;" />
+
+                    <Button fx:id="chooseFileButton" layoutX="88.0" layoutY="268.0" prefHeight="30" prefWidth="120"
+                            style="-fx-background-color: linear-gradient(to bottom, #333, #1a1a1a); -fx-text-fill: white; -fx-background-radius: 10;"
+                            text="Choisir un fichier" />
+                    <Label fx:id="fileNameLabel" layoutX="220.0" layoutY="274.0"
+                           style="-fx-text-fill: #666;" text="Aucun fichier choisi" />
+
+                    <ImageView fx:id="imagePreview" layoutX="88" layoutY="310" fitWidth="150" fitHeight="150" preserveRatio="true"
+                               style="-fx-border-color: #ccc; -fx-border-width: 1;" />
+
+                    <Label fx:id="errorLabel" layoutX="260" layoutY="310"
+                           style="-fx-text-fill: red;" text="" />
+
+                    <Button fx:id="ajouterBtn" layoutX="260.0" layoutY="390.0" prefHeight="35" prefWidth="240"
+                            style="-fx-background-color: linear-gradient(to bottom, #333, #1a1a1a); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10;"
+                            text="Ajouter l'article" />
+                </children>
+            </AnchorPane>
+        </VBox>
+    </center>
+
+</BorderPane>

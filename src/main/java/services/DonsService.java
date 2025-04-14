@@ -1,4 +1,4 @@
-package service;
+package services;
 
 import models.Dons;
 import utils.MyDataBase;
