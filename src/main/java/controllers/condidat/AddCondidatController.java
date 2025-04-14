@@ -1,12 +1,12 @@
-package controller.condidat;
+package controllers.condidat;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import models.Condidat;
 import models.Offre;
-import service.CondidatService;
-import service.OffreService;
+import services.CondidatService;
+import services.OffreService;
 import utils.Router;
 
 import java.io.File;

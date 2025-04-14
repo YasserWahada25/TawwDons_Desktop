@@ -1,4 +1,4 @@
-package controller.offre;
+package controllers.offre;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -8,7 +8,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import models.Offre;
-import service.OffreService;
+import services.OffreService;
 import utils.Router;
 
 import java.util.List;
