@@ -1,11 +1,11 @@
-package controller;
+package controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import models.Dons;
-import service.DonsService;
+import services.DonsService;
 import utils.Router;
 
 import java.io.File;
@@ -24,6 +24,8 @@ public class AddDonsController {
     @FXML private Button creerDonBtn;
     @FXML private MenuItem menuListeDons;
     @FXML private MenuItem menuPosterDon;
+    @FXML private MenuItem menuListeArticles;
+
 
     @FXML private File imageFile;
     @FXML private final DonsService donsService = new DonsService();
@@ -38,6 +40,9 @@ public class AddDonsController {
         // Routage via Router
         menuListeDons.setOnAction(e -> Router.navigateTo("/ListDons.fxml"));
         menuPosterDon.setOnAction(e -> Router.navigateTo("/AddDons.fxml"));
+        menuListeArticles.setOnAction(e -> Router.navigateTo("/articleList.fxml"));
+
+
     }
 
     @FXML

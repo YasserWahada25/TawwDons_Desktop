@@ -6,7 +6,7 @@
 <?import javafx.geometry.Insets?>
 
 <?import javafx.scene.image.Image?>
-<AnchorPane fx:controller="controller.ListDonsController"
+<AnchorPane fx:controller="controllers.ListDonsController"
             prefHeight="700.0" prefWidth="1000.0"
             xmlns="http://javafx.com/javafx/23.0.1"
             xmlns:fx="http://javafx.com/fxml/1">
@@ -44,7 +44,7 @@
 
                     <MenuButton text="BLOG">
                         <items>
-                            <MenuItem text="Les Articles"/>
+                            <MenuItem fx:id="menuListeArticles" text="Les Articles"/>
                         </items>
                     </MenuButton>
 
