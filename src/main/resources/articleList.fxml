@@ -5,13 +5,13 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
-<?import javafx.collections.FXCollections?>
-<?import java.lang.String?>
 
-<AnchorPane fx:controller="controllers.AddDonsController" prefHeight="650.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane xmlns="http://javafx.com/javafx/17.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.article.ArticleListController"
+            prefWidth="1000" prefHeight="700">
+
     <children>
-
-        <!-- NAVBAR -->
         <VBox layoutY="0" spacing="10.0" style="-fx-background-color: skyblue;" prefWidth="974.0">
             <HBox spacing="10" alignment="CENTER_LEFT">
                 <padding>
@@ -59,40 +59,18 @@
             </HBox>
         </VBox>
 
-        <!-- FORMULAIRE -->
-        <VBox spacing="20" alignment="TOP_LEFT" AnchorPane.topAnchor="50.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="40.0">
+
+        <FlowPane fx:id="articlesFlowPane"
+                  AnchorPane.topAnchor="60.0"
+                  AnchorPane.bottomAnchor="0.0"
+                  AnchorPane.leftAnchor="0.0"
+                  AnchorPane.rightAnchor="0.0"
+                  prefWidth="1000"
+                  hgap="20" vgap="20"
+                  style="-fx-background-color: #f9f9f9;">
             <padding>
-                <Insets top="40.0" left="40.0" right="40.0" bottom="40.0"/>
+                <Insets top="20" right="20" bottom="20" left="20"/>
             </padding>
-
-            <Label text="Formulaire de Don" style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #1c2a4d;"/>
-
-            <TextField fx:id="titreField" promptText="Entrez le titre du don" maxWidth="700"/>
-
-            <TextArea fx:id="descriptionArea" promptText="Décrivez votre don" prefRowCount="4" maxWidth="700"/>
-
-            <DatePicker fx:id="datePicker" promptText="Date de Création" maxWidth="700"/>
-
-            <ComboBox fx:id="categorieCombo" promptText="Choisissez une catégorie" maxWidth="700">
-                <items>
-                    <FXCollections fx:factory="observableArrayList">
-                        <String fx:value="vetements"/>
-                        <String fx:value="nourriture"/>
-                        <String fx:value="electronique"/>
-                        <String fx:value="meubles"/>
-                        <String fx:value="autre"/>
-                    </FXCollections>
-                </items>
-            </ComboBox>
-
-            <HBox spacing="10" alignment="CENTER_LEFT" maxWidth="700">
-                <Label text="Image du Don:"/>
-                <Button fx:id="choisirImageBtn" text="Choisir un fichier" onAction="#choisirImage"/>
-                <Label fx:id="imageLabel" text="Aucun fichier choisi"/>
-            </HBox>
-
-            <Button fx:id="creerDonBtn" text="Créer le Don" onAction="#creerDon" style="-fx-background-color: #007bff; -fx-text-fill: white;" maxWidth="300"/>
-        </VBox>
-
+        </FlowPane>
     </children>
 </AnchorPane>
