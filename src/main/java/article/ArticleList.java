@@ -16,6 +16,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import models.Article;
 import services.ArticleService;
+import utils.Router;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,6 +34,9 @@ public class ArticleList implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+
+
         allArticles = articleService.getAll();
     }
 

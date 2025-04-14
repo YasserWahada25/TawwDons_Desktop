@@ -28,6 +28,9 @@
                 <Label text="Tawwa Dons" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #0066ff;" />
                 <Pane HBox.hgrow="ALWAYS"/>
                 <HBox spacing="20" alignment="CENTER_RIGHT">
+                    <Button fx:id="btnHome"
+                            text="Home"
+                    />
                     <MenuButton text="SERVICES">
                         <items>
                             <MenuItem fx:id="menuListeDons" text="Liste des dons"/>
