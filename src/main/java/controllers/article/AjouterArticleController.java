@@ -34,22 +34,16 @@ public class AjouterArticleController {
 
     @FXML
     public void initialize() {
-        // Choix du fichier image
         chooseFileButton.setOnAction(event -> handleChooseFile());
-
-        // Action bouton ajout
         ajouterBtn.setOnAction(event -> handleAjoutArticle());
 
-        // ✅ Routage sidebar
+        // Routage sidebar
         if (menuArticleForm != null)
             menuArticleForm.setOnAction(e -> Router.navigateTo("/Admin/ajouterArticle.fxml"));
-
         if (menuArticleList != null)
             menuArticleList.setOnAction(e -> Router.navigateTo("/Admin/adminArticleList.fxml"));
-
         if (btnDonsRequests != null)
             btnDonsRequests.setOnAction(e -> Router.navigateTo("/Admin/RequestAddDons.fxml"));
-
         if (btnDashboard != null)
             btnDashboard.setOnAction(e -> System.out.println("Dashboard (à venir)"));
     }
@@ -78,12 +72,53 @@ public class AjouterArticleController {
         String description = contenuField.getText();
         String categorie = categorieField.getText();
 
-        if (titre.isEmpty() || description.isEmpty() || categorie.isEmpty()) {
-            errorLabel.setStyle("-fx-text-fill: red;");
-            errorLabel.setText("Veuillez remplir tous les champs !");
+        if (titre == null || titre.trim().isEmpty()) {
+            errorLabel.setText("❌ Le titre est obligatoire.");
+            return;
+        }
+        if (titre.length() < 3 || titre.length() > 255) {
+            errorLabel.setText("❌ Le titre doit contenir entre 3 et 255 caractères.");
+            return;
+        }
+        if (!titre.matches("^[A-Za-z0-9\\s'.]+$")) {
+            errorLabel.setText("❌ Le titre contient des caractères invalides.");
             return;
         }
 
+        if (description == null || description.trim().isEmpty()) {
+            errorLabel.setText("❌ La description est obligatoire.");
+            return;
+        }
+        if (description.length() < 10) {
+            errorLabel.setText("❌ La description doit contenir au moins 10 caractères.");
+            return;
+        }
+        if (!description.matches("^[A-Za-z0-9\\s'.]+$")) {
+            errorLabel.setText("❌ La description contient des caractères invalides.");
+            return;
+        }
+
+        if (categorie == null || categorie.trim().isEmpty()) {
+            errorLabel.setText("❌ La catégorie est obligatoire.");
+            return;
+        }
+        if (!categorie.matches("^[A-Za-z0-9\\s'.]+$")) {
+            errorLabel.setText("❌ Catégorie invalide.");
+            return;
+        }
+
+        if (selectedFile == null) {
+            errorLabel.setText("❌ Vous devez choisir une image.");
+            return;
+        }
+
+        String fileName = selectedFile.getName().toLowerCase();
+        if (!(fileName.endsWith(".jpg") || fileName.endsWith(".jpeg") || fileName.endsWith(".png"))) {
+            errorLabel.setText("❌ Format d’image invalide (seuls JPG/PNG sont acceptés).");
+            return;
+        }
+
+        // ✅ Tous les champs sont valides
         Article article = new Article();
         article.setTitre(titre);
         article.setDescription(description);
