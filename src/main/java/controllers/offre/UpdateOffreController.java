@@ -1,34 +1,59 @@
-// src/main/java/controller/offre/AddOffreController.java
-package controller.offre;
+package controllers.offre;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import models.Offre;
-import service.OffreService;
+import services.OffreService;
 import utils.Router;
 import java.util.List;
 
-public class AddOffreController {
+public class UpdateOffreController {
 
     @FXML private TextField titreField;
     @FXML private TextArea descriptionArea;
-    @FXML private Button creerOffreBtn;
+    @FXML private Button updateOffreBtn;
     @FXML private MenuItem menuListeOffres;
     @FXML private MenuItem menuPosterOffre;
-    @FXML private Button offreBtn;
 
     private final OffreService offreService = new OffreService();
 
+    private int offreId;
+
     @FXML
     public void initialize() {
-        // Navigation
-        menuListeOffres.setOnAction(e -> Router.navigateTo("/offre/ListOffre_BC.fxml"));
-        menuPosterOffre.setOnAction(e -> Router.navigateTo("/offre/AddOffre.fxml"));
-
+        // Configuration de la navigation
+        setupNavigation();
+        
         // Ajouter des validateurs en temps réel
         setupValidators();
         
-        creerOffreBtn.setOnAction(e -> creerOffre());
+        // Récupérer l'ID passé dans l'URL et charger l'offre correspondante
+        String url = Router.getCurrentUrl();
+        this.offreId = extractIdFromUrl(url);
+        
+        System.out.println("URL: " + url);
+        System.out.println("ID extrait: " + offreId);
+
+        // Charger l'offre dans le formulaire
+        if (offreId > 0) {
+            Offre offre = offreService.getOffreById(offreId);
+            if (offre != null) {
+                titreField.setText(offre.getTitreOffre());
+                descriptionArea.setText(offre.getDescriptionOffre());
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Erreur", "Offre non trouvée.");
+            }
+        } else {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "ID d'offre invalide.");
+        }
+
+        // Bouton de mise à jour
+        updateOffreBtn.setOnAction(e -> updateOffre());
+    }
+    
+    private void setupNavigation() {
+        menuListeOffres.setOnAction(e -> Router.navigateTo("/offre/ListOffre_BC.fxml"));
+        menuPosterOffre.setOnAction(e -> Router.navigateTo("/offre/AddOffre.fxml"));
     }
 
     private void setupValidators() {
@@ -49,15 +74,31 @@ public class AddOffreController {
         });
     }
 
-    @FXML
-    private void handleOffreButtonClick() {
-        System.out.println("Bouton Offre cliqué - Redirection vers la liste des offres");
-        // Rediriger vers la page de liste des offres
-        Router.navigateTo("/offre/ListOffre_BC.fxml");
+    private int extractIdFromUrl(String url) {
+        if (url == null || !url.contains("?")) {
+            return -1;
+        }
+        
+        // Extraire l'ID du paramètre "id" dans l'URL
+        String[] parts = url.split("\\?");
+        if (parts.length < 2) {
+            return -1;
+        }
+        
+        String[] params = parts[1].split("&");
+        for (String param : params) {
+            if (param.startsWith("id=")) {
+                try {
+                    return Integer.parseInt(param.substring(3));
+                } catch (NumberFormatException e) {
+                    return -1;
+                }
+            }
+        }
+        return -1;
     }
 
-    @FXML
-    private void creerOffre() {
+    private void updateOffre() {
         String titre = titreField.getText().trim();
         String desc = descriptionArea.getText().trim();
 
@@ -87,33 +128,29 @@ public class AddOffreController {
             return;
         }
 
-        // Vérifier si une offre similaire existe déjà
+        // Vérifier si une autre offre avec le même titre existe déjà
         List<Offre> offres = offreService.getAllOffres();
         for (Offre offre : offres) {
-            if (offre.getTitreOffre().equalsIgnoreCase(titre)) {
-                showAlert(Alert.AlertType.ERROR, "Erreur de validation", "Une offre avec ce titre existe déjà.");
+            if (offre.getTitreOffre().equalsIgnoreCase(titre) && offre.getId() != offreId) {
+                showAlert(Alert.AlertType.ERROR, "Erreur de validation", "Une autre offre avec ce titre existe déjà.");
                 titreField.requestFocus();
                 return;
             }
         }
 
         Offre offre = new Offre();
+        offre.setId(offreId);
         offre.setTitreOffre(titre);
         offre.setDescriptionOffre(desc);
 
-        boolean ok = offreService.ajouterOffre(offre);
+        boolean ok = offreService.updateOffre(offre);
         if (ok) {
-            showAlert(Alert.AlertType.INFORMATION, "Succès", "Offre ajoutée avec succès !");
-            clearForm();
+            showAlert(Alert.AlertType.INFORMATION, "Succès", "Offre mise à jour avec succès !");
+            // Retourner à la liste des offres
+            Router.navigateTo("/offre/ListOffre_BC.fxml");
         } else {
-            showAlert(Alert.AlertType.ERROR, "Erreur", "Échec lors de l'ajout de l'offre.");
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Échec lors de la mise à jour de l'offre.");
         }
-    }
-
-    private void clearForm() {
-        titreField.clear();
-        descriptionArea.clear();
-        titreField.requestFocus();
     }
 
     private void showAlert(Alert.AlertType type, String title, String message) {

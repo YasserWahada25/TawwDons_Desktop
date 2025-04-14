@@ -1,9 +1,9 @@
-package controller.offre;
+package controllers.offre;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import models.Offre;
-import service.OffreService;
+import services.OffreService;
 import utils.Router;
 
 public class DeleteOffreController {
