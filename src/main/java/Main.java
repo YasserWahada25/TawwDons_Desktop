@@ -23,7 +23,8 @@ public class Main extends Application {
 
 
         // 2. Charger la première page via le Router
-        Router.navigateTo("/condidat/AddCondidat.fxml"); // Chemin relatif dans resources
+        Router.navigateTo("/Home.fxml"); // Chemin relatif dans resources
+
 
 
         primaryStage.setTitle("TawwaDon App");

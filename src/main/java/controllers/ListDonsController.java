@@ -25,6 +25,7 @@ public class ListDonsController {
     @FXML private MenuItem menuListeDons;
     @FXML private MenuItem menuPosterDon;
     @FXML private MenuItem menuListeArticles;
+    @FXML private Button btnHome;
 
 
     private final DonsService donsService = new DonsService();
@@ -39,6 +40,8 @@ public class ListDonsController {
         menuListeDons.setOnAction(e -> Router.navigateTo("/ListDons.fxml"));
         menuPosterDon.setOnAction(e -> Router.navigateTo("/AddDons.fxml"));
         menuListeArticles.setOnAction(e -> Router.navigateTo("/articleList.fxml"));
+        btnHome.setOnAction(e -> Router.navigateTo("/Home.fxml"));
+
 
 
     }

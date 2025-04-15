@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane
+            xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.HomeController"
+            prefHeight="600.0" prefWidth="1200.0">
+
+    <children>
+
+        <!-- NAVBAR -->
+        <VBox spacing="10.0" prefWidth="1200.0" style="-fx-background-color: white;">
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <padding>
+                    <Insets top="10" bottom="10" left="10" right="10"/>
+                </padding>
+
+                <ImageView fitHeight="40" fitWidth="40" preserveRatio="true">
+                    <image>
+                        <Image url="@/images/tawwa don 3.png"/>
+                    </image>
+                </ImageView>
+
+                <Label text="Tawwa Dons"
+                       style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #0066ff;"/>
+                <Pane HBox.hgrow="ALWAYS"/>
+                <HBox spacing="20" alignment="CENTER_RIGHT">
+
+                    <Button fx:id="btnHome"
+                            text="Home"
+                            />
+
+                    <MenuButton text="SERVICES">
+                        <items>
+                            <MenuItem text="Liste des dons" fx:id="menuListeDons"/>
+                            <MenuItem text="Poster un don" fx:id="menuPosterDon"/>
+                        </items>
+                    </MenuButton>
+                    <MenuButton text="EVALUATION">
+                        <items>
+                            <MenuItem text="Liste des évaluations"/>
+                        </items>
+                    </MenuButton>
+                    <MenuButton text="BLOG">
+                        <items>
+                            <MenuItem text="Les Articles" fx:id="menuArticleList"/>
+                        </items>
+                    </MenuButton>
+                    <MenuButton text="RECRUTEMENT">
+                        <items>
+                            <MenuItem text="Liste des offres"/>
+                        </items>
+                    </MenuButton>
+                    <MenuButton text="EVENEMENT">
+                        <items>
+                            <MenuItem text="Liste des événements"/>
+                        </items>
+                    </MenuButton>
+                    <Button text="🔔" style="-fx-background-color: transparent;"/>
+                    <Button text="Login" style="-fx-background-color: transparent;"/>
+                    <Button text="Register" style="-fx-background-color: #6c757d; -fx-text-fill: white;"/>
+                </HBox>
+            </HBox>
+        </VBox>
+
+        <!-- HERO IMAGE SECTION -->
+        <StackPane layoutY="60" prefHeight="540.0" prefWidth="1200.0">
+            <ImageView fitHeight="540.0" fitWidth="1200.0" preserveRatio="false">
+                <image>
+                    <Image url="@/images/donation2.jpg" />
+                </image>
+            </ImageView>
+
+            <!-- TEXT OVERLAY -->
+            <VBox alignment="CENTER" spacing="15" maxWidth="600">
+                <Label text="DONATE TO TAWWA"
+                       style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;" />
+                <Label text="Your donation helps support people in need and ensures that no one is left without care or support. Join us to build a better world through kindness."
+                       wrapText="true"
+                       style="-fx-font-size: 14px; -fx-text-fill: white; -fx-padding: 0 40 0 40;" />
+
+                <Hyperlink text="For questions about supporting Tawwa, please contact us"
+                           style="-fx-text-fill: #a4f0a4;"/>
+
+                <Label wrapText="true" style="-fx-background-color: rgba(255,255,255,0.9); -fx-padding: 10; -fx-background-radius: 5; -fx-text-fill: #333;" maxWidth="500">
+                    Donations are used to provide support, food, services and more to vulnerable communities. You can donate online or by sending a check to Tawwa Dons, 123 Rue de l'Espoir, Tunis, Tunisia.
+                </Label>
+            </VBox>
+        </StackPane>
+
+    </children>
+</AnchorPane>

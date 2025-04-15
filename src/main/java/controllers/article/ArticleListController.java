@@ -37,6 +37,8 @@ public class ArticleListController implements Initializable {
     private MenuItem menuListeArticles;
 
     private final ArticleService articleService = new ArticleService();
+    @FXML
+    private Button btnHome;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -56,6 +58,8 @@ public class ArticleListController implements Initializable {
             menuPosterDon.setOnAction(e -> Router.navigateTo("/AddDons.fxml"));
         if (menuListeArticles != null)
             menuListeArticles.setOnAction(e -> Router.navigateTo("/articleList.fxml"));
+        if (btnHome != null)
+            btnHome.setOnAction(e -> Router.navigateTo("/Home.fxml"));
     }
     private VBox createArticleCard(Article article) {
         ImageView imageView = new ImageView();
