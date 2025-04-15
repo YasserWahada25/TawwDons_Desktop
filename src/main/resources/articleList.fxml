@@ -9,7 +9,7 @@
 <AnchorPane xmlns="http://javafx.com/javafx/17.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="controllers.article.ArticleListController"
-            prefWidth="1000" prefHeight="700">
+            prefWidth="1000" prefHeight="600">
 
     <children>
         <VBox layoutY="0" spacing="10.0" style="-fx-background-color: skyblue;" prefWidth="974.0">
