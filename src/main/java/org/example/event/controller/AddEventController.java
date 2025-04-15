@@ -1,30 +1,41 @@
 package org.example.event.controller;
 
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
+import org.example.event.model.categorie;
 import org.example.event.model.event;
+import org.example.event.model.categorie;
+import org.example.event.model.event;
+import org.example.event.service.categorieService;
 import org.example.event.service.eventService;
 
 import java.io.File;
+import java.sql.SQLException;
+import java.util.List;
 
 public class AddEventController {
     @FXML private TextField nomField;
+    @FXML private ComboBox<categorie> categorieComboBox;
     @FXML private TextArea descriptionField;
     @FXML private ImageView eventImageView;
 
     private eventService eventService = new eventService();
+    private categorieService categorieService = new categorieService();
     private Stage dialogStage;
     private String imagePath;
 
-    public void setDialogStage(Stage dialogStage) {
-        this.dialogStage = dialogStage;
+    @FXML
+    public void initialize() {
+        chargerCategories();
     }
+
+
 
     @FXML
     private void handleChooseImage() {
@@ -37,33 +48,73 @@ public class AddEventController {
         File selectedFile = fileChooser.showOpenDialog(dialogStage);
         if (selectedFile != null) {
             try {
-                // Stocker le chemin de l'image
                 imagePath = selectedFile.toURI().toString();
-
-                // Afficher l'aperçu
                 Image image = new Image(imagePath);
                 eventImageView.setImage(image);
             } catch (Exception e) {
-                showErrorAlert("Erreur", "Impossible de charger l'image", e.getMessage());
+                afficherAlerteErreur("Erreur", "Impossible de charger l'image", e.getMessage());
             }
+        }
+    }
+
+
+    private void chargerCategories() {
+        try {
+            List<categorie> categories = categorieService.getList();
+
+            // Vérifiez que les catégories ont des IDs valides
+            System.out.println("Catégories chargées:");
+            for (categorie c : categories) {
+                System.out.println("ID: " + c.getId() + ", Nom: " + c.getType());
+            }
+
+            // Peupler la ComboBox
+            categorieComboBox.setItems(FXCollections.observableArrayList(categories));
+
+            // Configurer l'affichage pour ne montrer que le type
+            categorieComboBox.setConverter(new StringConverter<categorie>() {
+                @Override
+                public String toString(categorie categorie) {
+                    return categorie != null ? categorie.getType() : "";
+                }
+
+                @Override
+                public categorie fromString(String string) {
+                    return null; // Non nécessaire pour la sélection seule
+                }
+            });
+
+            // Sélectionner la première valeur par défaut
+            if (!categories.isEmpty()) {
+                categorieComboBox.getSelectionModel().selectFirst();
+            }
+        } catch (Exception e) {
+            afficherAlerteErreur("Erreur", "Échec du chargement", e.getMessage());
         }
     }
 
     @FXML
     private void handleAdd() {
-        if (isInputValid()) {
-            event newEvent = new event(
+        if (estDonneesValides()) {
+            categorie selected = categorieComboBox.getSelectionModel().getSelectedItem();
+
+            // Debug: Afficher la catégorie sélectionnée
+            System.out.println("Catégorie sélectionnée - ID: " + selected.getId() + ", type: " + selected.getType());
+
+            event nouvelEvent = new event(
                     0, // ID auto-généré
                     nomField.getText(),
                     descriptionField.getText(),
-                    imagePath
+                    imagePath,
+                    selected.getId() // Utilisation directe de l'ID
             );
-
+  nouvelEvent.setCateegorie_id (selected.getId());
             try {
-                eventService.ajouter(newEvent);
+                System.out.println("categorie_id"+ nouvelEvent.getCateegorie_id());
+                eventService.ajouter(nouvelEvent);
                 dialogStage.close();
             } catch (Exception e) {
-                showErrorAlert("Erreur", "Échec de l'ajout", e.getMessage());
+                afficherAlerteErreur("Erreur", "Échec de l'ajout", e.getMessage());
             }
         }
     }
@@ -73,33 +124,40 @@ public class AddEventController {
         dialogStage.close();
     }
 
-    private boolean isInputValid() {
-        String errorMessage = "";
+    private boolean estDonneesValides() {
+        StringBuilder messageErreur = new StringBuilder();
 
-        if (nomField.getText() == null || nomField.getText().isEmpty()) {
-            errorMessage += "Nom invalide!\n";
+        if (nomField.getText() == null || nomField.getText().trim().isEmpty()) {
+            messageErreur.append("Nom invalide!\n");
         }
         if (imagePath == null || imagePath.isEmpty()) {
-            errorMessage += "Image requise!\n";
+            messageErreur.append("Image requise!\n");
         }
-        if (descriptionField.getText() == null || descriptionField.getText().isEmpty()) {
-            errorMessage += "Description invalide!\n";
+        if (descriptionField.getText() == null || descriptionField.getText().trim().isEmpty()) {
+            messageErreur.append("Description invalide!\n");
+        }
+        if (categorieComboBox.getValue() == null) {
+            messageErreur.append("Veuillez sélectionner une catégorie!\n");
         }
 
-        if (errorMessage.isEmpty()) {
+        if (messageErreur.length() == 0) {
             return true;
         } else {
-            showErrorAlert("Champs invalides", "Veuillez corriger les champs", errorMessage);
+            afficherAlerteErreur("Champs invalides", "Veuillez corriger les erreurs suivantes", messageErreur.toString());
             return false;
         }
     }
 
-    private void showErrorAlert(String title, String header, String content) {
+    private void afficherAlerteErreur(String titre, String entete, String contenu) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.initOwner(dialogStage);
-        alert.setTitle(title);
-        alert.setHeaderText(header);
-        alert.setContentText(content);
+        alert.setTitle(titre);
+        alert.setHeaderText(entete);
+        alert.setContentText(contenu);
         alert.showAndWait();
+    }
+
+    public void setDialogStage(Stage dialogStage) {
+        this.dialogStage = dialogStage;
     }
 }

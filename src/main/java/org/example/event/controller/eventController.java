@@ -28,6 +28,7 @@ public class eventController {
     @FXML private TableColumn<event, String> nomColumn;
     @FXML private TableColumn<event, String> imageColumn;
     @FXML private TableColumn<event, String> descriptionColumn;
+    @FXML private TableColumn<event, Integer> categorieColumn;
     @FXML private TableColumn<event, Void> actionsColumn;
     @FXML private ImageView imageView;
     @FXML private TextArea descriptionTextArea;
@@ -50,6 +51,7 @@ public class eventController {
         nomColumn.setCellValueFactory(new PropertyValueFactory<>("nom"));
         descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
         imageColumn.setCellValueFactory(new PropertyValueFactory<>("image"));
+        categorieColumn.setCellValueFactory(new PropertyValueFactory<>("idcategory"));
 
         // Configuration personnalisée pour l'image
         imageColumn.setCellFactory(column -> new TableCell<event, String>() {
@@ -134,7 +136,7 @@ public class eventController {
 
     private void openParticipantsWindow(event event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/event/participant-view.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/event/view-participant.fxml"));
             Parent root = loader.load();
 
             participantController controller = loader.getController();

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<GridPane xmlns:fx="http://javafx.com/fxml"
+          stylesheets="@stylesheet.css"
+          fx:controller="org.example.event.controller.UpdateParticipantController"
+          hgap="10" vgap="10" alignment="CENTER">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+    <!-- Nom -->
+    <Label text="Nom:" GridPane.columnIndex="0" GridPane.rowIndex="0" styleClass="form-label"/>
+    <TextField fx:id="nomField" GridPane.columnIndex="1" GridPane.rowIndex="0" styleClass="form-field"/>
+
+    <!-- Prénom -->
+    <Label text="Prénom:" GridPane.columnIndex="0" GridPane.rowIndex="1" styleClass="form-label"/>
+    <TextField fx:id="prenomField" GridPane.columnIndex="1" GridPane.rowIndex="1" styleClass="form-field"/>
+
+    <!-- Email -->
+    <Label text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="2" styleClass="form-label"/>
+    <TextField fx:id="emailField" GridPane.columnIndex="1" GridPane.rowIndex="2" styleClass="form-field"/>
+
+    <!-- Téléphone -->
+    <Label text="Téléphone:" GridPane.columnIndex="0" GridPane.rowIndex="3" styleClass="form-label"/>
+    <TextField fx:id="numTelField" GridPane.columnIndex="1" GridPane.rowIndex="3" styleClass="form-field"/>
+
+    <!-- Boutons -->
+    <HBox spacing="15" alignment="CENTER_RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="4">
+        <Button text="Annuler" onAction="#handleCancel" styleClass="cancel-btn"/>
+        <Button text="Enregistrer" onAction="#handleUpdate" styleClass="save-btn"/>
+    </HBox>
+</GridPane>

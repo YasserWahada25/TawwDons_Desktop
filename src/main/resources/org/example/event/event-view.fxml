@@ -24,6 +24,7 @@
                 <TableColumn fx:id="nomColumn" prefWidth="200" text="Nom Événement" />
                 <TableColumn fx:id="descriptionColumn" prefWidth="300" text="Description" />
                 <TableColumn fx:id="imageColumn" prefWidth="200" text="Image" />
+                <TableColumn fx:id="categorieColumn" prefWidth="200" text="Categorie" />
                 <TableColumn fx:id="actionsColumn" prefWidth="150" text="Actions" />
             </columns>
         </TableView>

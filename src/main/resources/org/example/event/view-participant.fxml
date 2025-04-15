@@ -9,8 +9,7 @@
 
 <VBox alignment="CENTER" spacing="20.0" styleClass="main-container"
       stylesheets="@stylesheet.css"
-      xmlns:fx="http://javafx.com/fxml/1"
-      xmlns="http://javafx.com/javafx/23.0.1"
+      xmlns:fx="http://javafx.com/fxml"
       fx:controller="org.example.event.controller.participantController">
 
     <Label style="-fx-font-size: 20px; -fx-font-weight: bold;" text="Gestion des participant" />

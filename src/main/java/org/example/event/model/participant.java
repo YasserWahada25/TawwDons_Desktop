@@ -24,7 +24,14 @@ public class participant {
 
     }
 
+    public participant(String nom, String prenom, String email, int numtel, int event_id) {
+        setNom(nom);
+        setPrenom(prenom);
+        setEmail(email);
+        setNumtel(numtel);
+        setEvent_id(event_id);
 
+    }
 
     // Getters
     public int getId() { return id.get(); }

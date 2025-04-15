@@ -14,6 +14,15 @@ public class eventService implements Ievent <event> {
 
     @Override
     public void ajouter(event event) throws SQLException, IOException {
+        // Vérifier d'abord si la catégorie existe
+        String checkCategorySql = "SELECT id FROM categorie WHERE id = ?";
+        try (PreparedStatement checkStmt = cnx.prepareStatement(checkCategorySql)) {
+            checkStmt.setInt(1, event.getCateegorie_id());
+            ResultSet rs = checkStmt.executeQuery();
+            if (!rs.next()) {
+                throw new SQLException("La catégorie avec l'ID " + event.getCateegorie_id() + " n'existe pas");
+            }
+        }
         String sql ="insert into event(nom,description,image,categorie_id) values(?,?,?,?)";
         PreparedStatement ps = cnx.prepareStatement(sql);
         ps.setString(1, event.getNom());

@@ -19,9 +19,13 @@
     <Label text="Nom:" GridPane.columnIndex="0" GridPane.rowIndex="0" styleClass="form-label"/>
     <TextField fx:id="nomField" GridPane.columnIndex="1" GridPane.rowIndex="0" styleClass="form-field"/>
 
+    <!-- Sélection de catégorie -->
+    <Label text="Catégorie:" GridPane.columnIndex="0" GridPane.rowIndex="1" styleClass="form-label"/>
+    <ComboBox fx:id="categorieComboBox" GridPane.columnIndex="1" GridPane.rowIndex="1" styleClass="form-field"/>
+
     <!-- Sélection d'image -->
-    <Label text="Image:" GridPane.columnIndex="0" GridPane.rowIndex="1" styleClass="form-label"/>
-    <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="1">
+    <Label text="Image:" GridPane.columnIndex="0" GridPane.rowIndex="2" styleClass="form-label"/>
+    <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="2">
         <ImageView fx:id="eventImageView"
                    fitHeight="100"
                    fitWidth="100"
@@ -33,16 +37,16 @@
     </HBox>
 
     <!-- Description -->
-    <Label text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="2" styleClass="form-label"/>
+    <Label text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="3" styleClass="form-label"/>
     <TextArea fx:id="descriptionField"
               GridPane.columnIndex="1"
-              GridPane.rowIndex="2"
+              GridPane.rowIndex="3"
               wrapText="true"
               prefRowCount="4"
               styleClass="form-textarea"/>
 
     <!-- Boutons -->
-    <HBox spacing="10" alignment="CENTER_RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="3">
+    <HBox spacing="10" alignment="CENTER_RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="4">
         <Button text="Annuler" onAction="#handleCancel" styleClass="cancel-btn"/>
         <Button text="Ajouter" onAction="#handleAdd" styleClass="submit-btn"/>
     </HBox>

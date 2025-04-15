@@ -28,8 +28,7 @@ public class participantController {
     @FXML private TableColumn<participant, String> nomColumn;
     @FXML private TableColumn<participant, String> prenomColumn;
     @FXML private TableColumn<participant, String> emailColumn;
-    @FXML
-    private TableColumn<participant, Integer> numtelColumn;
+    @FXML private TableColumn<participant, Integer> numtelColumn;
     @FXML private TableColumn<participant, Integer> eventIdColumn;
     @FXML private TableColumn<participant, Void> actionsColumn;
 
@@ -54,7 +53,7 @@ public class participantController {
         prenomColumn.setCellValueFactory(new PropertyValueFactory<>("prenom"));
         emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
         numtelColumn.setCellValueFactory(new PropertyValueFactory<>("numtel"));
-        eventIdColumn.setCellValueFactory(new PropertyValueFactory<>("event_id"));
+
     }
 
     private void setupActionsColumn() {
@@ -123,7 +122,7 @@ public class participantController {
     }
 
     private void handleDeleteParticipant(participant p) {
-        /*Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
         confirmation.setTitle("Confirmation suppression");
         confirmation.setHeaderText("Supprimer " + p.getNom());
         confirmation.setContentText("Êtes-vous sûr de vouloir supprimer ce participant?");
@@ -137,11 +136,11 @@ public class participantController {
             } catch (SQLException e) {
                 showErrorAlert("Erreur", "Échec de suppression", e.getMessage());
             }
-        }*/
+        }
     }
 
     private void handleUpdateParticipant(participant p) {
-        /*try {
+        try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/event/update-participant.fxml"));
             Parent root = loader.load();
 
@@ -158,7 +157,7 @@ public class participantController {
             loadParticipants();
         } catch (IOException e) {
             showErrorAlert("Erreur", "Formulaire inaccessible", e.getMessage());
-        }*/
+        }
     }
 
     private void showSuccessAlert(String title, String header, String content) {
