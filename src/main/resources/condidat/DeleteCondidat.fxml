@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<BorderPane fx:controller="controller.condidat.DeleteCondidatController"
+<BorderPane fx:controller="controllers.condidat.DeleteCondidatController"
             xmlns="http://javafx.com/javafx/23.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
             prefWidth="1200" prefHeight="700">
