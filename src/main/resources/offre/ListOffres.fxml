@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<AnchorPane fx:controller="controller.offre.ListOffresController"
+<AnchorPane fx:controller="controllers.offre.ListOffresController"
             prefHeight="700.0" prefWidth="1000.0"
             xmlns="http://javafx.com/javafx/23.0.1"
             xmlns:fx="http://javafx.com/fxml/1">

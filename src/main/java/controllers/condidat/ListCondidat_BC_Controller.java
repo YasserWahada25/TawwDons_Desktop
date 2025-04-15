@@ -1,4 +1,4 @@
-package controller.condidat;
+package controllers.condidat;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -6,13 +6,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 import javafx.beans.property.SimpleStringProperty;
 import models.Condidat;
 import models.Offre;
-import service.CondidatService;
-import service.OffreService;
+import services.CondidatService;
+import services.OffreService;
 import utils.Router;
 
 import java.awt.Desktop;

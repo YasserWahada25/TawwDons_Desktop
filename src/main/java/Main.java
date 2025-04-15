@@ -26,6 +26,7 @@ public class Main extends Application {
         Router.navigateTo("/Home.fxml"); // Chemin relatif dans resources
 
 
+
         primaryStage.setTitle("TawwaDon App");
         primaryStage.show();
 
