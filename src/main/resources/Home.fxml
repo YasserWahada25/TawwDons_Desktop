@@ -53,7 +53,7 @@
                     </MenuButton>
                     <MenuButton text="RECRUTEMENT">
                         <items>
-                            <MenuItem text="Liste des offres"/>
+                            <MenuItem text="Liste des offres" fx:id="menuOffreList"/>
                         </items>
                     </MenuButton>
                     <MenuButton text="EVENEMENT">

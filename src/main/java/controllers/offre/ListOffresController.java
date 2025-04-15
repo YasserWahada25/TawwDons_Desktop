@@ -25,6 +25,7 @@ public class ListOffresController {
     @FXML private MenuItem menuPosterDon;
     @FXML private MenuItem menuListeOffres;
     @FXML private MenuItem menuPosterOffre;
+    @FXML private Button btnHome;
 
     private final OffreService offreService = new OffreService();
 
@@ -39,6 +40,8 @@ public class ListOffresController {
         menuPosterDon.setOnAction(e -> Router.navigateTo("/AddDons.fxml"));
         menuListeOffres.setOnAction(e -> Router.navigateTo("/offre/ListOffres.fxml"));
         menuPosterOffre.setOnAction(e -> Router.navigateTo("/offre/AddOffre.fxml"));
+        btnHome.setOnAction(e -> Router.navigateTo("/Home.fxml"));
+
     }
 
     private void afficherOffres() {

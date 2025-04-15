@@ -19,6 +19,9 @@ public class HomeController {
     @FXML
     private MenuItem menuArticleList;
 
+    @FXML
+    private MenuItem menuOffreList;
+
 
 
     @FXML
@@ -34,6 +37,9 @@ public class HomeController {
         btnHome.setOnAction(event -> Router.navigateTo("/Home.fxml"));
 
         menuArticleList.setOnAction(event -> Router.navigateTo("/articleList.fxml"));
+
+        menuOffreList.setOnAction(event -> Router.navigateTo("/offre/ListOffres.fxml"));
+
 
 
 
