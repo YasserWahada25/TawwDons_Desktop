@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane fx:controller="controller.RegisterController" 
+            prefHeight="600.0" prefWidth="800.0"
+            xmlns="http://javafx.com/javafx/8" 
+            xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <!-- NAVBAR -->
+        <VBox layoutY="0" spacing="10.0" style="-fx-background-color: skyblue;" prefWidth="800.0">
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <padding>
+                    <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
+                </padding>
+
+                <ImageView fitHeight="40" fitWidth="40" pickOnBounds="true" preserveRatio="true" >
+                    <image>
+                        <Image url="@images/tawwa don 3.png" />
+                    </image>
+                </ImageView>
+
+                <Label text="Tawwa Dons" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #0066ff;" />
+                <Pane HBox.hgrow="ALWAYS"/>
+            </HBox>
+        </VBox>
+
+        <!-- REGISTRATION FORM -->
+        <VBox spacing="15" alignment="CENTER" 
+              AnchorPane.topAnchor="100.0" 
+              AnchorPane.leftAnchor="250.0" 
+              AnchorPane.rightAnchor="250.0"
+              style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 0);">
+            <padding>
+                <Insets top="30.0" right="40.0" bottom="30.0" left="40.0"/>
+            </padding>
+
+            <Label text="Inscription" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #1c2a4d;"/>
+            
+            <VBox spacing="5">
+                <Label text="Nom" style="-fx-font-size: 14px;"/>
+                <TextField fx:id="nomField" promptText="Entrez votre nom"/>
+            </VBox>
+            
+            <VBox spacing="5">
+                <Label text="Prénom" style="-fx-font-size: 14px;"/>
+                <TextField fx:id="prenomField" promptText="Entrez votre prénom"/>
+            </VBox>
+            
+            <VBox spacing="5">
+                <Label text="Email" style="-fx-font-size: 14px;"/>
+                <TextField fx:id="emailField" promptText="Entrez votre email"/>
+            </VBox>
+            
+            <VBox spacing="5">
+                <Label text="Mot de passe" style="-fx-font-size: 14px;"/>
+                <PasswordField fx:id="passwordField" promptText="Entrez votre mot de passe"/>
+            </VBox>
+            
+            <VBox spacing="5">
+                <Label text="Type d'utilisateur" style="-fx-font-size: 14px;"/>
+                <HBox spacing="15" style="-fx-background-color: #f8f9fa; -fx-padding: 10px; -fx-background-radius: 5;">
+                    <RadioButton fx:id="radioDonneur" text="Donneur" selected="true">
+                        <toggleGroup>
+                            <ToggleGroup fx:id="userTypeGroup"/>
+                        </toggleGroup>
+                    </RadioButton>
+                    <RadioButton fx:id="radioBeneficiaire" text="Bénéficiaire" toggleGroup="$userTypeGroup"/>
+                    <RadioButton fx:id="radioProfessionnel" text="Professionnel" toggleGroup="$userTypeGroup"/>
+                </HBox>
+            </VBox>
+            
+            <Button fx:id="registerButton" onAction="#handleRegisterButtonAction" 
+                    text="S'inscrire" 
+                    style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-size: 14px;"
+                    prefWidth="180" prefHeight="40"/>
+                    
+            <HBox spacing="5" alignment="CENTER">
+                <Label text="Vous avez déjà un compte?" style="-fx-font-size: 12px;"/>
+                <Hyperlink fx:id="loginLink" text="Se connecter" style="-fx-font-size: 12px;" onAction="#navigateToLogin"/>
+            </HBox>
+        </VBox>
+        
+        <!-- FOOTER -->
+        <HBox alignment="CENTER" 
+              AnchorPane.bottomAnchor="20.0" 
+              AnchorPane.leftAnchor="0.0" 
+              AnchorPane.rightAnchor="0.0">
+            <Label text="© 2023 Tawwa Dons. Tous droits réservés." style="-fx-font-size: 12px; -fx-text-fill: #6c757d;"/>
+        </HBox>
+    </children>
+</AnchorPane> 

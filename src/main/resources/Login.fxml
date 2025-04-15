@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane fx:controller="controller.LoginController" 
+            prefHeight="600.0" prefWidth="800.0"
+            xmlns="http://javafx.com/javafx/8" 
+            xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <!-- NAVBAR -->
+        <VBox layoutY="0" spacing="10.0" style="-fx-background-color: skyblue;" prefWidth="800.0">
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <padding>
+                    <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
+                </padding>
+
+                <ImageView fitHeight="40" fitWidth="40" pickOnBounds="true" preserveRatio="true" >
+                    <image>
+                        <Image url="@images/tawwa don 3.png" />
+                    </image>
+                </ImageView>
+
+                <Label text="Tawwa Dons" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #0066ff;" />
+                <Pane HBox.hgrow="ALWAYS"/>
+            </HBox>
+        </VBox>
+
+        <!-- LOGIN FORM -->
+        <VBox spacing="20" alignment="CENTER" 
+              AnchorPane.topAnchor="150.0" 
+              AnchorPane.leftAnchor="250.0" 
+              AnchorPane.rightAnchor="250.0"
+              style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 0);">
+            <padding>
+                <Insets top="40.0" right="40.0" bottom="40.0" left="40.0"/>
+            </padding>
+
+            <Label text="Connexion" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #1c2a4d;"/>
+            
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Email:" style="-fx-font-size: 14px;" minWidth="80"/>
+                <TextField fx:id="emailField" promptText="Entrez votre email" prefWidth="250"/>
+            </HBox>
+            
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Mot de passe:" style="-fx-font-size: 14px;" minWidth="80"/>
+                <PasswordField fx:id="passwordField" promptText="Entrez votre mot de passe" prefWidth="250"/>
+            </HBox>
+            
+            <Button fx:id="loginButton" onAction="#handleLoginButtonAction" 
+                    text="Se connecter" 
+                    style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-size: 14px;"
+                    prefWidth="180" prefHeight="40"/>
+                    
+            <HBox spacing="5" alignment="CENTER">
+                <Label text="Vous n'avez pas de compte?" style="-fx-font-size: 12px;"/>
+                <Hyperlink fx:id="registerLink" text="S'inscrire" style="-fx-font-size: 12px;" onAction="#navigateToRegister"/>
+            </HBox>
+            
+            <Hyperlink text="Mot de passe oublié?" alignment="CENTER" style="-fx-font-size: 12px;"/>
+        </VBox>
+        
+        <!-- FOOTER -->
+        <HBox alignment="CENTER" 
+              AnchorPane.bottomAnchor="20.0" 
+              AnchorPane.leftAnchor="0.0" 
+              AnchorPane.rightAnchor="0.0">
+            <Label text="© 2023 Tawwa Dons. Tous droits réservés." style="-fx-font-size: 12px; -fx-text-fill: #6c757d;"/>
+        </HBox>
+    </children>
+</AnchorPane> 
