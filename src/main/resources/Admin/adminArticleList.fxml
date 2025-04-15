@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.article.AdminArticleListController"
+            prefWidth="1200" prefHeight="700"
+            style="-fx-background-color: #ffffff;">
+
+    <!-- ✅ Sidebar gauche -->
+    <left>
+        <VBox spacing="15" prefWidth="200" alignment="TOP_LEFT" style="-fx-background-color: #f8f9fa;">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+
+            <Label text="Creative Tim" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+            <Separator/>
+
+            <Button fx:id="btnDashboard" text="Dashboard" maxWidth="Infinity" />
+            <Button fx:id="btnDonsRequests" text="Dons Requests" maxWidth="Infinity" />
+
+            <MenuButton text="Gestion Article" maxWidth="Infinity">
+                <items>
+                    <MenuItem fx:id="menuArticleList" text="Article List" />
+                    <MenuItem fx:id="menuArticleForm" text="Article Form" />
+                </items>
+            </MenuButton>
+
+            <Button text="Offre" maxWidth="Infinity"/>
+            <Button text="Condidat" maxWidth="Infinity"/>
+            <Button text="Evenement" maxWidth="Infinity"/>
+            <Button text="Evaluation" maxWidth="Infinity"/>
+            <Button text="Participant" maxWidth="Infinity"/>
+            <Button text="Catégorie" maxWidth="Infinity"/>
+            <Button text="Notifications" maxWidth="Infinity"/>
+
+            <Label text="Account Pages" style="-fx-font-weight: bold; -fx-padding: 10 0 0 0;" />
+            <Button text="Profile" maxWidth="Infinity"/>
+        </VBox>
+    </left>
+
+    <!-- ✅ Contenu principal -->
+    <center>
+        <VBox spacing="10">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+            <!-- Titre -->
+            <Label text="Liste Des Articles">
+                <font>
+                    <Font name="Arial Bold" size="24" />
+                </font>
+            </Label>
+
+            <!-- Barre de recherche -->
+            <HBox spacing="10">
+                <Region HBox.hgrow="ALWAYS" />
+                <TextField fx:id="searchField" promptText="Search..." prefWidth="250" />
+            </HBox>
+
+            <!-- Table des articles -->
+            <TableView fx:id="tableView" prefHeight="500">
+                <columns>
+                    <TableColumn fx:id="colId" text="ID" prefWidth="50" />
+                    <TableColumn fx:id="colTitre" text="Titre" prefWidth="150" />
+                    <TableColumn fx:id="colImage" text="Image Name" prefWidth="150" />
+                    <TableColumn fx:id="colDescription" text="Description" prefWidth="300" />
+                    <TableColumn fx:id="colCategorie" text="Categorie" prefWidth="150" />
+                    <TableColumn fx:id="colActions" text="Actions" prefWidth="150" />
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+</BorderPane>

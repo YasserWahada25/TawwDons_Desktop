@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane fx:controller="controllers.condidat.ListCondidat_BC_Controller"
+            xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            prefWidth="1200" prefHeight="700">
+
+    <!-- Sidebar gauche -->
+    <left>
+        <VBox style="-fx-background-color: #f8f9fa;" spacing="15" prefWidth="200" alignment="TOP_LEFT">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+            <Label text="Tawwa Dons" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+            <Separator/>
+
+            <Button text="Dashboard" maxWidth="Infinity"/>
+            <Button text="Dons Requests" maxWidth="Infinity"/>
+            <MenuButton text="Gestion Article" maxWidth="Infinity">
+                <items>
+                    <MenuItem text="Article List"/>
+                    <MenuItem text="Article Form"/>
+                </items>
+            </MenuButton>
+            <Button fx:id="offreBtn" text="Offre" maxWidth="Infinity" onAction="#handleOffreButtonClick"/>
+            <Button fx:id="condidatBtn" text="Condidat" maxWidth="Infinity" onAction="#handleCondidatButtonClick"/>
+            <Button text="Evenement" maxWidth="Infinity"/>
+            <Button text="Evaluation" maxWidth="Infinity"/>
+            <Button text="Participant" maxWidth="Infinity"/>
+            <Button text="Catégorie" maxWidth="Infinity"/>
+            <Button text="Notifications" maxWidth="Infinity"/>
+
+            <Label text="Account Pages"
+                   style="-fx-font-weight: bold; -fx-padding: 10 0 0 0;"/>
+            <Button text="Profile" maxWidth="Infinity"/>
+        </VBox>
+    </left>
+
+    <!-- Top bar -->
+    <top>
+        <HBox spacing="20" alignment="CENTER_RIGHT" style="-fx-background-color: #ffffff;">
+            <padding>
+                <Insets top="10" right="20" bottom="10" left="20"/>
+            </padding>
+            <TextField promptText="Type here..." prefWidth="200"/>
+            <MenuButton text="Navigation">
+                <items>
+                    <MenuItem fx:id="menuListeCondidats" text="Liste des Candidats"/>
+                    <MenuItem fx:id="menuAjouterCondidat" text="Ajouter un Candidat"/>
+                </items>
+            </MenuButton>
+            <Button text="⚙"/>
+            <Button text="🔔"/>
+            <Button text="Logout"
+                    style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
+        </HBox>
+    </top>
+
+    <!-- Contenu central : tableau des candidats -->
+    <center>
+        <VBox spacing="20" alignment="TOP_LEFT">
+            <padding>
+                <Insets top="30" right="30" bottom="30" left="30"/>
+            </padding>
+
+            <HBox alignment="CENTER_LEFT" spacing="20">
+                <Label text="Liste des Candidats"
+                       style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #1c2a4d;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="addCondidatBtn" text="Ajouter un Candidat" 
+                        style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-padding: 8 15;"/>
+            </HBox>
+
+            <TableView fx:id="condidatTable" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="nomColumn" text="Nom" />
+                    <TableColumn fx:id="prenomColumn" text="Prénom" />
+                    <TableColumn fx:id="emailColumn" text="Email" />
+                    <TableColumn fx:id="telephoneColumn" text="Téléphone" />
+                    <TableColumn fx:id="offreColumn" text="Offre" />
+                    <TableColumn fx:id="cvColumn" text="CV" />
+                    <TableColumn fx:id="editColumn" text="Actions" />
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+
+</BorderPane> 

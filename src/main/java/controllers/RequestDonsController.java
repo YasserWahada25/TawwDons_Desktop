@@ -1,4 +1,4 @@
-package controller;
+package controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -7,7 +7,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 import models.Dons;
-import service.DonsService;
+import services.DonsService;
+import utils.Router;
+
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -20,22 +22,51 @@ public class RequestDonsController {
     @FXML private TableColumn<Dons, String> colDate;
     @FXML private TableColumn<Dons, Void> colActions;
 
+    // Routage via sidebar
+    @FXML private MenuItem menuArticleList;
+    @FXML private MenuItem menuArticleForm;
+    @FXML private Button btnDonsRequests;
+    @FXML private Button btnDashboard;
+
     private final DonsService donsService = new DonsService();
 
     @FXML
     public void initialize() {
+        // Charger la table des dons
         loadDons();
+
+        // Routage sidebar
+        if (menuArticleList != null)
+            menuArticleList.setOnAction(e -> Router.navigateTo("/Admin/adminArticleList.fxml"));
+
+        if (menuArticleForm != null)
+            menuArticleForm.setOnAction(e -> Router.navigateTo("/Admin/ajouterArticle.fxml"));
+
+        if (btnDonsRequests != null)
+            btnDonsRequests.setOnAction(e -> Router.navigateTo("/Admin/RequestAddDons.fxml"));
+
+        if (btnDashboard != null)
+            btnDashboard.setOnAction(e -> System.out.println("Dashboard cliqué (non encore implémenté)"));
     }
 
     private void loadDons() {
         List<Dons> donsList = donsService.getDonsNonValidés();
         ObservableList<Dons> observableList = FXCollections.observableArrayList(donsList);
 
-        colId.setCellValueFactory(cellData -> new javafx.beans.property.SimpleIntegerProperty(cellData.getValue().getId()).asObject());
-        colTitre.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getTitre()));
-        colDescription.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getDescription()));
-        colDate.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(
-                cellData.getValue().getDateCreation().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
+        colId.setCellValueFactory(cellData ->
+                new javafx.beans.property.SimpleIntegerProperty(cellData.getValue().getId()).asObject());
+
+        colTitre.setCellValueFactory(cellData ->
+                new javafx.beans.property.SimpleStringProperty(cellData.getValue().getTitre()));
+
+        colDescription.setCellValueFactory(cellData ->
+                new javafx.beans.property.SimpleStringProperty(cellData.getValue().getDescription()));
+
+        colDate.setCellValueFactory(cellData ->
+                new javafx.beans.property.SimpleStringProperty(
+                        cellData.getValue().getDateCreation().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+                )
+        );
 
         colActions.setCellFactory(getActionsCellFactory());
 

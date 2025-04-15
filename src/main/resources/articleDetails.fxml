@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/17.0.1"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.article.ArticleDetailsController"
+            prefWidth="800" prefHeight="600">
+
+    <children>
+        <VBox fx:id="container" alignment="TOP_CENTER" spacing="20" style="-fx-background-color: #f9f9f9;"
+              AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
+              AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+
+            <Label fx:id="titreLabel" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+
+            <ImageView fx:id="imageView" fitWidth="600" preserveRatio="true" />
+
+            <Label fx:id="categorieLabel" style="-fx-font-size: 14px; -fx-text-fill: #666;" />
+
+            <Label fx:id="descriptionLabel" wrapText="true"
+                   style="-fx-font-size: 16px; -fx-text-fill: #333;" maxWidth="600" />
+        </VBox>
+    </children>
+</AnchorPane>
