@@ -31,7 +31,7 @@
         </VBox>
 
         <!-- LOGIN FORM -->
-        <VBox spacing="20" alignment="CENTER" 
+        <VBox fx:id="loginVBox" spacing="20" alignment="CENTER" 
               AnchorPane.topAnchor="150.0" 
               AnchorPane.leftAnchor="250.0" 
               AnchorPane.rightAnchor="250.0"
@@ -85,7 +85,7 @@
                 <Hyperlink fx:id="registerLink" text="S'inscrire" style="-fx-font-size: 12px;" onAction="#navigateToRegister"/>
             </HBox>
             
-            <Hyperlink text="Mot de passe oublié?" alignment="CENTER" style="-fx-font-size: 12px;"/>
+            <Hyperlink text="Mot de passe oublié?" alignment="CENTER" style="-fx-font-size: 12px;" onAction="#navigateToForgotPassword"/>
         </VBox>
         
         <!-- FOOTER -->
