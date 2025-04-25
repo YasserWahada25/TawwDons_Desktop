@@ -59,7 +59,7 @@
         <groupId>de.jensd</groupId>
         <artifactId>fontawesomefx</artifactId>
         <version>8.9</version>
-
+        </dependency>
         <!-- Evaluation -->
         <dependency>
             <groupId>com.itextpdf</groupId>
