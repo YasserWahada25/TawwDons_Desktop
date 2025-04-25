@@ -36,3 +36,7 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+# OAuth credentials
+config/oauth_credentials.properties
+oauth_credentials.properties

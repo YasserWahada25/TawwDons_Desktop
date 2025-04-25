@@ -17,7 +17,9 @@ import javafx.scene.layout.StackPane;
 
 import java.awt.Desktop;
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -27,9 +29,13 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -44,9 +50,9 @@ import com.sun.net.httpserver.HttpServer;
  * and automatic code extraction via a temporary local HTTP server.
  */
 public class GoogleAuthService {
-    // OAuth2 parameters
-    private static final String CLIENT_ID = "240682917308-vve7n1ha3thhd17fjmp070s1lq9n105n.apps.googleusercontent.com";
-    private static final String CLIENT_SECRET = "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";
+    // OAuth2 parameters loaded from config file
+    private String clientId;
+    private String clientSecret;
     
     // Configuration - we'll find an available port dynamically
     private static final int[] PORTS_TO_TRY = {8765, 8080, 8081, 8082, 8083, 8084, 8085, 3000, 9000};
@@ -58,6 +64,131 @@ public class GoogleAuthService {
     private Stage loadingStage;
     private int serverPort;
     private String redirectUri;
+    
+    /**
+     * Constructor that loads OAuth credentials from config file
+     */
+    public GoogleAuthService() {
+        loadCredentials();
+    }
+    
+    /**
+     * Loads OAuth credentials from config file
+     */
+    private void loadCredentials() {
+        try {
+            // Look for credentials file in multiple locations
+            Path configPath = Paths.get("config", "oauth_credentials.properties");
+            if (!Files.exists(configPath)) {
+                configPath = Paths.get("oauth_credentials.properties");
+            }
+            
+            // Create default config file if it doesn't exist
+            if (!Files.exists(configPath)) {
+                createDefaultConfigFile(configPath);
+                showConfigFileCreatedAlert(configPath);
+                // Default values for development only - should be replaced in production
+                clientId = "REPLACE_WITH_YOUR_CLIENT_ID";
+                clientSecret = "REPLACE_WITH_YOUR_CLIENT_SECRET";
+                return;
+            }
+            
+            // Load properties from file
+            Properties props = new Properties();
+            try (InputStream input = new FileInputStream(configPath.toFile())) {
+                props.load(input);
+            }
+            
+            // Get credentials
+            clientId = props.getProperty("google.client.id");
+            clientSecret = props.getProperty("google.client.secret");
+            
+            // Trim any whitespace that might have been accidentally added
+            if (clientId != null) clientId = clientId.trim();
+            if (clientSecret != null) clientSecret = clientSecret.trim();
+            
+            System.out.println("Loaded credentials from: " + configPath.toAbsolutePath());
+            System.out.println("Client ID length: " + (clientId != null ? clientId.length() : "null"));
+            System.out.println("Client Secret length: " + (clientSecret != null ? clientSecret.length() : "null"));
+            
+            // Validate credentials
+            if (clientId == null || clientId.isEmpty() || 
+                clientId.equals("REPLACE_WITH_YOUR_CLIENT_ID") ||
+                clientSecret == null || clientSecret.isEmpty() || 
+                clientSecret.equals("REPLACE_WITH_YOUR_CLIENT_SECRET")) {
+                
+                showInvalidCredentialsAlert(configPath);
+            }
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+            clientId = "REPLACE_WITH_YOUR_CLIENT_ID";
+            clientSecret = "REPLACE_WITH_YOUR_CLIENT_SECRET";
+            showCredentialsLoadingErrorAlert(e.getMessage());
+        }
+    }
+    
+    /**
+     * Creates default config file with placeholder values
+     */
+    private void createDefaultConfigFile(Path configPath) throws IOException {
+        // Create directory if it doesn't exist
+        if (!Files.exists(configPath.getParent())) {
+            Files.createDirectories(configPath.getParent());
+        }
+        
+        // Write default config file
+        String defaultConfig = 
+            "# Google OAuth credentials\n" +
+            "# Replace these values with your actual Google Cloud Console credentials\n" +
+            "google.client.id=REPLACE_WITH_YOUR_CLIENT_ID\n" +
+            "google.client.secret=REPLACE_WITH_YOUR_CLIENT_SECRET\n";
+        
+        Files.write(configPath, defaultConfig.getBytes());
+    }
+    
+    /**
+     * Shows alert when config file is created
+     */
+    private void showConfigFileCreatedAlert(Path configPath) {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("OAuth Configuration Required");
+            alert.setHeaderText("OAuth Credentials Not Found");
+            alert.setContentText("A default configuration file has been created at:\n" + 
+                configPath.toAbsolutePath() + "\n\n" +
+                "Please edit this file to add your Google OAuth credentials from Google Cloud Console.");
+            alert.showAndWait();
+        });
+    }
+    
+    /**
+     * Shows alert when credentials are invalid
+     */
+    private void showInvalidCredentialsAlert(Path configPath) {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Invalid OAuth Configuration");
+            alert.setHeaderText("OAuth Credentials Not Configured");
+            alert.setContentText("Please edit the configuration file at:\n" + 
+                configPath.toAbsolutePath() + "\n\n" +
+                "Add your Google OAuth credentials from Google Cloud Console.");
+            alert.showAndWait();
+        });
+    }
+    
+    /**
+     * Shows alert when credentials loading fails
+     */
+    private void showCredentialsLoadingErrorAlert(String errorMessage) {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("OAuth Configuration Error");
+            alert.setHeaderText("Failed to Load OAuth Credentials");
+            alert.setContentText("Error: " + errorMessage);
+            alert.showAndWait();
+        });
+    }
 
     /**
      * Initiates the Google sign-in process using the system's default browser
@@ -67,6 +198,15 @@ public class GoogleAuthService {
         CompletableFuture<Map<String, String>> future = new CompletableFuture<>();
         
         try {
+            // Verify credentials are set
+            if (clientId == null || clientId.isEmpty() || 
+                clientId.equals("REPLACE_WITH_YOUR_CLIENT_ID") ||
+                clientSecret == null || clientSecret.isEmpty() || 
+                clientSecret.equals("REPLACE_WITH_YOUR_CLIENT_SECRET")) {
+                
+                throw new Exception("OAuth credentials not configured. Please set your Google OAuth credentials in the configuration file.");
+            }
+            
             // Show loading indicator
             showLoadingDialog("Connexion avec Google en cours...");
             
@@ -272,7 +412,7 @@ public class GoogleAuthService {
             System.out.println("Using redirect URI for auth: " + redirectUri);
             
             return AUTH_URL + 
-                   "?client_id=" + URLEncoder.encode(CLIENT_ID, StandardCharsets.UTF_8.toString()) +
+                   "?client_id=" + URLEncoder.encode(clientId, StandardCharsets.UTF_8.toString()) +
                    "&redirect_uri=" + URLEncoder.encode(redirectUri, StandardCharsets.UTF_8.toString()) +
                    "&scope=" + scope +
                    "&response_type=code" +
@@ -293,6 +433,13 @@ public class GoogleAuthService {
             protected Void call() throws Exception {
                 HttpURLConnection conn = null;
                 try {
+                    // Debug logging
+                    System.out.println("=== OAuth Debug Information ===");
+                    System.out.println("Auth Code: " + authCode);
+                    System.out.println("Client ID: " + clientId);
+                    System.out.println("Client Secret length: " + (clientSecret != null ? clientSecret.length() : "null"));
+                    System.out.println("Redirect URI: " + redirectUri);
+                    
                     // Prepare the token request
                     URL url = new URL(TOKEN_URL);
                     conn = (HttpURLConnection) url.openConnection();
@@ -303,8 +450,8 @@ public class GoogleAuthService {
                     // Prepare the request body with proper URL encoding
                     StringBuilder requestBodyBuilder = new StringBuilder();
                     appendParam(requestBodyBuilder, "code", authCode, true);
-                    appendParam(requestBodyBuilder, "client_id", CLIENT_ID, false);
-                    appendParam(requestBodyBuilder, "client_secret", CLIENT_SECRET, false);
+                    appendParam(requestBodyBuilder, "client_id", clientId, false);
+                    appendParam(requestBodyBuilder, "client_secret", clientSecret, false);
                     appendParam(requestBodyBuilder, "redirect_uri", redirectUri, false);
                     appendParam(requestBodyBuilder, "grant_type", "authorization_code", false);
                     
@@ -352,19 +499,27 @@ public class GoogleAuthService {
                         String errorBody = errorResponse.toString();
                         System.err.println("Error response: " + errorBody);
                         
-                        // Handle redirect_uri_mismatch specifically
-                        if (errorBody.contains("redirect_uri_mismatch") || errorBody.contains("redirect_uri")) {
-                            Platform.runLater(() -> {
-                                Alert alert = new Alert(Alert.AlertType.ERROR);
-                                alert.setTitle("Google Authentication Error");
-                                alert.setHeaderText("Redirect URI Mismatch");
-                                alert.setContentText("The redirect URI used by the application (" + redirectUri + ") " +
-                                    "does not match the one configured in Google Cloud Console. \n\n" +
-                                    "Please go to Google Cloud Console > APIs & Services > Credentials > OAuth 2.0 Client ID, " +
-                                    "and add this exact URI to the authorized redirect URIs: \n\n" + redirectUri);
-                                alert.showAndWait();
-                            });
-                        }
+                        // Show detailed error information
+                        Platform.runLater(() -> {
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setTitle("Google Authentication Error");
+                            alert.setHeaderText("OAuth Error: " + responseCode);
+                            
+                            String message = "Authentication failed with response code: " + responseCode + "\n\n";
+                            message += "Error details: " + errorBody + "\n\n";
+                            
+                            if (errorBody.contains("invalid_client")) {
+                                message += "This is likely due to incorrect OAuth credentials.\n" +
+                                    "Please check your Client ID and Client Secret in the config file.";
+                            } else if (errorBody.contains("redirect_uri_mismatch")) {
+                                message += "The redirect URI used (" + redirectUri + ") " +
+                                    "does not match what's configured in Google Cloud Console.\n\n" +
+                                    "Please add this exact URI to the authorized redirect URIs in your Google Cloud Console.";
+                            }
+                            
+                            alert.setContentText(message);
+                            alert.showAndWait();
+                        });
                         
                         closeLoadingDialog();
                         future.completeExceptionally(new RuntimeException("Error exchanging code for tokens: " + responseCode + " - " + errorBody));
