@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.ChatController"
+            prefWidth="550" prefHeight="600"
+            style="-fx-background-color: #1e1e1e;">
+
+    <!-- HEADER -->
+    <top>
+
+        <Label text="🤖 Assistant Santé &amp; Éducation"
+               style="-fx-font-size: 20px; -fx-text-fill: white; -fx-padding: 15 0 15 20;" />
+    </top>
+
+    <!-- MESSAGES -->
+    <center>
+        <ScrollPane fx:id="scrollPane" fitToWidth="true" style="-fx-background-color: transparent;">
+            <VBox fx:id="chatBox" spacing="12" style="-fx-padding: 15;" />
+        </ScrollPane>
+    </center>
+
+    <!-- INPUT -->
+    <bottom>
+        <HBox spacing="10" style="-fx-padding: 10;">
+            <TextField fx:id="chatInput" promptText="Pose ta question..."
+                       HBox.hgrow="ALWAYS"
+                       style="-fx-background-radius: 8; -fx-padding: 10;" />
+            <Button text="Envoyer" onAction="#envoyer"
+                    style="-fx-background-color: #27ae60; -fx-text-fill: white;
+                           -fx-background-radius: 8; -fx-font-weight: bold;" />
+        </HBox>
+    </bottom>
+</BorderPane>

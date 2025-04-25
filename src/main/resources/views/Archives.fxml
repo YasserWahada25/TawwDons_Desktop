@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.ArchivesController"
+            style="-fx-background-color: #121212;"
+            prefWidth="1000" prefHeight="600">
+
+    <top>
+        <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-background-color: #1f1f1f; -fx-padding: 20;">
+            <Label text="🗃 Archives des Évaluations"
+                   style="-fx-text-fill: white; -fx-font-size: 22px; -fx-font-weight: bold;" />
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="↩ Retour" onAction="#retourAdmin"
+                    style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-background-radius: 8;" />
+        </HBox>
+    </top>
+
+    <center>
+        <TableView fx:id="archivesTable" style="-fx-background-color: #1a1a1a;" prefHeight="500">
+            <columns>
+                <TableColumn fx:id="idCol" text="ID" prefWidth="80"/>
+                <TableColumn fx:id="nomCol" text="Nom" prefWidth="200"/>
+                <TableColumn fx:id="typeCol" text="Type" prefWidth="120"/>
+                <TableColumn fx:id="dateCol" text="Date Archivage" prefWidth="200"/>
+            </columns>
+        </TableView>
+    </center>
+</BorderPane>

@@ -13,8 +13,7 @@ import javafx.stage.Stage;
 import models.Article;
 import services.ArticleService;
 import utils.Router;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.io.IOException;
 import java.net.URL;
@@ -32,7 +31,7 @@ public class AdminArticleListController implements Initializable {
     @FXML private TableColumn<Article, Void> colActions;
     @FXML private TextField searchField;
 
-    // Sidebar routage
+    // Sidebar routing
     @FXML private MenuItem menuArticleList;
     @FXML private MenuItem menuArticleForm;
     @FXML private Button btnDonsRequests;
@@ -42,14 +41,14 @@ public class AdminArticleListController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // Initialiser colonnes
+        // Initialize table columns
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colTitre.setCellValueFactory(new PropertyValueFactory<>("titre"));
         colImage.setCellValueFactory(new PropertyValueFactory<>("image"));
         colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
         colCategorie.setCellValueFactory(new PropertyValueFactory<>("categorie"));
 
-        // Routage sidebar
+        // Sidebar navigation
         if (menuArticleList != null)
             menuArticleList.setOnAction(e -> Router.navigateTo("/Admin/adminArticleList.fxml"));
         if (menuArticleForm != null)
@@ -57,13 +56,13 @@ public class AdminArticleListController implements Initializable {
         if (btnDonsRequests != null)
             btnDonsRequests.setOnAction(e -> Router.navigateTo("/Admin/RequestAddDons.fxml"));
         if (btnDashboard != null)
-            btnDashboard.setOnAction(e -> System.out.println("Dashboard clické ! (à implémenter)"));
+            btnDashboard.setOnAction(e -> System.out.println("Dashboard clicked! (to implement)"));
 
-        // Charger données
+        // Load data
         loadArticles();
         addActionButtonsToTable();
 
-        // Filtre recherche
+        // Search filter
         searchField.textProperty().addListener((obs, oldText, newText) -> {
             tableView.getItems().setAll(
                     articleService.getAll().stream()
@@ -80,15 +79,15 @@ public class AdminArticleListController implements Initializable {
 
     private void addActionButtonsToTable() {
         colActions.setCellFactory(param -> new TableCell<>() {
-            private final FontAwesomeIconView editIcon = new FontAwesomeIconView(FontAwesomeIcon.PENCIL);
-            private final FontAwesomeIconView deleteIcon = new FontAwesomeIconView(FontAwesomeIcon.TRASH);
-            private final FontAwesomeIconView viewIcon = new FontAwesomeIconView(FontAwesomeIcon.EYE);
+            private final FontIcon editIcon = new FontIcon("fa-pencil");
+            private final FontIcon deleteIcon = new FontIcon("fa-trash");
+            private final FontIcon viewIcon = new FontIcon("fa-eye");
             private final HBox pane = new HBox(10, editIcon, deleteIcon, viewIcon);
 
             {
-                editIcon.setStyle("-fx-fill: #2980b9;");
-                deleteIcon.setStyle("-fx-fill: #c0392b;");
-                viewIcon.setStyle("-fx-fill: #2ecc71;");
+                editIcon.setStyle("-fx-icon-color: #2980b9;");
+                deleteIcon.setStyle("-fx-icon-color: #c0392b;");
+                viewIcon.setStyle("-fx-icon-color: #2ecc71;");
                 pane.setAlignment(Pos.CENTER);
 
                 editIcon.setOnMouseClicked(event -> {
@@ -128,7 +127,7 @@ public class AdminArticleListController implements Initializable {
                 viewIcon.setOnMouseClicked(event -> {
                     Article article = getTableView().getItems().get(getIndex());
                     System.out.println("View clicked for article: " + article.getTitre());
-                    // Affichage ou détail à implémenter plus tard
+                    // Détail à implémenter plus tard
                 });
             }
 
