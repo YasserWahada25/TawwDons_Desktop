@@ -1,4 +1,4 @@
-package controller;
+package controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
@@ -21,11 +21,7 @@ public class MainInterfaceController {
     @FXML
     private Label userNameLabel;
 
-    private SessionManager sessionManager;
-
-    public MainInterfaceController() {
-        this.sessionManager = new SessionManager();
-    }
+    private final SessionManager sessionManager = SessionManager.getInstance();
 
     @FXML
     public void initialize() {

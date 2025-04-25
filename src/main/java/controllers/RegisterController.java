@@ -1,4 +1,4 @@
-package controller;
+package controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -7,7 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import service.UserService;
+import services.UserService;
 import models.User;
 
 import java.io.IOException;
@@ -223,5 +223,19 @@ public class RegisterController {
     private void initialize() {
         // Initialization logic here
         System.out.println("RegisterController initialized");
+    }
+
+    @FXML
+    public void navigateToRegister() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Register.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Failed to load Register.fxml");
+        }
     }
 } 
