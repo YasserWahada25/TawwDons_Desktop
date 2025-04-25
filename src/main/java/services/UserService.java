@@ -335,4 +335,37 @@ public class UserService {
             return false;
         }
     }
+
+    // Method to get a user by email
+    public User getUserByEmail(String email) {
+        String query = "SELECT * FROM user WHERE email = ?";
+        
+        try (Connection conn = MyDataBase.getInstance().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+            
+            if (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("id"));
+                user.setEmail(rs.getString("email"));
+                user.setPassword(rs.getString("password"));
+                user.setRoles(rs.getString("roles"));
+                user.setNom(rs.getString("nom"));
+                user.setPrenom(rs.getString("prenom"));
+                user.setEtat_compte(rs.getString("etat_compte"));
+                user.setType_utilisateur(rs.getString("type_utilisateur"));
+                user.setReset_token(rs.getString("reset_token"));
+                user.setGoogle_id(rs.getString("google_id"));
+                
+                return user;
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getting user by email: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        return null;
+    }
 } 
