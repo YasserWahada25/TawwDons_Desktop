@@ -1,4 +1,4 @@
-package controller;
+package controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -34,11 +34,7 @@ public class MainInterfaceController {
     @FXML
     private Button userBtn;
 
-    private SessionManager sessionManager;
-
-    public MainInterfaceController() {
-        this.sessionManager = new SessionManager();
-    }
+    private final SessionManager sessionManager = SessionManager.getInstance();
 
     @FXML
     public void initialize() {

@@ -42,6 +42,7 @@
 
             <Label text="Account Pages" style="-fx-font-weight: bold; -fx-padding: 10 0 0 0;" />
             <Button text="Profile" maxWidth="Infinity"/>
+            <Button fx:id="btnUserList" text="Liste des Utilisateurs" style="-fx-background-color: transparent;" onAction="#navigateToUserList"/>
         </VBox>
     </left>
 

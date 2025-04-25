@@ -1,4 +1,4 @@
-package service;
+package services;
 
 import models.User;
 import utils.MyDataBase;
@@ -231,5 +231,108 @@ public class UserService {
             e.printStackTrace();
         }
         return false;
+    }
+    public boolean updateUser(User user) {
+        try {
+            Connection conn = MyDataBase.getInstance().getConnection();
+            
+            // Format roles as valid JSON array
+            String role = user.getRoles();
+            String jsonRole;
+            
+            // Ensure role is in valid JSON format for the database
+            if (role.equals("ROLE_DONNEUR") || role.equals("[ROLE_DONNEUR]")) {
+                jsonRole = "[\"ROLE_DONNEUR\"]";
+            } else if (role.equals("ROLE_BENEFICIAIRE") || role.equals("[ROLE_BENEFICIAIRE]")) {
+                jsonRole = "[\"ROLE_BENEFICIAIRE\"]";
+            } else if (role.equals("ROLE_PROFESSIONNEL") || role.equals("[ROLE_PROFESSIONNEL]")) {
+                jsonRole = "[\"ROLE_PROFESSIONNEL\"]";
+            } else if (role.equals("ROLE_ADMIN") || role.equals("[ROLE_ADMIN]")) {
+                jsonRole = "[\"ROLE_ADMIN\"]";
+            } else {
+                // Default fallback
+                jsonRole = "[\"" + role.replace("[", "").replace("]", "").replace("\"", "") + "\"]";
+            }
+            
+            StringBuilder queryBuilder = new StringBuilder("UPDATE user SET nom = ?, prenom = ?, email = ?, roles = ?");
+            
+            // Check if password should be updated
+            boolean updatePassword = user.getPassword() != null && !user.getPassword().isEmpty();
+            if (updatePassword) {
+                queryBuilder.append(", password = ?");
+            }
+            
+            queryBuilder.append(" WHERE id = ?");
+            
+            PreparedStatement stmt = conn.prepareStatement(queryBuilder.toString());
+            
+            // Set the parameters
+            stmt.setString(1, user.getNom());
+            stmt.setString(2, user.getPrenom());
+            stmt.setString(3, user.getEmail());
+            stmt.setString(4, jsonRole);
+            
+            if (updatePassword) {
+                // Hash the password before storing it
+                String hashedPassword = hashPassword(user.getPassword());
+                stmt.setString(5, hashedPassword);
+                stmt.setInt(6, user.getId());
+            } else {
+                stmt.setInt(5, user.getId());
+            }
+            
+            System.out.println("Executing update query: " + stmt.toString());
+            
+            int rowsAffected = stmt.executeUpdate();
+            stmt.close();
+            
+            System.out.println("Update user result: " + rowsAffected + " rows affected");
+            return rowsAffected > 0;
+            
+        } catch (SQLException e) {
+            System.out.println("Error updating user: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // Method to fetch all users from the database
+    public List<User> getAllUsers() {
+        List<User> users = new ArrayList<>();
+        String query = "SELECT nom, prenom, email, roles FROM user"; // Use the correct table name
+
+        try (Connection connection = MyDataBase.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            while (resultSet.next()) {
+                User user = new User();
+                user.setNom(resultSet.getString("nom"));
+                user.setPrenom(resultSet.getString("prenom"));
+                user.setEmail(resultSet.getString("email"));
+                user.setRoles(resultSet.getString("roles"));
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return users;
+    }
+
+    // Method to delete a user from the database
+    public boolean deleteUser(String email) {
+        String query = "DELETE FROM user WHERE email = ?"; // Use the correct table name
+
+        try (Connection connection = MyDataBase.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setString(1, email);
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0; // Return true if the deletion was successful
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 } 
