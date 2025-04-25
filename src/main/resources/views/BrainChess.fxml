@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx"
+            fx:controller="controllers.BrainChessController"
+            prefWidth="600.0" prefHeight="700.0"
+            style="-fx-background-color: linear-gradient(to bottom right, #1f1f1f, #121212);">
+
+    <VBox alignment="CENTER" spacing="20.0" AnchorPane.topAnchor="20.0" AnchorPane.bottomAnchor="20.0"
+          AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
+
+        <Label text="🧠 Brain Chess" style="-fx-text-fill: white;">
+            <font>
+                <Font size="28"/>
+            </font>
+        </Label>
+
+        <!-- Score et Timer -->
+        <HBox spacing="30" alignment="CENTER">
+            <Label fx:id="scoreLabel" text="Score: 0" style="-fx-text-fill: #2ecc71; -fx-font-size: 16px;"/>
+            <Label fx:id="timerLabel" text="Temps: 60s" style="-fx-text-fill: #e74c3c; -fx-font-size: 16px;"/>
+        </HBox>
+
+        <!-- Plateau de jeu -->
+        <GridPane fx:id="board" hgap="2" vgap="2" style="-fx-padding: 10;">
+            <!-- Les cellules sont ajoutées dynamiquement -->
+        </GridPane>
+
+        <!-- Bouton Rejouer -->
+        <Button fx:id="replayButton" text="🔁 Rejouer"
+                style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 8 20;"/>
+    </VBox>
+</AnchorPane>

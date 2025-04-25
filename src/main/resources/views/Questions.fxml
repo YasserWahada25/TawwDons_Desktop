@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.QuestionsController"
+            prefWidth="900" prefHeight="600"
+            style="-fx-background-color: linear-gradient(to bottom, #181818, #121212);">
+
+    <!-- SIDEBAR -->
+    <left>
+        <VBox spacing="15" style="-fx-background-color: #1c1c1c; -fx-padding: 25;">
+            <Label text="📁 Actions"
+                   style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white;" />
+
+            <Button text="✏️ Modifier" onAction="#modifierQuestion"
+                    style="-fx-background-color: #f39c12; -fx-text-fill: white;
+                           -fx-font-weight: bold; -fx-background-radius: 6; -fx-pref-width: 160;" />
+
+            <Button text="🗑️ Supprimer" onAction="#supprimerQuestion"
+                    style="-fx-background-color: #c0392b; -fx-text-fill: white;
+                           -fx-font-weight: bold; -fx-background-radius: 6; -fx-pref-width: 160;" />
+
+            <Button text="↩ Retour" onAction="#retourAdmin"
+                    style="-fx-background-color: #34495e; -fx-text-fill: white;
+                           -fx-font-weight: bold; -fx-background-radius: 6; -fx-pref-width: 160;" />
+        </VBox>
+    </left>
+
+    <!-- TOP BAR -->
+    <top>
+        <VBox spacing="15" style="-fx-background-color: transparent; -fx-padding: 25;">
+            <Label fx:id="titreLabel" text="📝 Questions pour l'évaluation"
+                   style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: white;" />
+
+            <HBox spacing="10">
+                <TextField fx:id="contenuField" promptText="Contenu de la question"
+                           style="-fx-pref-width: 250; -fx-background-color: #2b2b2b;
+                                  -fx-text-fill: white; -fx-background-radius: 6;
+                                  -fx-prompt-text-fill: gray;" />
+
+                <TextField fx:id="bonneReponseField" promptText="Bonne réponse"
+                           style="-fx-pref-width: 250; -fx-background-color: #2b2b2b;
+                                  -fx-text-fill: white; -fx-background-radius: 6;
+                                  -fx-prompt-text-fill: gray;" />
+
+                <ComboBox fx:id="typeBox" promptText="Type"
+                          style="-fx-pref-width: 180; -fx-background-color: #2b2b2b;
+                                 -fx-text-fill: white; -fx-background-radius: 6;" />
+
+                <Button text="✅ Ajouter" onAction="#ajouterQuestion"
+                        style="-fx-background-color: #2ecc71; -fx-text-fill: white;
+                               -fx-font-weight: bold; -fx-background-radius: 6;" />
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- CENTER TABLE -->
+    <center>
+        <TableView fx:id="tableView" prefHeight="400"
+                   style="-fx-background-color: #1a1a1a; -fx-border-radius: 6; -fx-background-radius: 6;
+                          -fx-text-fill: white;">
+            <columns>
+                <TableColumn fx:id="idCol" text="ID" prefWidth="60"/>
+                <TableColumn fx:id="contenuCol" text="Contenu" prefWidth="300"/>
+                <TableColumn fx:id="typeCol" text="Type" prefWidth="180"/>
+                <TableColumn fx:id="bonneCol" text="Bonne réponse" prefWidth="250"/>
+            </columns>
+        </TableView>
+    </center>
+</BorderPane>

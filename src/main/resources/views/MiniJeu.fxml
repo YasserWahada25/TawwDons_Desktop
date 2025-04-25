@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Pos?>
+
+<AnchorPane fx:id="root" stylesheets="@/style/miniJeu.css"
+            xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.MiniJeuController"
+            prefWidth="800" prefHeight="600">
+
+    <VBox spacing="20" alignment="CENTER" prefWidth="800" prefHeight="600" styleClass="root">
+
+        <!-- Padding proprement défini -->
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+
+        <!-- Titre -->
+        <Label fx:id="titreJeu" text="🧠 Mini Jeu Santé &amp; Bien-être" styleClass="titre"/>
+
+        <!-- Formulaire de démarrage -->
+        <HBox spacing="10" alignment="CENTER">
+            <TextField fx:id="joueurField" promptText="Votre nom" styleClass="text-field"/>
+            <ComboBox fx:id="niveauBox" promptText="Niveau" styleClass="combo-box"/>
+            <Button fx:id="commencerButton" text="🚀 Démarrer" onAction="#demarrerJeu" styleClass="start-button"/>
+        </HBox>
+
+        <!-- Zone de question -->
+        <Label fx:id="questionLabel" styleClass="question-box" wrapText="true" maxWidth="700"/>
+
+        <!-- Choix QCM -->
+        <GridPane fx:id="choixBox" hgap="20" vgap="15" alignment="CENTER"/>
+
+        <!-- Bouton valider -->
+        <Button fx:id="validerButton" text="✅ Valider" onAction="#validerReponse" styleClass="validate-button"/>
+
+        <!-- Score et Chrono -->
+        <HBox spacing="40" alignment="CENTER">
+            <Label fx:id="scoreLabel" styleClass="score"/>
+            <Label fx:id="chronoLabel" styleClass="chrono"/>
+        </HBox>
+
+    </VBox>
+</AnchorPane>
