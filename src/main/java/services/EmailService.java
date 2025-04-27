@@ -9,7 +9,7 @@ import java.util.Properties;
  */
 public class EmailService {
     private static final String USERNAME = "itstimetoduel01@gmail.com";
-    private static final String PASSWORD = "";
+    private static final String PASSWORD = "wyyd cybu ahxr oawi";
     
     /**
      * Send a welcome email to a newly registered user
