@@ -46,6 +46,8 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import javax.imageio.ImageIO;
 import java.io.ByteArrayOutputStream;
+import services.EmailService;
+import java.security.SecureRandom;
 
 public class LoginController {
 
@@ -515,5 +517,46 @@ public class LoginController {
     private boolean isValidEmail(String email) {
         String regex = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
         return email.matches(regex);
+    }
+
+    // Generate a random verification code for password reset
+    public static String generateVerificationCode() {
+        SecureRandom random = new SecureRandom();
+        int code = 100000 + random.nextInt(900000); // 6-digit code
+        return String.valueOf(code);
+    }
+    
+    // Method to handle password reset requests
+    public void requestPasswordReset(String email) {
+        if (email == null || email.isEmpty() || !isValidEmail(email)) {
+            showAlert(AlertType.ERROR, "Error", "Invalid Email", "Please enter a valid email address.");
+            return;
+        }
+        
+        // Generate verification code
+        String resetCode = generateVerificationCode();
+        
+        // Store the reset code in the user's account (implementation depends on your user service)
+        boolean codeStored = userService.storeResetCode(email, resetCode);
+        
+        if (codeStored) {
+            // Send reset email in a new thread to avoid freezing the UI
+            new Thread(() -> {
+                try {
+                    EmailService.sendPasswordResetEmail(email, resetCode);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }).start();
+            
+            showAlert(AlertType.INFORMATION, "Reset Email Sent", 
+                      "Password reset instructions", 
+                      "If an account exists with that email, we've sent password reset instructions.");
+        } else {
+            // Still show success to prevent email enumeration attacks
+            showAlert(AlertType.INFORMATION, "Reset Email Sent", 
+                      "Password reset instructions", 
+                      "If an account exists with that email, we've sent password reset instructions.");
+        }
     }
 } 

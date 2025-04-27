@@ -18,84 +18,13 @@ public class Main extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws Exception {
         Router.setMainStage(primaryStage);
 
-
         // 2. Charger la première page via le Router
-            Router.navigateTo("/login.fxml"); // Chemin relatif dans resources
-
+        Router.navigateTo("/login.fxml"); // Chemin relatif dans resources
 
         primaryStage.setTitle("TawwaDon App");
         primaryStage.show();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }
