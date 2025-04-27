@@ -368,4 +368,90 @@ public class UserService {
         
         return null;
     }
+
+    /**
+     * Store a password reset code for a user
+     * @param email The user's email
+     * @param resetCode The reset code to store
+     * @return true if successfully stored, false otherwise
+     */
+    public boolean storeResetCode(String email, String resetCode) {
+        try {
+            Connection conn = MyDataBase.getInstance().getConnection();
+            String query = "UPDATE user SET reset_token = ? WHERE email = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, resetCode);
+            stmt.setString(2, email);
+            
+            int rowsAffected = stmt.executeUpdate();
+            stmt.close();
+            
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            System.out.println("Error storing reset code: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    /**
+     * Verify a password reset code
+     * @param email The user's email
+     * @param resetCode The reset code to verify
+     * @return true if the code is valid, false otherwise
+     */
+    public boolean verifyResetCode(String email, String resetCode) {
+        try {
+            Connection conn = MyDataBase.getInstance().getConnection();
+            String query = "SELECT reset_token FROM user WHERE email = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, email);
+            
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                String storedCode = rs.getString("reset_token");
+                rs.close();
+                stmt.close();
+                
+                return storedCode != null && storedCode.equals(resetCode);
+            }
+            rs.close();
+            stmt.close();
+            return false;
+        } catch (SQLException e) {
+            System.out.println("Error verifying reset code: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    /**
+     * Update a user's password after reset
+     * @param email The user's email
+     * @param newPassword The new password (unhashed)
+     * @return true if successfully updated, false otherwise
+     */
+    public boolean updatePasswordAfterReset(String email, String newPassword) {
+        try {
+            Connection conn = MyDataBase.getInstance().getConnection();
+            String hashedPassword = hashPassword(newPassword);
+            
+            String query = "UPDATE user SET password = ?, reset_token = NULL WHERE email = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, hashedPassword);
+            stmt.setString(2, email);
+            
+            int rowsAffected = stmt.executeUpdate();
+            stmt.close();
+            
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            System.out.println("Error updating password: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // For more complex business logic
+    // Additional methods as needed
 } 
