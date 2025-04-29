@@ -18,25 +18,25 @@
             <Label text="Tawwa Dons" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
             <Separator/>
 
-            <Button fx:id="btnDashboard" text="Dashboard" maxWidth="Infinity"/>
-            <Button fx:id="btnDonsRequests" text="Dons Requests" maxWidth="Infinity"/>
+            <Button text="Dashboard" maxWidth="Infinity"/>
+            <Button text="Dons Requests" maxWidth="Infinity"/>
             <MenuButton text="Gestion Article" maxWidth="Infinity">
                 <items>
-                    <MenuItem fx:id="menuArticleList" text="Article List"/>
-                    <MenuItem fx:id="menuArticleForm" text="Article Form"/>
+                    <MenuItem text="Article List"/>
+                    <MenuItem text="Article Form"/>
                 </items>
             </MenuButton>
-            <Button fx:id="btnOffre" text="Offre" maxWidth="Infinity"/>
-            <Button fx:id="btnCondidat" text="Condidat" maxWidth="Infinity"/>
-            <Button fx:id="btnEvenement" text="Evenement" maxWidth="Infinity"/>
-            <Button fx:id="btnEvaluation" text="Evaluation" maxWidth="Infinity"/>
-            <Button fx:id="btnParticipant" text="Participant" maxWidth="Infinity"/>
-            <Button fx:id="btnCategorie" text="Catégorie" maxWidth="Infinity"/>
-            <Button fx:id="btnNotifications" text="Notifications" maxWidth="Infinity"/>
+            <Button fx:id="offreBtn" text="Offre" maxWidth="Infinity" onAction="#handleOffreButtonClick"/>
+            <Button fx:id="condidatBtn" text="Condidat" maxWidth="Infinity" onAction="#handleCondidatButtonClick"/>
+            <Button text="Evenement" maxWidth="Infinity"/>
+            <Button text="Evaluation" maxWidth="Infinity"/>
+            <Button text="Participant" maxWidth="Infinity"/>
+            <Button text="Catégorie" maxWidth="Infinity"/>
+            <Button text="Notifications" maxWidth="Infinity"/>
 
             <Label text="Account Pages"
                    style="-fx-font-weight: bold; -fx-padding: 10 0 0 0;"/>
-            <Button fx:id="btnProfile" text="Profile" maxWidth="Infinity"/>
+            <Button text="Profile" maxWidth="Infinity"/>
         </VBox>
     </left>
 
@@ -46,7 +46,7 @@
             <padding>
                 <Insets top="10" right="20" bottom="10" left="20"/>
             </padding>
-            <TextField fx:id="searchField" promptText="Rechercher un candidat..." prefWidth="200"/>
+            <TextField promptText="Type here..." prefWidth="200"/>
             <MenuButton text="Navigation">
                 <items>
                     <MenuItem fx:id="menuListeCondidats" text="Liste des Candidats"/>
@@ -84,7 +84,6 @@
                     <TableColumn fx:id="offreColumn" text="Offre" />
                     <TableColumn fx:id="cvColumn" text="CV" />
                     <TableColumn fx:id="editColumn" text="Actions" />
-                    <TableColumn fx:id="acceptColumn" text="Acceptation" />
                 </columns>
             </TableView>
         </VBox>

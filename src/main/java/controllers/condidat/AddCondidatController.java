@@ -46,31 +46,9 @@ public class AddCondidatController {
             
             // Configuration des styles initiaux
             setupInitialStyles();
-
-            // Récupérer l'ID de l'offre depuis l'URL et le sélectionner
-            String url = Router.getCurrentUrl();
-            if (url != null && url.contains("id=")) {
-                String idStr = url.substring(url.indexOf("id=") + 3);
-                try {
-                    int offreId = Integer.parseInt(idStr);
-                    selectOffreById(offreId);
-                } catch (NumberFormatException e) {
-                    System.err.println("ID d'offre invalide dans l'URL: " + idStr);
-                }
-            }
         } catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "Erreur d'initialisation", 
                      "Une erreur est survenue lors de l'initialisation : " + e.getMessage());
-        }
-    }
-
-    private void selectOffreById(int offreId) {
-        for (Offre offre : offreComboBox.getItems()) {
-            if (offre.getId() == offreId) {
-                offreComboBox.setValue(offre);
-                offreComboBox.setStyle("-fx-border-color: #2ecc71;");
-                break;
-            }
         }
     }
 

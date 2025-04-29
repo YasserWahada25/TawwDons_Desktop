@@ -3,18 +3,10 @@ package utils;
 import models.User;
 
 public class SessionManager {
-    private static SessionManager instance;
     private User currentUser;
 
-    private SessionManager() {
-        // Private constructor to enforce singleton pattern
-    }
-
-    public static SessionManager getInstance() {
-        if (instance == null) {
-            instance = new SessionManager();
-        }
-        return instance;
+    public SessionManager() {
+        this.currentUser = null;
     }
 
     public void setCurrentUser(User user) {
@@ -27,9 +19,5 @@ public class SessionManager {
 
     public void clearSession() {
         this.currentUser = null;
-    }
-
-    public boolean isLoggedIn() {
-        return currentUser != null;
     }
 } 

@@ -32,35 +32,47 @@
                 </items>
             </MenuButton>
 
-            <Button fx:id="btnOffre" text="Offre" maxWidth="Infinity"/>
-            <Button fx:id="btnCondidat" text="Condidat" maxWidth="Infinity"/>
-            <Button fx:id="btnEvenement" text="Evenement" maxWidth="Infinity"/>
-            <Button fx:id="btnEvaluation" text="Evaluation" maxWidth="Infinity"/>
-            <Button fx:id="btnParticipant" text="Participant" maxWidth="Infinity"/>
-            <Button fx:id="btnCategorie" text="Catégorie" maxWidth="Infinity"/>
-            <Button fx:id="btnNotifications" text="Notifications" maxWidth="Infinity"/>
+            <Button text="Offre" maxWidth="Infinity"/>
+            <Button text="Condidat" maxWidth="Infinity"/>
+            <Button text="Evenement" maxWidth="Infinity"/>
+            <Button text="Evaluation" maxWidth="Infinity"/>
+            <Button text="Participant" maxWidth="Infinity"/>
+            <Button text="Catégorie" maxWidth="Infinity"/>
+            <Button text="Notifications" maxWidth="Infinity"/>
 
             <Label text="Account Pages" style="-fx-font-weight: bold; -fx-padding: 10 0 0 0;" />
-            <Button fx:id="btnProfile" text="Profile" maxWidth="Infinity"/>
+            <Button text="Profile" maxWidth="Infinity"/>
         </VBox>
     </left>
 
     <!-- ✅ Contenu principal -->
     <center>
-        <VBox spacing="20" style="-fx-padding: 20;">
-            <HBox alignment="CENTER_LEFT" spacing="10">
-                <TextField fx:id="searchField" promptText="Rechercher..." prefWidth="300"/>
-                <Button text="Ajouter un article" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+        <VBox spacing="10">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+            <!-- Titre -->
+            <Label text="Liste Des Articles">
+                <font>
+                    <Font name="Arial Bold" size="24" />
+                </font>
+            </Label>
+
+            <!-- Barre de recherche -->
+            <HBox spacing="10">
+                <Region HBox.hgrow="ALWAYS" />
+                <TextField fx:id="searchField" promptText="Search..." prefWidth="250" />
             </HBox>
-            
-            <TableView fx:id="tableView" VBox.vgrow="ALWAYS">
+
+            <!-- Table des articles -->
+            <TableView fx:id="tableView" prefHeight="500">
                 <columns>
-                    <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
-                    <TableColumn fx:id="colTitre" text="Titre" prefWidth="200"/>
-                    <TableColumn fx:id="colImage" text="Image" prefWidth="100"/>
-                    <TableColumn fx:id="colDescription" text="Description" prefWidth="400"/>
-                    <TableColumn fx:id="colCategorie" text="Catégorie" prefWidth="150"/>
-                    <TableColumn fx:id="colActions" text="Actions" prefWidth="150"/>
+                    <TableColumn fx:id="colId" text="ID" prefWidth="50" />
+                    <TableColumn fx:id="colTitre" text="Titre" prefWidth="150" />
+                    <TableColumn fx:id="colImage" text="Image Name" prefWidth="150" />
+                    <TableColumn fx:id="colDescription" text="Description" prefWidth="300" />
+                    <TableColumn fx:id="colCategorie" text="Categorie" prefWidth="150" />
+                    <TableColumn fx:id="colActions" text="Actions" prefWidth="150" />
                 </columns>
             </TableView>
         </VBox>

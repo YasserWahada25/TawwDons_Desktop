@@ -273,7 +273,7 @@ public class UserController {
     @FXML
     private void retourAccueil() {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/Home.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/MainInterface.fxml"));
             Stage stage = (Stage) utilisateurField.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("Accueil");

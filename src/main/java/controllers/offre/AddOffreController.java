@@ -13,7 +13,6 @@ public class AddOffreController {
     @FXML private TextField titreField;
     @FXML private TextArea descriptionArea;
     @FXML private Button creerOffreBtn;
-    @FXML private Button assistantBtn;
     @FXML private MenuItem menuListeOffres;
     @FXML private MenuItem menuPosterOffre;
     @FXML private Button offreBtn;
@@ -22,24 +21,38 @@ public class AddOffreController {
 
     @FXML
     public void initialize() {
-        setupNavigation();
-        setupValidators();
-    }
-
-    private void setupNavigation() {
+        // Navigation
         menuListeOffres.setOnAction(e -> Router.navigateTo("/offre/ListOffre_BC.fxml"));
         menuPosterOffre.setOnAction(e -> Router.navigateTo("/offre/AddOffre.fxml"));
+
+        // Ajouter des validateurs en temps réel
+        setupValidators();
+        
         creerOffreBtn.setOnAction(e -> creerOffre());
     }
 
-    @FXML
-    private void handleAssistantButtonClick() {
-        Router.navigateTo("/ChatBot.fxml");
+    private void setupValidators() {
+        // Limiter la longueur du titre
+        titreField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.length() > 100) {
+                titreField.setText(oldValue);
+                showAlert(Alert.AlertType.WARNING, "Attention", "Le titre ne doit pas dépasser 100 caractères.");
+            }
+        });
+
+        // Limiter la longueur de la description
+        descriptionArea.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.length() > 1000) {
+                descriptionArea.setText(oldValue);
+                showAlert(Alert.AlertType.WARNING, "Attention", "La description ne doit pas dépasser 1000 caractères.");
+            }
+        });
     }
 
     @FXML
     private void handleOffreButtonClick() {
         System.out.println("Bouton Offre cliqué - Redirection vers la liste des offres");
+        // Rediriger vers la page de liste des offres
         Router.navigateTo("/offre/ListOffre_BC.fxml");
     }
 
@@ -90,29 +103,17 @@ public class AddOffreController {
 
         boolean ok = offreService.ajouterOffre(offre);
         if (ok) {
-            showAlert(Alert.AlertType.INFORMATION, "Succès", "L'offre a été créée avec succès.");
-            Router.navigateTo("/offre/ListOffre_BC.fxml");
+            showAlert(Alert.AlertType.INFORMATION, "Succès", "Offre ajoutée avec succès !");
+            clearForm();
         } else {
-            showAlert(Alert.AlertType.ERROR, "Erreur", "Une erreur est survenue lors de la création de l'offre.");
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Échec lors de l'ajout de l'offre.");
         }
     }
 
-    private void setupValidators() {
-        // Limiter la longueur du titre
-        titreField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.length() > 100) {
-                titreField.setText(oldValue);
-                showAlert(Alert.AlertType.WARNING, "Attention", "Le titre ne doit pas dépasser 100 caractères.");
-            }
-        });
-
-        // Limiter la longueur de la description
-        descriptionArea.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.length() > 1000) {
-                descriptionArea.setText(oldValue);
-                showAlert(Alert.AlertType.WARNING, "Attention", "La description ne doit pas dépasser 1000 caractères.");
-            }
-        });
+    private void clearForm() {
+        titreField.clear();
+        descriptionArea.clear();
+        titreField.requestFocus();
     }
 
     private void showAlert(Alert.AlertType type, String title, String message) {
@@ -123,4 +124,3 @@ public class AddOffreController {
         alert.showAndWait();
     }
 }
-

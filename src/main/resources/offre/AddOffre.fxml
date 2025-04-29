@@ -72,16 +72,10 @@
                       promptText="Décrivez l'offre"
                       prefRowCount="4"
                       maxWidth="700"/>
-            <HBox spacing="20" alignment="CENTER_LEFT">
-                <Button fx:id="creerOffreBtn"
-                        text="Créer l'Offre"
-                        style="-fx-background-color: #007bff; -fx-text-fill: white;"
-                        maxWidth="300"/>
-                <Button fx:id="assistantBtn"
-                        text="Assistant AI"
-                        style="-fx-background-color: #6c5ce7; -fx-text-fill: white;"
-                        onAction="#handleAssistantButtonClick"/>
-            </HBox>
+            <Button fx:id="creerOffreBtn"
+                    text="Créer l'Offre"
+                    style="-fx-background-color: #007bff; -fx-text-fill: white;"
+                    maxWidth="300"/>
         </VBox>
     </center>
 </BorderPane>
