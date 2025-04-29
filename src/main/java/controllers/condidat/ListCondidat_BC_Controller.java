@@ -1,7 +1,10 @@
 package controllers.condidat;
 
+import controllers.BaseNavigationController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -11,6 +14,7 @@ import models.Condidat;
 import models.Offre;
 import services.CondidatService;
 import services.OffreService;
+import services.EmailService;
 import utils.Router;
 
 import java.awt.Desktop;
@@ -20,7 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ListCondidat_BC_Controller {
+public class ListCondidat_BC_Controller extends BaseNavigationController {
 
     @FXML private TableView<Condidat> condidatTable;
     @FXML private TableColumn<Condidat, String> nomColumn;
@@ -30,37 +34,37 @@ public class ListCondidat_BC_Controller {
     @FXML private TableColumn<Condidat, String> offreColumn;
     @FXML private TableColumn<Condidat, Void> cvColumn;
     @FXML private TableColumn<Condidat, Void> editColumn;
+    @FXML private TableColumn<Condidat, Void> acceptColumn;
     @FXML private MenuItem menuListeCondidats;
     @FXML private MenuItem menuAjouterCondidat;
     @FXML private Button addCondidatBtn;
-    @FXML private Button offreBtn;
-    @FXML private Button condidatBtn;
+    @FXML private TextField searchField;
 
     private final CondidatService condidatService = new CondidatService();
     private final OffreService offreService = new OffreService();
     private Map<Integer, String> offreTitres = new HashMap<>();
+    private ObservableList<Condidat> condidatsList;
+    private FilteredList<Condidat> filteredCondidats;
 
     @FXML
     public void initialize() {
-        // Configuration de la navigation
-        setupNavigation();
-        
-        // Charger les titres des offres
+        super.initialize();
         loadOffreTitres();
-        
-        // Configuration du tableau
         setupTable();
-        
-        // Charger les candidats
+        setupSearch();
         loadCondidats();
+        
+        if (addCondidatBtn != null)
+            addCondidatBtn.setOnAction(e -> Router.navigateTo("/condidat/AddCondidat.fxml"));
     }
 
-    private void setupNavigation() {
-        menuListeCondidats.setOnAction(e -> Router.navigateTo("/condidat/ListCondidat_BC.fxml"));
-        menuAjouterCondidat.setOnAction(e -> Router.navigateTo("/condidat/AddCondidat.fxml"));
-        addCondidatBtn.setOnAction(e -> Router.navigateTo("/condidat/AddCondidat.fxml"));
-        offreBtn.setOnAction(e -> Router.navigateTo("/offre/ListOffre_BC.fxml"));
-        condidatBtn.setOnAction(e -> Router.navigateTo("/condidat/ListCondidat_BC.fxml"));
+    @Override
+    protected void setupNavigation() {
+        super.setupNavigation();
+        if (menuListeCondidats != null)
+            menuListeCondidats.setOnAction(e -> Router.navigateTo("/condidat/ListCondidat_BC.fxml"));
+        if (menuAjouterCondidat != null)
+            menuAjouterCondidat.setOnAction(e -> Router.navigateTo("/condidat/AddCondidat.fxml"));
     }
     
     private void loadOffreTitres() {
@@ -96,6 +100,7 @@ public class ListCondidat_BC_Controller {
         offreColumn.setPrefWidth(200);
         cvColumn.setPrefWidth(100);
         editColumn.setPrefWidth(200);
+        acceptColumn.setPrefWidth(100);
         
         // Ajouter les boutons d'action
         addActionButtonsToTable();
@@ -105,11 +110,34 @@ public class ListCondidat_BC_Controller {
         
         // Ajouter un message si le tableau est vide
         condidatTable.setPlaceholder(new Label("Aucun candidat disponible"));
+
+        // Activer le tri sur les colonnes
+        condidatTable.getSortOrder().add(nomColumn);
+        nomColumn.setSortType(TableColumn.SortType.ASCENDING);
+    }
+
+    private void setupSearch() {
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredCondidats.setPredicate(condidat -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                String lowerCaseFilter = newValue.toLowerCase();
+                return condidat.getNom().toLowerCase().contains(lowerCaseFilter) ||
+                       condidat.getPrenom().toLowerCase().contains(lowerCaseFilter) ||
+                       condidat.getEmail().toLowerCase().contains(lowerCaseFilter) ||
+                       String.valueOf(condidat.getTelephone()).contains(lowerCaseFilter) ||
+                       offreTitres.get(condidat.getOffreId()).toLowerCase().contains(lowerCaseFilter);
+            });
+        });
     }
 
     private void loadCondidats() {
-        ObservableList<Condidat> condidats = FXCollections.observableArrayList(condidatService.getAllCondidats());
-        condidatTable.setItems(condidats);
+        condidatsList = FXCollections.observableArrayList(condidatService.getAllCondidats());
+        filteredCondidats = new FilteredList<>(condidatsList, p -> true);
+        SortedList<Condidat> sortedCondidats = new SortedList<>(filteredCondidats);
+        sortedCondidats.comparatorProperty().bind(condidatTable.comparatorProperty());
+        condidatTable.setItems(sortedCondidats);
     }
 
     private void addActionButtonsToTable() {
@@ -118,10 +146,8 @@ public class ListCondidat_BC_Controller {
             private final Button viewCvButton = new Button("Voir CV");
 
             {
-                // Style du bouton Voir CV
                 viewCvButton.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-padding: 5 10;");
                 
-                // Action du bouton Voir CV
                 viewCvButton.setOnAction(event -> {
                     Condidat selectedCondidat = getTableView().getItems().get(getIndex());
                     if (selectedCondidat != null && selectedCondidat.getCv() != null) {
@@ -151,13 +177,9 @@ public class ListCondidat_BC_Controller {
             private final HBox buttonsBox = new HBox(5, editButton, deleteButton);
 
             {
-                // Style du bouton Modifier
                 editButton.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-padding: 5 10;");
-                
-                // Style du bouton Supprimer
                 deleteButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-padding: 5 10;");
                 
-                // Action du bouton Modifier
                 editButton.setOnAction(event -> {
                     Condidat selectedCondidat = getTableView().getItems().get(getIndex());
                     if (selectedCondidat != null) {
@@ -169,7 +191,6 @@ public class ListCondidat_BC_Controller {
                     }
                 });
 
-                // Action du bouton Supprimer
                 deleteButton.setOnAction(event -> {
                     Condidat selectedCondidat = getTableView().getItems().get(getIndex());
                     if (selectedCondidat != null) {
@@ -189,6 +210,62 @@ public class ListCondidat_BC_Controller {
                     setGraphic(null);
                 } else {
                     setGraphic(buttonsBox);
+                }
+            }
+        });
+
+        // Colonne pour le bouton d'acceptation
+        acceptColumn.setCellFactory(param -> new TableCell<>() {
+            private final Button acceptButton = new Button("Accepter");
+
+            {
+                acceptButton.setStyle("-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-padding: 5 10;");
+                
+                acceptButton.setOnAction(event -> {
+                    Condidat selectedCondidat = getTableView().getItems().get(getIndex());
+                    if (selectedCondidat != null) {
+                        handleAcceptance(selectedCondidat);
+                    }
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(acceptButton);
+                }
+            }
+        });
+    }
+
+    private void handleAcceptance(Condidat condidat) {
+        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmAlert.setTitle("Confirmation d'acceptation");
+        confirmAlert.setHeaderText("Accepter le candidat");
+        confirmAlert.setContentText("Êtes-vous sûr de vouloir accepter " + condidat.getPrenom() + " " + condidat.getNom() + " ?");
+
+        confirmAlert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                try {
+                    // Envoyer l'email de félicitations
+                    String poste = offreTitres.get(condidat.getOffreId());
+                    EmailService.sendAcceptanceEmail(condidat.getEmail(), condidat.getNom(), condidat.getPrenom(), poste);
+                    
+                    // Mettre à jour le statut du candidat dans la base de données
+                    //condidat.setStatut("Accepté");
+                    condidatService.updateCondidat(condidat);
+                    
+                    showAlert(Alert.AlertType.INFORMATION, "Succès", 
+                            "Le candidat a été accepté et un email de félicitations a été envoyé.");
+                    
+                    // Recharger la liste des candidats
+                    loadCondidats();
+                } catch (Exception e) {
+                    showAlert(Alert.AlertType.ERROR, "Erreur", 
+                            "Erreur lors de l'acceptation du candidat : " + e.getMessage());
                 }
             }
         });
@@ -212,18 +289,6 @@ public class ListCondidat_BC_Controller {
             showAlert(Alert.AlertType.ERROR, "Erreur", 
                     "Impossible d'ouvrir le fichier CV : " + e.getMessage());
         }
-    }
-
-    @FXML
-    private void handleOffreButtonClick() {
-        Router.navigateTo("/offre/ListOffre_BC.fxml");
-    }
-    
-    @FXML
-    private void handleCondidatButtonClick() {
-        // Recharger les données au lieu de naviguer vers la même page
-        loadOffreTitres();
-        loadCondidats();
     }
 
     private void showAlert(Alert.AlertType type, String title, String message) {
