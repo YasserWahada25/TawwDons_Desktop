@@ -31,7 +31,7 @@
             <Button text="Offre" maxWidth="Infinity"/>
             <Button text="Condidat" maxWidth="Infinity"/>
             <Button text="Evenement" maxWidth="Infinity"/>
-            <Button text="Evaluation" maxWidth="Infinity"/>
+            <Button fx:id="adminBtn" text="Espace Admin" maxWidth="Infinity"/>
             <Button text="Participant" maxWidth="Infinity"/>
             <Button text="Catégorie" maxWidth="Infinity"/>
             <Button text="Notifications" maxWidth="Infinity"/>

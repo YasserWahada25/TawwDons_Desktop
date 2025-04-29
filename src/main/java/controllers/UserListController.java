@@ -1,5 +1,6 @@
 package controllers;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -32,6 +33,8 @@ public class UserListController {
 
     @FXML
     private Button deleteButton;
+    @FXML
+    private Button adminBtn;
 
     private UserService userService = new UserService();
 
@@ -42,6 +45,11 @@ public class UserListController {
         prenomColumn.setCellValueFactory(new PropertyValueFactory<>("prenom"));
         emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
         roleColumn.setCellValueFactory(new PropertyValueFactory<>("roles"));
+
+
+
+
+        adminBtn.setOnAction(this::goToAdmin);
 
         // Load the user data into the table
         loadUserData();
@@ -105,6 +113,26 @@ public class UserListController {
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Failed to load UserList.fxml");
+        }
+    }
+
+
+
+
+
+
+
+    @FXML
+    private void goToAdmin(ActionEvent event) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/views/Admin.fxml"));
+            Stage stage = (Stage) adminBtn.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Espace Admin");
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("❌ Erreur lors du chargement de l'interface Admin.");
         }
     }
 } 

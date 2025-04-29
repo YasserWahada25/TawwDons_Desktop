@@ -1,5 +1,6 @@
 package controllers;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -28,6 +29,8 @@ public class HomeController {
 
     @FXML
     private MenuItem menuOffreList;
+    @FXML
+    private Button userBtn;
 
     @FXML
     private Button btnRegister;
@@ -47,6 +50,7 @@ public class HomeController {
         if (currentUser != null) {
             updateUI(currentUser);
         }
+        userBtn.setOnAction(this::goToUser);
 
         // Redirection vers la page Liste des Dons
         // menuListeDons.setOnAction(event -> Router.navigateTo("/ListDons.fxml"));
@@ -116,6 +120,22 @@ public class HomeController {
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Failed to load ModifyUser.fxml");
+        }
+    }
+    @FXML
+    private void goToUser(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/User.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) userBtn.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Espace Utilisateur");
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("❌ Erreur lors du chargement de l'interface Utilisateur.");
         }
     }
 

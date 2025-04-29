@@ -22,7 +22,7 @@ public class Main extends Application {
         Router.setMainStage(primaryStage);
 
         // 2. Charger la première page via le Router
-        Router.navigateTo("/Login.fxml"); // Chemin relatif dans resources
+        Router.navigateTo("/Admin/UserList.fxml"); // Chemin relatif dans resources
 
         primaryStage.setTitle("TawwaDon App");
         primaryStage.show();
