@@ -1,0 +1,12 @@
+.root {
+    -fx-background-color: #121212;
+}
+
+.label, .text-field, .combo-box, .table-view {
+    -fx-text-fill: white;
+    -fx-background-color: #1e1e1e;
+}
+
+.button {
+    -fx-background-radius: 6;
+}

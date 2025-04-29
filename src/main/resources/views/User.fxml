@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.UserController"
+            prefWidth="1000" prefHeight="600"
+            style="-fx-background-color: linear-gradient(to bottom right, #ffffff, #e0f7fa);">
+
+    <!-- ========== SIDEBAR ========== -->
+    <left>
+        <VBox spacing="18" alignment="TOP_CENTER"
+              style="-fx-background-color: #ecf0f1; -fx-padding: 30; -fx-border-radius: 0 15 15 0;">
+            <Label text="🚀 Navigation"
+                   style="-fx-text-fill: #2c3e50; -fx-font-weight: bold; -fx-font-size: 16; -fx-padding: 10 0 20 0;" />
+
+            <Button text="↩ Retour" onAction="#retourAccueil"
+                    style="-fx-background-color: #34495e; -fx-text-fill: white;
+                           -fx-background-radius: 10; -fx-font-weight: bold;
+                           -fx-pref-width: 180; -fx-pref-height: 40; -fx-font-size: 14;" />
+
+            <Button text="📝 Évaluation" onAction="#montrerFormulaire"
+                    style="-fx-background-color: #2980b9; -fx-text-fill: white;
+                           -fx-background-radius: 10; -fx-font-weight: bold;
+                           -fx-pref-width: 180; -fx-pref-height: 40; -fx-font-size: 14;" />
+
+            <Button text="💬 Ouvrir le Chat" onAction="#ouvrirChat"
+                    style="-fx-background-color: #2739ae; -fx-text-fill: white;
+                           -fx-background-radius: 10; -fx-font-weight: bold;
+                           -fx-pref-width: 180; -fx-pref-height: 40; -fx-font-size: 14;" />
+
+            <Button text="🧠 Jeu Santé" onAction="#ouvrirMiniJeu"
+                    style="-fx-background-color: #27ae60; -fx-text-fill: white;
+                           -fx-background-radius: 10; -fx-font-weight: bold;
+                           -fx-pref-width: 180; -fx-pref-height: 40; -fx-font-size: 14;" />
+
+            <Button text="♟ Brain Chess" onAction="#ouvrirBrainChess"
+                    style="-fx-background-color: #9b59b6; -fx-text-fill: white;
+                           -fx-background-radius: 10; -fx-font-weight: bold;
+                           -fx-pref-width: 180; -fx-pref-height: 40; -fx-font-size: 14;" />
+        </VBox>
+    </left>
+
+    <!-- ========== CONTENU PRINCIPAL ========== -->
+    <center>
+        <VBox spacing="25" style="-fx-padding: 30;">
+
+            <!-- ===== HEADER ===== -->
+            <HBox spacing="20" alignment="CENTER_LEFT">
+                <Label text="👋 Bienvenue dans l'espace utilisateur"
+                       style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
+                <Region HBox.hgrow="ALWAYS"/>
+                <TextField promptText="🔍 Rechercher une évaluation..."
+                           style="-fx-background-color: #ffffff; -fx-text-fill: black;
+                                  -fx-prompt-text-fill: gray; -fx-background-radius: 10;
+                                  -fx-border-color: #bdc3c7; -fx-border-radius: 10; -fx-pref-width: 320;" />
+            </HBox>
+
+            <!-- ===== TOAST MESSAGE ===== -->
+            <StackPane fx:id="toastContainer" alignment="TOP_CENTER" style="-fx-padding: 10 0 0 0;">
+                <Label fx:id="toastMessage" visible="false"
+                       style="-fx-background-color: #2ecc71; -fx-text-fill: white;
+                              -fx-padding: 10 20; -fx-background-radius: 10;
+                              -fx-font-weight: bold; -fx-font-size: 14;" />
+            </StackPane>
+
+            <!-- ===== FORMULAIRE DE RÉPONSE ===== -->
+            <VBox fx:id="formView" spacing="30" alignment="TOP_CENTER"
+                  style="-fx-padding: 30; -fx-background-color: transparent;">
+
+                <!-- Sélection éval + nom -->
+                <HBox spacing="15" alignment="CENTER">
+                    <ComboBox fx:id="evaluationBox" promptText="Sélectionnez une évaluation"
+                              style="-fx-background-color: #ffffff; -fx-border-color: #bdc3c7;
+                                     -fx-text-fill: black; -fx-prompt-text-fill: gray;
+                                     -fx-border-radius: 8; -fx-background-radius: 8;
+                                     -fx-pref-width: 250;" />
+
+                    <TextField fx:id="utilisateurField" promptText="Votre nom complet"
+                               style="-fx-background-color: #ffffff; -fx-border-color: #bdc3c7;
+                                      -fx-text-fill: black; -fx-prompt-text-fill: gray;
+                                      -fx-border-radius: 8; -fx-background-radius: 8;
+                                      -fx-pref-width: 250;" />
+
+                    <Button text="✅ Soumettre" onAction="#envoyerReponses"
+                            style="-fx-background-color: #2ecc71; -fx-text-fill: white;
+                                   -fx-font-weight: bold; -fx-background-radius: 8;
+                                   -fx-padding: 8 20;"/>
+                </HBox>
+
+                <!-- Questions dynamiques -->
+                <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;">
+                    <VBox fx:id="questionsBox" spacing="20" style="-fx-background-color: transparent;" />
+                </ScrollPane>
+
+                <!-- Barre de progression -->
+                <VBox spacing="12" alignment="CENTER">
+                    <ProgressBar fx:id="progressBar" prefWidth="400"
+                                 style="-fx-accent: #3498db; -fx-background-radius: 10;" />
+                    <Label fx:id="progressLabel" text="Progression : 0%"
+                           style="-fx-text-fill: #2c3e50; -fx-font-size: 14px;" />
+                </VBox>
+
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>

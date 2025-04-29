@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane fx:controller="controllers.condidat.UpdateCondidatController"
+            xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            prefWidth="1200" prefHeight="700">
+
+    <!-- Sidebar gauche -->
+    <left>
+        <VBox style="-fx-background-color: #f8f9fa;" spacing="15" prefWidth="200" alignment="TOP_LEFT">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+            <Label text="Tawwa Dons" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+            <Separator/>
+
+            <Button text="Dashboard" maxWidth="Infinity"/>
+            <Button text="Dons Requests" maxWidth="Infinity"/>
+            <MenuButton text="Gestion Article" maxWidth="Infinity">
+                <items>
+                    <MenuItem text="Article List"/>
+                    <MenuItem text="Article Form"/>
+                </items>
+            </MenuButton>
+            <Button fx:id="offreBtn" text="Offre" maxWidth="Infinity" onAction="#handleOffreButtonClick"/>
+            <Button fx:id="condidatBtn" text="Condidat" maxWidth="Infinity" onAction="#handleCondidatButtonClick"/>
+            <Button text="Evenement" maxWidth="Infinity"/>
+            <Button text="Evaluation" maxWidth="Infinity"/>
+            <Button text="Participant" maxWidth="Infinity"/>
+            <Button text="Catégorie" maxWidth="Infinity"/>
+            <Button text="Notifications" maxWidth="Infinity"/>
+
+            <Label text="Account Pages"
+                   style="-fx-font-weight: bold; -fx-padding: 10 0 0 0;"/>
+            <Button text="Profile" maxWidth="Infinity"/>
+        </VBox>
+    </left>
+
+    <!-- Top bar -->
+    <top>
+        <HBox spacing="20" alignment="CENTER_RIGHT" style="-fx-background-color: #ffffff;">
+            <padding>
+                <Insets top="10" right="20" bottom="10" left="20"/>
+            </padding>
+            <TextField promptText="Type here..." prefWidth="200"/>
+            <MenuButton text="Navigation">
+                <items>
+                    <MenuItem fx:id="menuListeCondidats" text="Liste des Candidats"/>
+                    <MenuItem fx:id="menuAjouterCondidat" text="Ajouter un Candidat"/>
+                </items>
+            </MenuButton>
+            <Button text="⚙"/>
+            <Button text="🔔"/>
+            <Button text="Logout"
+                    style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
+        </HBox>
+    </top>
+
+    <!-- Contenu central : formulaire de modification de candidat -->
+    <center>
+        <VBox spacing="20" alignment="TOP_LEFT">
+            <padding>
+                <Insets top="30" right="30" bottom="30" left="30"/>
+            </padding>
+
+            <Label text="Modifier un Candidat"
+                   style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #1c2a4d;"/>
+
+            <GridPane vgap="20" hgap="20">
+                <padding>
+                    <Insets top="20"/>
+                </padding>
+
+                <!-- Offre -->
+                <Label text="Offre :" GridPane.rowIndex="0" GridPane.columnIndex="0"
+                       style="-fx-font-weight: bold;"/>
+                <ComboBox fx:id="offreComboBox" prefWidth="300" GridPane.rowIndex="0" GridPane.columnIndex="1"
+                         style="-fx-background-color: white; -fx-border-color: #bdc3c7; -fx-border-radius: 3;"/>
+
+                <!-- Nom -->
+                <Label text="Nom :" GridPane.rowIndex="1" GridPane.columnIndex="0"
+                       style="-fx-font-weight: bold;"/>
+                <TextField fx:id="nomField" prefWidth="300" GridPane.rowIndex="1" GridPane.columnIndex="1"
+                         style="-fx-background-color: white; -fx-border-color: #bdc3c7; -fx-border-radius: 3;"/>
+
+                <!-- Prénom -->
+                <Label text="Prénom :" GridPane.rowIndex="2" GridPane.columnIndex="0"
+                       style="-fx-font-weight: bold;"/>
+                <TextField fx:id="prenomField" prefWidth="300" GridPane.rowIndex="2" GridPane.columnIndex="1"
+                         style="-fx-background-color: white; -fx-border-color: #bdc3c7; -fx-border-radius: 3;"/>
+
+                <!-- Email -->
+                <Label text="Email :" GridPane.rowIndex="3" GridPane.columnIndex="0"
+                       style="-fx-font-weight: bold;"/>
+                <TextField fx:id="emailField" prefWidth="300" GridPane.rowIndex="3" GridPane.columnIndex="1"
+                         style="-fx-background-color: white; -fx-border-color: #bdc3c7; -fx-border-radius: 3;"/>
+
+                <!-- Téléphone -->
+                <Label text="Téléphone :" GridPane.rowIndex="4" GridPane.columnIndex="0"
+                       style="-fx-font-weight: bold;"/>
+                <TextField fx:id="telephoneField" prefWidth="300" GridPane.rowIndex="4" GridPane.columnIndex="1"
+                         style="-fx-background-color: white; -fx-border-color: #bdc3c7; -fx-border-radius: 3;"/>
+
+                <!-- CV -->
+                <Label text="CV :" GridPane.rowIndex="5" GridPane.columnIndex="0"
+                       style="-fx-font-weight: bold;"/>
+                <HBox spacing="10" GridPane.rowIndex="5" GridPane.columnIndex="1">
+                    <TextField fx:id="cvField" prefWidth="250" editable="false"
+                             style="-fx-background-color: white; -fx-border-color: #bdc3c7; -fx-border-radius: 3;"/>
+                    <Button fx:id="browseButton" text="Parcourir" onAction="#handleBrowseButtonClick"
+                            style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-padding: 8 15;"/>
+                </HBox>
+            </GridPane>
+
+            <!-- Boutons d'action -->
+            <HBox spacing="20" alignment="CENTER_RIGHT">
+                <padding>
+                    <Insets top="30"/>
+                </padding>
+                <Button fx:id="cancelButton" text="Annuler" onAction="#handleCancelButtonClick"
+                        style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-padding: 8 15;"/>
+                <Button fx:id="updateButton" text="Mettre à jour" onAction="#handleUpdateButtonClick"
+                        style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-padding: 8 15;"/>
+            </HBox>
+        </VBox>
+    </center>
+
+</BorderPane> 
