@@ -10,11 +10,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.example.event.model.event;
 import org.example.event.model.participant;
-
+import javafx.stage.FileChooser;
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
@@ -29,8 +31,8 @@ public class participantController {
     @FXML private TableColumn<participant, String> prenomColumn;
     @FXML private TableColumn<participant, String> emailColumn;
     @FXML private TableColumn<participant, Integer> numtelColumn;
-    @FXML private TableColumn<participant, Integer> eventIdColumn;
     @FXML private TableColumn<participant, Void> actionsColumn;
+    @FXML private TableColumn<participant, Integer> eventIdColumn;
 
     private final ObservableList<participant> participantData = FXCollections.observableArrayList();
     private final participantService participantService = new participantService();
@@ -121,6 +123,7 @@ public class participantController {
         }
     }
 
+
     private void handleDeleteParticipant(participant p) {
         Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
         confirmation.setTitle("Confirmation suppression");
@@ -159,6 +162,36 @@ public class participantController {
             showErrorAlert("Erreur", "Formulaire inaccessible", e.getMessage());
         }
     }
+   /* @FXML
+    private void handleExportExcel() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Exporter vers Excel");
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Fichiers Excel", "*.xlsx"));
+
+        // Nom de fichier par défaut
+        String defaultFileName = "participants_event" + currentEvent.getId() + ".xlsx";
+        fileChooser.setInitialFileName(defaultFileName);
+
+        File file = fileChooser.showSaveDialog(participantTable.getScene().getWindow());
+
+        if (file != null) {
+            try {
+                // Export des données actuelles du TableView
+                participantService.exportToExcel(participantTable.getItems(), file.getAbsolutePath());
+
+                showSuccessAlert("Export réussi",
+                        "Fichier enregistré",
+                        participants.size() + " participants exportés vers:\n" + file.getAbsolutePath());
+            } catch (IOException e) {
+                showErrorAlert("Erreur d'export",
+                        "Échec de l'export",
+                        "Erreur lors de l'export Excel:\n" + e.getMessage());
+            }
+        }
+    }
+
+*/
 
     private void showSuccessAlert(String title, String header, String content) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);

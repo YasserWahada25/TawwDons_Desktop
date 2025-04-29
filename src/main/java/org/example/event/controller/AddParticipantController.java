@@ -93,7 +93,7 @@ public void setEventId(int eventId) {
             return;
         }
 
-        if (!field.getText().matches("^[0-9]{8,15}$")) {
+        if (!field.getText().matches("^[1-9]{8}$")) {
             errors.append("- ").append(fieldName).append(" doit être un numéro de téléphone valide (8-15 chiffres)\n");
         }
     }

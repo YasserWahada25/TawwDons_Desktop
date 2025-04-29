@@ -10,7 +10,7 @@ public class event {
     private final StringProperty nom = new SimpleStringProperty();
     private final StringProperty description = new SimpleStringProperty();
     private final StringProperty image = new SimpleStringProperty();
-    private final IntegerProperty cateegorie_id = new SimpleIntegerProperty();
+    private final IntegerProperty categorie_id = new SimpleIntegerProperty();
 
     public event(int id, String nom, String description, String image, int cateegorie_id) {
         setId(id);
@@ -56,10 +56,10 @@ public class event {
     }
 
     public int getCateegorie_id() {
-        return cateegorie_id.get();
+        return categorie_id.get();
     }
-    public void setCateegorie_id(int cateegorie_id) {
-        this.cateegorie_id.set(cateegorie_id);
+    public void setCategorie_id(int categorie_id) {
+        this.categorie_id.set(categorie_id);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class event {
                 ", nom=" + nom +
                 ", description=" + description +
                 ", image=" + image +
-                ", cateegorie_id=" + cateegorie_id +
+                ", categorie_id=" + categorie_id +
                 '}';
     }
 }

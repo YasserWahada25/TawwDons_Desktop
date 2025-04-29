@@ -10,7 +10,7 @@ module org.example.event {
     requires org.kordamp.bootstrapfx.core;
     requires com.almasb.fxgl.all;
     requires java.sql;
-    requires java.desktop;
+    requires org.apache.poi.ooxml;
 
     opens org.example.event to javafx.fxml;
     exports org.example.event;

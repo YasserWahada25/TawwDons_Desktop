@@ -1,11 +1,16 @@
 package org.example.event.controller;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -16,10 +21,14 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.example.event.model.event;
 import org.example.event.service.eventService;
+import org.example.event.service.participantService;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+
 
 public class eventController {
 
@@ -32,6 +41,9 @@ public class eventController {
     @FXML private TableColumn<event, Void> actionsColumn;
     @FXML private ImageView imageView;
     @FXML private TextArea descriptionTextArea;
+    @FXML private TextField searchField;
+    @FXML private TableColumn<event, String> participantsCountColumn;
+
 
     private final ObservableList<event> eventData = FXCollections.observableArrayList();
     private final eventService eventService = new eventService();
@@ -43,6 +55,10 @@ public class eventController {
         loadEvents();
         setupSelectionListener();
         setupDoubleClickHandler();
+        setupSearchListener(); // Configuration de l'écouteur de recherche
+        setupStatisticsColumn(); // Nouvelle méthode pour configurer la colonne stats
+
+
     }
 
     private void configureColumns() {
@@ -50,8 +66,9 @@ public class eventController {
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         nomColumn.setCellValueFactory(new PropertyValueFactory<>("nom"));
         descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
+        categorieColumn.setCellValueFactory(new PropertyValueFactory<>("categorieId"));
         imageColumn.setCellValueFactory(new PropertyValueFactory<>("image"));
-        categorieColumn.setCellValueFactory(new PropertyValueFactory<>("idcategory"));
+
 
         // Configuration personnalisée pour l'image
         imageColumn.setCellFactory(column -> new TableCell<event, String>() {
@@ -80,6 +97,83 @@ public class eventController {
                 }
             }
         });
+    }
+    private void setupStatisticsColumn() {
+        participantsCountColumn.setCellValueFactory(cellData -> {
+            try {
+                int count = new participantService().countParticipantsByEvent(cellData.getValue().getId());
+                return new SimpleStringProperty(String.valueOf(count));
+            } catch (SQLException e) {
+                return new SimpleStringProperty("Erreur");
+            }
+        });
+
+        participantsCountColumn.setCellFactory(column -> new TableCell<event, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    setText(item);
+                    setStyle("-fx-alignment: CENTER; -fx-font-weight: bold;");
+
+                    // Optionnel: coloration en fonction du nombre
+                    try {
+                        int count = Integer.parseInt(item);
+                        if (count > 50) {
+                            setStyle("-fx-text-fill: green; -fx-font-weight: bold; -fx-alignment: CENTER;");
+                        } else if (count > 20) {
+                            setStyle("-fx-text-fill: orange; -fx-font-weight: bold; -fx-alignment: CENTER;");
+                        }
+                    } catch (NumberFormatException e) {
+                        // Ne rien faire si ce n'est pas un nombre
+                    }
+                }
+            }
+        });
+    }
+
+    @FXML
+    private void handleShowStatistics() {
+        try {
+            // Créer une nouvelle fenêtre
+            Stage statsStage = new Stage();
+            statsStage.setTitle("Statistiques des Participants");
+
+            // Créer un BarChart
+            CategoryAxis xAxis = new CategoryAxis();
+            NumberAxis yAxis = new NumberAxis();
+            BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
+            barChart.setTitle("Participants par Événement");
+            xAxis.setLabel("Événements");
+            yAxis.setLabel("Nombre de Participants");
+
+            // Préparer les données
+            XYChart.Series<String, Number> series = new XYChart.Series<>();
+            series.setName("Participants");
+
+            participantService pService = new participantService();
+            for (event e : eventData) {
+                try {
+                    int count = pService.countParticipantsByEvent(e.getId());
+                    series.getData().add(new XYChart.Data<>(e.getNom(), count));
+                } catch (SQLException ex) {
+                    series.getData().add(new XYChart.Data<>(e.getNom(), 0));
+                }
+            }
+
+            barChart.getData().add(series);
+
+            // Configurer la scène
+            Scene scene = new Scene(barChart, 800, 600);
+            statsStage.setScene(scene);
+            statsStage.show();
+
+        } catch (Exception e) {
+            showErrorAlert("Erreur", "Impossible d'afficher les statistiques", e.getMessage());
+        }
     }
 
 
@@ -122,6 +216,13 @@ public class eventController {
             showErrorAlert("Database Error", "Failed to load events", e.getMessage());
         }
     }
+    // Ajout des méthodes pour la recherche
+    private void setupSearchListener() {
+        // Recherche en temps réel lors de la saisie
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filterEventsByName(newValue);
+        });
+    }
     private void setupDoubleClickHandler() {
         eventTable.setRowFactory(tv -> {
             TableRow<event> row = new TableRow<>();
@@ -133,6 +234,29 @@ public class eventController {
             return row;
         });
     }
+    @FXML
+    private void handleSearch() {
+        filterEventsByName(searchField.getText());
+    }
+
+    private void filterEventsByName(String name) {
+        if (name == null || name.isEmpty()) {
+            eventTable.setItems(eventData);
+            return;
+        }
+
+        ObservableList<event> filteredList = FXCollections.observableArrayList();
+        String lowerCaseFilter = name.toLowerCase();
+
+        for (event e : eventData) {
+            if (e.getNom().toLowerCase().contains(lowerCaseFilter)) {
+                filteredList.add(e);
+            }
+        }
+
+        eventTable.setItems(filteredList);
+    }
+
 
     private void openParticipantsWindow(event event) {
         try {
@@ -211,7 +335,6 @@ public class eventController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/event/update-event.fxml"));
             Parent root = loader.load();
-
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Modifier Événement");
             dialogStage.initModality(Modality.WINDOW_MODAL);
@@ -228,6 +351,51 @@ public class eventController {
             showErrorAlert("Erreur", "Impossible d'ouvrir le formulaire", e.getMessage());
         }
     }
+    @FXML
+    private void handleSortByParticipants() {
+        try {
+            // Créer une liste observable triée
+            ObservableList<event> sortedList = FXCollections.observableArrayList();
+            participantService pService = new participantService();
+
+            // Créer une liste avec les événements et leur nombre de participants
+            List<EventWithCount> eventsWithCount = new ArrayList<>();
+            for (event e : eventData) {
+                int count = pService.countParticipantsByEvent(e.getId());
+                eventsWithCount.add(new EventWithCount(e, count));
+            }
+
+            // Trier la liste par nombre de participants (décroissant)
+            eventsWithCount.sort((e1, e2) -> Integer.compare(e2.count, e1.count));
+
+            // Récupérer les événements triés
+            for (EventWithCount ew : eventsWithCount) {
+                sortedList.add(ew.event);
+            }
+
+            // Mettre à jour la TableView
+            eventTable.setItems(sortedList);
+
+        } catch (SQLException e) {
+            showErrorAlert("Erreur", "Échec du tri", e.getMessage());
+        }
+    }
+
+    // Classe helper pour stocker temporairement les événements avec leur count
+    private static class EventWithCount {
+        event event;
+        int count;
+
+        public EventWithCount(event event, int count) {
+            this.event = event;
+            this.count = count;
+        }
+    }
+    @FXML
+    private void handleResetSort() {
+        eventTable.setItems(eventData); // Réinitialise à la liste originale
+    }
+
 
     private void showAlert(String title, String header, String content, Alert.AlertType type) {
         Alert alert = new Alert(type);

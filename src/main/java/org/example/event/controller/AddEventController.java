@@ -108,7 +108,7 @@ public class AddEventController {
                     imagePath,
                     selected.getId() // Utilisation directe de l'ID
             );
-  nouvelEvent.setCateegorie_id (selected.getId());
+  nouvelEvent.setCategorie_id (selected.getId());
             try {
                 System.out.println("categorie_id"+ nouvelEvent.getCateegorie_id());
                 eventService.ajouter(nouvelEvent);

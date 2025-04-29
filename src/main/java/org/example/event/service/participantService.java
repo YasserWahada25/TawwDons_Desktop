@@ -1,8 +1,12 @@
 package org.example.event.service;
 
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.example.event.model.participant;
 import org.example.event.utils.database;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +55,73 @@ public class participantService implements Iparticipant<participant>{
             System.out.println("Participant modifié");
         }
     }
+    public void exportToExcel(List<participant> participants, String filePath)
+            throws IOException, IllegalArgumentException {
 
+        // Validation des paramètres
+        if (participants == null) {
+            throw new IllegalArgumentException("La liste des participants ne peut pas être null");
+        }
+
+        if (filePath == null || filePath.isEmpty()) {
+            throw new IllegalArgumentException("Le chemin du fichier ne peut pas être vide");
+        }
+
+        if (!filePath.toLowerCase().endsWith(".xlsx")) {
+            filePath += ".xlsx";
+        }
+
+        try (Workbook workbook = new XSSFWorkbook()) {
+            // Création de la feuille Excel
+            Sheet sheet = workbook.createSheet("Participants");
+
+            // Style pour les en-têtes
+            CellStyle headerStyle = workbook.createCellStyle();
+            Font headerFont = workbook.createFont();
+            headerFont.setBold(true);
+            headerStyle.setFont(headerFont);
+            headerStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+            // En-têtes de colonnes
+            String[] headers = {"ID", "Nom", "Prénom", "Email", "Téléphone", "ID Événement"};
+            Row headerRow = sheet.createRow(0);
+
+            for (int i = 0; i < headers.length; i++) {
+                Cell cell = headerRow.createCell(i);
+                cell.setCellValue(headers[i]);
+                cell.setCellStyle(headerStyle);
+            }
+
+            // Remplissage des données
+            int rowNum = 1;
+            for (participant p : participants) {
+                Row row = sheet.createRow(rowNum++);
+
+                row.createCell(0).setCellValue(p.getId());
+                row.createCell(1).setCellValue(p.getNom());
+                row.createCell(2).setCellValue(p.getPrenom());
+                row.createCell(3).setCellValue(p.getEmail());
+                row.createCell(4).setCellValue(p.getNumtel());
+                row.createCell(5).setCellValue(p.getEvent_id());
+            }
+
+            // Ajustement automatique des colonnes
+            for (int i = 0; i < headers.length; i++) {
+                sheet.autoSizeColumn(i);
+            }
+
+            // Écriture du fichier
+            try (FileOutputStream outputStream = new FileOutputStream(filePath)) {
+                workbook.write(outputStream);
+                System.out.println("Fichier Excel généré avec succès: " + filePath);
+            }
+
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la génération du fichier Excel: " + e.getMessage());
+            throw new IOException("Échec de l'export Excel: " + e.getMessage(), e);
+        }
+    }
     @Override
     public List<participant> getList() throws SQLException {
         List<participant> participants = new ArrayList<>();
@@ -76,6 +146,18 @@ public class participantService implements Iparticipant<participant>{
         }
         return participants;
     }
+    public int countParticipantsByEvent(int eventId) throws SQLException {
+        String query = "SELECT COUNT(*) FROM participant WHERE event_id = ?";
+        try (PreparedStatement statement = cnx.prepareStatement(query)) {
+            statement.setInt(1, eventId);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+            return 0;
+        }
+    }
+
     public List<participant> getParticipantByEvent(int eventId) throws SQLException {
         System.out.println("Exécution de getParticipantByEvent()...");
         List<participant> participants = new ArrayList<>();
