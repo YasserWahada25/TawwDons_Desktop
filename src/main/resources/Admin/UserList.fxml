@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Pos?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.UserListController"
+            prefWidth="1200" prefHeight="700">
+
+    <!-- ✅ SIDEBAR -->
+    <left>
+        <VBox style="-fx-background-color: #f8f9fa;" spacing="15" prefWidth="200" alignment="TOP_LEFT">
+            <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+            <Label text="Creative Tim" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+            <Separator/>
+
+            <Button fx:id="btnDashboard" text="Dashboard" maxWidth="Infinity" />
+            <Button fx:id="btnDonsRequests" text="Dons Requests" maxWidth="Infinity"/>
+
+            <MenuButton text="Gestion Article" maxWidth="Infinity">
+                <items>
+                    <MenuItem fx:id="menuArticleList" text="Article List" />
+                    <MenuItem fx:id="menuArticleForm" text="Article Form" />
+                </items>
+            </MenuButton>
+
+            <Button text="Offre" maxWidth="Infinity"/>
+            <Button text="Condidat" maxWidth="Infinity"/>
+            <Button text="Evenement" maxWidth="Infinity"/>
+            <Button text="Evaluation" maxWidth="Infinity"/>
+            <Button text="Participant" maxWidth="Infinity"/>
+            <Button text="Catégorie" maxWidth="Infinity"/>
+            <Button text="Notifications" maxWidth="Infinity"/>
+
+            <Label text="Account Pages" style="-fx-font-weight: bold; -fx-padding: 10 0 0 0;" />
+            <Button text="Profile" maxWidth="Infinity" onAction="#navigateToProfile"/>
+        </VBox>
+    </left>
+
+    <!-- ✅ CONTENU CENTRAL CENTRÉ -->
+    <center>
+        <VBox alignment="CENTER" spacing="20">
+            <AnchorPane maxWidth="900" style="-fx-background-color: #f7f7f7; -fx-padding: 20;">
+                <children>
+                    <Label layoutX="320" layoutY="10"
+                           style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #333;"
+                           text="Liste des Utilisateurs" />
+
+                    <TableView fx:id="userTable" layoutX="50.0" layoutY="50.0" prefHeight="400" prefWidth="800">
+                        <columns>
+                            <TableColumn text="Nom" prefWidth="150" fx:id="nomColumn"/>
+                            <TableColumn text="Prénom" prefWidth="150" fx:id="prenomColumn"/>
+                            <TableColumn text="Email" prefWidth="250" fx:id="emailColumn"/>
+                            <TableColumn text="Rôle" prefWidth="150" fx:id="roleColumn"/>
+                        </columns>
+                    </TableView>
+
+                    <Button fx:id="deleteButton" layoutX="350.0" layoutY="470.0" prefHeight="35" prefWidth="240"
+                            style="-fx-background-color: linear-gradient(to bottom, #333, #1a1a1a); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10;"
+                            text="Supprimer" onAction="#handleDeleteButtonAction"/>
+                </children>
+            </AnchorPane>
+        </VBox>
+    </center>
+
+</BorderPane> 

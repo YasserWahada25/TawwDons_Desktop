@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
-<AnchorPane fx:controller="controller.RegisterController" 
+<AnchorPane fx:controller="controllers.RegisterController" 
             prefHeight="600.0" prefWidth="800.0"
             xmlns="http://javafx.com/javafx/8" 
             xmlns:fx="http://javafx.com/fxml/1">

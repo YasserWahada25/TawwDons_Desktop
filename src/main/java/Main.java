@@ -1,20 +1,30 @@
+// src/main/java/Main.java
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.Parent;
 import javafx.stage.Stage;
+import utils.MyDataBase;
+import utils.Router;
+
+import java.sql.Connection;
 
 public class Main extends Application {
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/MainInterface.fxml"));
-        Scene scene = new Scene(root, 800, 600);
-        primaryStage.setTitle("TawwDons - Donation Management System");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-    }
 
     public static void main(String[] args) {
+        Connection connection = MyDataBase.getInstance().getConnection();
+        System.out.println("connecté à la base de données");
+        System.out.println(connection);
         launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        Router.setMainStage(primaryStage);
+
+        // 2. Charger la première page via le Router
+        Router.navigateTo("/Login.fxml"); // Chemin relatif dans resources
+
+        primaryStage.setTitle("TawwaDon App");
+        primaryStage.show();
     }
 }

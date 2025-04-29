@@ -1,4 +1,4 @@
-package controller;
+package controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -7,7 +7,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import service.UserService;
+import services.UserService;
+import services.EmailService;
 import models.User;
 
 import java.io.IOException;
@@ -162,8 +163,19 @@ public class RegisterController {
         boolean success = userService.registerUser(newUser);
         
         if (success) {
+            // Send welcome email in a new thread to avoid freezing the UI
+            new Thread(() -> {
+                try {
+                    EmailService.sendWelcomeEmail(email, nom + " " + prenom);
+                    System.out.println("Welcome email sent to: " + email);
+                } catch (Exception e) {
+                    System.out.println("Failed to send welcome email: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }).start();
+            
             showAlert(Alert.AlertType.INFORMATION, "Inscription réussie", 
-                    "Votre compte a été créé avec succès. Vous pouvez maintenant vous connecter.");
+                    "Votre compte a été créé avec succès. Un email de bienvenue a été envoyé à " + email + ".");
             navigateToLogin();
         } else {
             showAlert(Alert.AlertType.ERROR, "Erreur d'inscription", 
@@ -223,5 +235,19 @@ public class RegisterController {
     private void initialize() {
         // Initialization logic here
         System.out.println("RegisterController initialized");
+    }
+
+    @FXML
+    public void navigateToRegister() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Register.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Failed to load Register.fxml");
+        }
     }
 } 
