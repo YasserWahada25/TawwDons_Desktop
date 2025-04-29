@@ -132,9 +132,13 @@ public class GoogleAuthService {
      * Creates default config file with placeholder values
      */
     private void createDefaultConfigFile(Path configPath) throws IOException {
-        // Create directory if it doesn't exist
-        if (!Files.exists(configPath.getParent())) {
-            Files.createDirectories(configPath.getParent());
+        // Create directory if needed
+        Path parent = configPath.getParent();
+        if (parent != null && !Files.exists(parent)) {
+            Files.createDirectories(parent);
+        } else if (parent == null) {
+            // If there's no parent directory, we're creating in the current directory
+            // No need to create directories
         }
         
         // Write default config file

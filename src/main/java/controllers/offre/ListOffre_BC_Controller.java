@@ -1,7 +1,10 @@
 package controllers.offre;
 
+import controllers.BaseNavigationController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -10,109 +13,108 @@ import models.Offre;
 import services.OffreService;
 import utils.Router;
 
-public class ListOffre_BC_Controller {
+public class ListOffre_BC_Controller extends BaseNavigationController {
 
     @FXML private TableView<Offre> offreTable;
     @FXML private TableColumn<Offre, String> titreColumn;
     @FXML private TableColumn<Offre, String> descriptionColumn;
-    @FXML private TableColumn<Offre, Void> editColumn;
+    @FXML private TableColumn<Offre, String> dateColumn;
+    @FXML private TableColumn<Offre, Void> actionsColumn;
     @FXML private MenuItem menuListeOffres;
     @FXML private MenuItem menuPosterOffre;
     @FXML private Button addOffreBtn;
-    @FXML private Button offreBtn;
+    @FXML private TextField searchField;
 
     private final OffreService offreService = new OffreService();
+    private ObservableList<Offre> offresList;
+    private FilteredList<Offre> filteredOffres;
 
     @FXML
     public void initialize() {
-        // Configuration de la navigation
-        setupNavigation();
-        
-        // Configuration du tableau
+        super.initialize();
         setupTable();
-        
-        // Charger les offres
+        setupSearch();
         loadOffres();
+        
+        if (addOffreBtn != null)
+            addOffreBtn.setOnAction(e -> Router.navigateTo("/offre/AddOffre.fxml"));
     }
 
-    private void setupNavigation() {
+    @Override
+    protected void setupNavigation() {
+        super.setupNavigation();
         menuListeOffres.setOnAction(e -> Router.navigateTo("/offre/ListOffre_BC.fxml"));
         menuPosterOffre.setOnAction(e -> Router.navigateTo("/offre/AddOffre.fxml"));
-        addOffreBtn.setOnAction(e -> Router.navigateTo("/offre/AddOffre.fxml"));
+    }
+    
+    private void setupSearch() {
+        searchField.textProperty().addListener((obs, oldText, newText) -> {
+            filteredOffres.setPredicate(offre -> {
+                if (newText == null || newText.isEmpty()) {
+                    return true;
+                }
+                String lowerCaseFilter = newText.toLowerCase();
+                return offre.getTitreOffre().toLowerCase().contains(lowerCaseFilter) ||
+                       offre.getDescriptionOffre().toLowerCase().contains(lowerCaseFilter);
+            });
+        });
     }
     
     @FXML
     private void handleOffreButtonClick() {
         System.out.println("Bouton Offre cliqué - Méthode handleOffreButtonClick");
-        // Recharger les données
         loadOffres();
-        // Afficher un message de confirmation
         showAlert(Alert.AlertType.INFORMATION, "Information", "Liste des offres actualisée.");
     }
     
     private void setupTable() {
-        // Configuration des colonnes
         titreColumn.setCellValueFactory(new PropertyValueFactory<>("titreOffre"));
         descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("descriptionOffre"));
+        dateColumn.setCellValueFactory(new PropertyValueFactory<>("dateOffre"));
         
-        // Ajuster la taille des colonnes
         titreColumn.setPrefWidth(200);
         descriptionColumn.setPrefWidth(600);
-        editColumn.setPrefWidth(200);
+        dateColumn.setPrefWidth(200);
+        actionsColumn.setPrefWidth(200);
         
-        // Permettre à la colonne description de s'étendre
         descriptionColumn.setMinWidth(300);
         
-        // Ajouter les boutons d'action
         addActionButtonsToTable();
         
-        // Configurer le tableau pour qu'il s'étende
         offreTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         
-        // Ajouter un message si le tableau est vide
         offreTable.setPlaceholder(new Label("Aucune offre disponible"));
+
+        offreTable.getSortOrder().add(titreColumn);
+        titreColumn.setSortType(TableColumn.SortType.ASCENDING);
     }
 
     private void loadOffres() {
-        ObservableList<Offre> offres = FXCollections.observableArrayList(offreService.getAllOffres());
-        offreTable.setItems(offres);
+        offresList = FXCollections.observableArrayList(offreService.getAllOffres());
+        filteredOffres = new FilteredList<>(offresList, p -> true);
+        SortedList<Offre> sortedOffres = new SortedList<>(filteredOffres);
+        sortedOffres.comparatorProperty().bind(offreTable.comparatorProperty());
+        offreTable.setItems(sortedOffres);
     }
 
     private void addActionButtonsToTable() {
-        editColumn.setCellFactory(param -> new TableCell<>() {
+        actionsColumn.setCellFactory(param -> new TableCell<>() {
             private final Button editButton = new Button("Modifier");
             private final Button deleteButton = new Button("Supprimer");
-            private final HBox buttonsBox = new HBox(5, editButton, deleteButton); // 5 est l'espacement entre les boutons
+            private final HBox buttonsBox = new HBox(10, editButton, deleteButton);
 
             {
-                // Style du bouton Modifier
-                editButton.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-padding: 5 10;");
+                editButton.setStyle("-fx-background-color: #3498db; -fx-text-fill: white;");
+                deleteButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
                 
-                // Style du bouton Supprimer
-                deleteButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-padding: 5 10;");
-                
-                // Action du bouton Modifier
                 editButton.setOnAction(event -> {
-                    Offre selectedOffre = getTableView().getItems().get(getIndex());
-                    if (selectedOffre != null) {
-                        try {
-                            Router.navigateTo("/offre/UpdateOffre.fxml?id=" + selectedOffre.getId());
-                        } catch (Exception e) {
-                            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible d'ouvrir la page de modification.");
-                        }
-                    }
+                    Offre offre = getTableView().getItems().get(getIndex());
+                    Router.navigateTo("/offre/UpdateOffre.fxml?id=" + offre.getId());
                 });
 
-                // Action du bouton Supprimer
                 deleteButton.setOnAction(event -> {
-                    Offre selectedOffre = getTableView().getItems().get(getIndex());
-                    if (selectedOffre != null) {
-                        try {
-                            Router.navigateTo("/offre/DeleteOffre.fxml?id=" + selectedOffre.getId());
-                        } catch (Exception e) {
-                            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible d'ouvrir la page de suppression.");
-                        }
-                    }
+                    Offre offre = getTableView().getItems().get(getIndex());
+                    Router.navigateTo("/offre/DeleteOffre.fxml?id=" + offre.getId());
                 });
             }
 
