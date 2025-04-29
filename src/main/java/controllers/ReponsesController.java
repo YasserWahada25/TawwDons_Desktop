@@ -37,7 +37,7 @@ public class ReponsesController {
             return;
         }
 
-        evalLabel.setText("Réponses pour : " + evaluation.getNom());
+        evalLabel.setText("Réponses pour : " + evaluation.getName());
         loadReponses();
     }
 

@@ -26,12 +26,12 @@ public class AdminReponsesView {
 
     public void show(Evaluation evaluation) {
         Stage stage = new Stage();
-        stage.setTitle("Réponses - " + evaluation.getNom());
+        stage.setTitle("Réponses - " + evaluation.getName());
 
         VBox layout = new VBox(10);
         layout.setPadding(new Insets(15));
 
-        Label titre = new Label("Réponses des utilisateurs - Évaluation : " + evaluation.getNom());
+        Label titre = new Label("Réponses des utilisateurs - Évaluation : " + evaluation.getName());
 
         TableView<ReponseDisplay> table = new TableView<>();
         TableColumn<ReponseDisplay, String> utilisateurCol = new TableColumn<>("Utilisateur");

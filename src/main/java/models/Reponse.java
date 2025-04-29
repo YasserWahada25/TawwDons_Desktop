@@ -28,6 +28,7 @@ public class Reponse {
     public void setBonne(boolean bonne) {
         this.bonne = bonne;
     }
+    private int evaluationId; // getter/setter aussi
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
@@ -42,5 +43,14 @@ public class Reponse {
     public void setReponse(String reponse) { this.reponse = reponse; }
 
     public LocalDateTime getDateReponse() { return dateReponse; }
+
     public void setDateReponse(LocalDateTime dateReponse) { this.dateReponse = dateReponse; }
+    public int getEvaluationId() {
+        return evaluationId;
+    }
+
+    public void setEvaluationId(int evaluationId) {
+        this.evaluationId = evaluationId;
+    }
+
 }

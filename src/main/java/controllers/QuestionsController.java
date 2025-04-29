@@ -27,7 +27,7 @@ public class QuestionsController {
 
     public void setEvaluation(Evaluation evaluation) {
         this.currentEvaluation = evaluation;
-        titreLabel.setText("Questions pour : " + evaluation.getNom());
+        titreLabel.setText("Questions pour : " + evaluation.getName());
         loadQuestions();
     }
 

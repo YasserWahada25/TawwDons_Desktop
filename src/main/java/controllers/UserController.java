@@ -1,11 +1,11 @@
 package controllers;
 
+import dao.BanDAO;
 import dao.EvaluationDAO;
 import dao.QuestionDAO;
 import dao.ReponseDAO;
 import javafx.animation.FadeTransition;
 import javafx.animation.PauseTransition;
-import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -36,16 +36,13 @@ public class UserController {
     @FXML private Label progressLabel;
     @FXML private StackPane toastContainer;
     @FXML private Label toastMessage;
-
     @FXML private VBox chatBox;
     @FXML private TextField chatInput;
 
     private final QuestionDAO questionDAO = new QuestionDAO();
     private final ReponseDAO reponseDAO = new ReponseDAO();
+    private final BanDAO banDAO = BanDAO.getInstance();
     private final Map<Question, Control> reponsesMap = new HashMap<>();
-
-    private Timeline timer;
-    private int secondes = 0;
 
     @FXML
     public void initialize() {
@@ -56,31 +53,39 @@ public class UserController {
                 evaluationBox.setPromptText("Sélectionnez une évaluation");
                 evaluationBox.setOnAction(e -> {
                     Evaluation selectedEval = evaluationBox.getSelectionModel().getSelectedItem();
-                    if (selectedEval != null) {
-                        loadQuestions(selectedEval);
-                    }
+                    if (selectedEval != null) loadQuestions(selectedEval);
                 });
             }
             if (formView != null) formView.setVisible(false);
             if (progressBar != null) progressBar.setProgress(0);
             if (progressLabel != null) progressLabel.setText("Progression : 0%");
         } catch (Exception e) {
-            System.err.println("⚠ Erreur d'initialisation : " + e.getMessage());
+            System.err.println("Erreur d'initialisation : " + e.getMessage());
         }
     }
 
-    // ========================== CHATBOT ==========================
     @FXML
     private void envoyerMessage() {
         String question = chatInput.getText().trim();
         if (question.isEmpty()) return;
 
-        afficherMessage("👤 Vous : " + question, "#ecf0f1");
-
+        afficherMessage("\uD83D\uDC64 Vous : " + question, "#ecf0f1");
         String reponse = repondre(question.toLowerCase());
-        afficherMessage("🤖 ChatBot : " + reponse, "#dff9fb");
-
+        afficherMessage("\uD83E\uDD16 ChatBot : " + reponse, "#dff9fb");
         chatInput.clear();
+    }
+
+    @FXML
+    private void ouvrirMiniJeu() {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/views/MiniJeu.fxml"));
+            Stage stage = new Stage();
+            stage.setTitle("\uD83E\uDDEA Jeu de Santé");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void afficherMessage(String text, String bgColor) {
@@ -91,45 +96,14 @@ public class UserController {
     }
 
     private String repondre(String question) {
-        if (question.contains("stress") || question.contains("anxieux")) return "Respire profondément, fais une pause 😊";
-        if (question.contains("eau") || question.contains("boire")) return "Boire de l’eau améliore la concentration 💧";
+        if (question.contains("stress") || question.contains("anxieux")) return "Respire profondément, fais une pause \uD83D\uDE0A";
+        if (question.contains("eau") || question.contains("boire")) return "Boire de l'eau améliore la concentration \uD83D\uDCA7";
         if (question.contains("conseil") || question.contains("astuce")) return "Lis bien chaque question, fais confiance à ton instinct !";
         if (question.contains("question")) return "Cherche les mots-clés dans l'énoncé.";
-        if (question.contains("bonjour") || question.contains("salut")) return "Salut ! Je suis ton assistant 😊";
+        if (question.contains("bonjour") || question.contains("salut")) return "Salut ! Je suis ton assistant \uD83D\uDE0A";
         return "Désolé, je ne suis pas sûr. Peux-tu reformuler ?";
     }
 
-    @FXML
-    private void ouvrirChat() {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("/views/Chatbot.fxml"));
-            Stage stage = new Stage();
-            stage.setTitle("Assistant ChatBot");
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-            showToast("Erreur de chargement du ChatBot.", "#e74c3c");
-        }
-    }
-
-    // ===================== MINI JEU DE MÉMOIRE ====================
-    @FXML
-    private void ouvrirMiniJeu() {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("/views/MiniJeu.fxml"));
-            Stage stage = new Stage();
-            stage.setTitle("🧠 Jeu de Santé");
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-            showToast("Erreur d'ouverture du jeu", "#e74c3c");
-        }
-    }
-
-
-    // ===================== RÉPONSES AUX QUESTIONS =====================
     @FXML
     private void montrerFormulaire() {
         formView.setVisible(true);
@@ -144,48 +118,48 @@ public class UserController {
         reponsesMap.clear();
 
         List<Question> questions = questionDAO.getByEvaluationId(evaluation.getId());
-
         if (questions.isEmpty()) {
             Label label = new Label("Aucune question trouvée.");
-            label.setStyle("-fx-text-fill: white;");
+            label.setStyle("-fx-text-fill: #2c3e50; -fx-font-size: 16px; -fx-font-weight: bold;");
             questionsBox.getChildren().add(label);
             return;
         }
 
         int delay = 0;
         for (Question q : questions) {
-            VBox bloc = new VBox(5);
-            bloc.setStyle("""
-                -fx-background-color: white;
+            VBox questionCard = new VBox(10);
+            questionCard.setStyle("""
+                -fx-background-color: #ffffff;
                 -fx-background-radius: 10;
-                -fx-padding: 15;
-                -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 6, 0.3, 0, 2);
+                -fx-border-radius: 10;
+                -fx-border-color: #dfe6e9;
+                -fx-border-width: 1;
+                -fx-padding: 20;
+                -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 8, 0, 0, 4);
             """);
 
             Label qLabel = new Label(q.getContenu());
-            qLabel.setStyle("-fx-text-fill: black; -fx-font-size: 14px; -fx-font-weight: bold;");
+            qLabel.setStyle("-fx-text-fill: #2c3e50; -fx-font-size: 15px; -fx-font-weight: bold;");
 
             Control input;
             if ("qcm".equalsIgnoreCase(q.getType())) {
                 ComboBox<String> choix = new ComboBox<>();
-                choix.getItems().addAll("vrai", "faux");
+                choix.getItems().addAll("Vrai", "Faux");
                 choix.setPromptText("Choisissez");
-                choix.setStyle("-fx-background-color: #eeeeee; -fx-background-radius: 6;");
                 choix.setOnAction(e -> updateProgress());
                 input = choix;
             } else {
                 TextField champ = new TextField();
-                champ.setPromptText("Votre réponse");
-                champ.setStyle("-fx-background-color: #eeeeee; -fx-background-radius: 6;");
+                champ.setPromptText("Votre réponse...");
                 champ.textProperty().addListener((obs, oldText, newText) -> updateProgress());
                 input = champ;
             }
 
-            bloc.getChildren().addAll(qLabel, input);
-            questionsBox.getChildren().add(bloc);
+            questionCard.getChildren().addAll(qLabel, input);
+            questionsBox.getChildren().add(questionCard);
             reponsesMap.put(q, input);
 
-            TranslateTransition tt = new TranslateTransition(Duration.millis(300), bloc);
+            TranslateTransition tt = new TranslateTransition(Duration.millis(300), questionCard);
             tt.setFromX(100);
             tt.setToX(0);
             tt.setDelay(Duration.millis(delay));
@@ -213,14 +187,6 @@ public class UserController {
         double progress = (double) remplis / total;
         progressBar.setProgress(progress);
         progressLabel.setText("Progression : " + (int) (progress * 100) + "%");
-
-        if (progress < 0.5) {
-            progressBar.setStyle("-fx-accent: red;");
-        } else if (progress < 0.8) {
-            progressBar.setStyle("-fx-accent: orange;");
-        } else {
-            progressBar.setStyle("-fx-accent: #2ecc71;");
-        }
     }
 
     @FXML
@@ -237,8 +203,8 @@ public class UserController {
             return;
         }
 
-        if (!nom.matches("^[A-Z][a-zA-Z0-9\\s]*$")) {
-            showToast("Le nom doit commencer par une majuscule.", "#f39c12");
+        if (banDAO.isBanni(nom)) {
+            showAlertAndRetourAccueil("Vous êtes banni. Vous ne pouvez pas envoyer de réponses.");
             return;
         }
 
@@ -247,12 +213,9 @@ public class UserController {
         for (Map.Entry<Question, Control> entry : reponsesMap.entrySet()) {
             Question q = entry.getKey();
             Control input = entry.getValue();
-            String value = "";
+            String value = (input instanceof TextField tf) ? tf.getText() : (input instanceof ComboBox<?> cb && cb.getValue() != null) ? cb.getValue().toString() : "";
 
-            if (input instanceof TextField tf) value = tf.getText();
-            else if (input instanceof ComboBox<?> cb && cb.getValue() != null) value = cb.getValue().toString();
-
-            if (value == null || value.isBlank()) {
+            if (value.isBlank()) {
                 erreur = true;
                 continue;
             }
@@ -266,11 +229,8 @@ public class UserController {
             reponseDAO.add(r);
         }
 
-        if (erreur) {
-            showToast("Certaines réponses sont incomplètes.", "#f39c12");
-        } else {
-            showToast("Réponses enregistrées avec succès ✅", "#2ecc71");
-        }
+        if (erreur) showToast("Certaines réponses sont incomplètes.", "#f39c12");
+        else showToast("Réponses enregistrées avec succès ✅", "#2ecc71");
 
         utilisateurField.clear();
         evaluationBox.getSelectionModel().clearSelection();
@@ -301,26 +261,42 @@ public class UserController {
         fadeIn.play();
     }
 
+    private void showAlertAndRetourAccueil(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Banni");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+        retourAccueil();
+    }
+
     @FXML
     private void retourAccueil() {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/views/Acceuil.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/MainInterface.fxml"));
             Stage stage = (Stage) utilisateurField.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("Accueil");
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
     @FXML
     private void ouvrirBrainChess() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/BrainChess.fxml"));
-        Parent root = loader.load();
+        Parent root = FXMLLoader.load(getClass().getResource("/views/BrainChess.fxml"));
         Stage stage = new Stage();
-        stage.setTitle("🧠 Brain Chess");
+        stage.setTitle("\uD83E\uDDEA Brain Chess");
         stage.setScene(new Scene(root));
         stage.show();
     }
 
+    @FXML
+    private void ouvrirChat() throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/views/Chatbot.fxml"));
+        Stage stage = new Stage();
+        stage.setTitle("Assistant Santé");
+        stage.setScene(new Scene(root));
+        stage.show();
+    }
 }
-

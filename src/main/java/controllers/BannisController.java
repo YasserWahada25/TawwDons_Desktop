@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
@@ -24,27 +25,42 @@ public class BannisController {
 
     @FXML
     public void initialize() {
-        utilisateurCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().utilisateur));
-        motCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().mot));
-        dateCol.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().date));
-
+        setupColumns();
         loadBannis();
     }
 
+    private void setupColumns() {
+        utilisateurCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().utilisateur));
+        motCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().mot));
+        dateCol.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().date));
+    }
+
     private void loadBannis() {
-        List<BanDAO.BanInfo> list = banDAO.getAllBannis();
-        System.out.println("🔍 Nombre de bannis récupérés : " + list.size());
-        banTable.getItems().setAll(list);
+        try {
+            List<BanDAO.BanInfo> list = banDAO.getAllBannis();
+            banTable.getItems().setAll(list);
+            System.out.println("🔍 Nombre de bannis récupérés : " + list.size());
+        } catch (Exception e) {
+            showAlert("Erreur de chargement", "Impossible de récupérer la liste des utilisateurs bannis.");
+            e.printStackTrace();
+        }
     }
 
     @FXML
     private void debannirSelection() {
         BanDAO.BanInfo selected = banTable.getSelectionModel().getSelectedItem();
-        if (selected != null) {
+        if (selected == null) {
+            showAlert("Sélection requise", "Veuillez sélectionner un utilisateur à débannir.");
+            return;
+        }
+
+        try {
             banDAO.debannir(selected.utilisateur);
             loadBannis();
-        } else {
-            System.out.println("❗ Aucun utilisateur sélectionné.");
+            showAlert("Succès", "Utilisateur débanni avec succès !");
+        } catch (Exception e) {
+            showAlert("Erreur", "Impossible de débannir cet utilisateur.");
+            e.printStackTrace();
         }
     }
 
@@ -56,7 +72,16 @@ public class BannisController {
             stage.setScene(new Scene(root));
             stage.setTitle("Espace Admin");
         } catch (Exception e) {
+            showAlert("Erreur de navigation", "Impossible de retourner à l'accueil admin.");
             e.printStackTrace();
         }
+    }
+
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 }

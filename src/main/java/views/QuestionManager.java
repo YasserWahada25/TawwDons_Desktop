@@ -27,7 +27,7 @@ public class QuestionManager {
         this.currentEvaluation = evaluation;
 
         Stage stage = new Stage();
-        stage.setTitle("Questions - " + evaluation.getNom());
+        stage.setTitle("Questions - " + evaluation.getName());
 
         contenuField = new TextField();
         contenuField.setPromptText("Contenu de la question");
