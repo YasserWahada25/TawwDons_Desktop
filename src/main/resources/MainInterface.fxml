@@ -35,6 +35,7 @@
                     </MenuButton>
 
                     <Button fx:id="userBtn" text="Evaluation"/>
+                    <Button fx:id="adminBtn" text="🛠 Espace Admin"/>
 
 
                     <MenuButton text="BLOG">
@@ -62,4 +63,4 @@
             </HBox>
         </VBox>
     </children>
-</AnchorPane> 
+</AnchorPane>

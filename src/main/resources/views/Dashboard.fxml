@@ -2,42 +2,59 @@
 
 <?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 
-<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="controllers.DashboardController"
-            style="-fx-background-color: #1e1e1e;" prefWidth="900" prefHeight="600">
+<StackPane fx:id="rootPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.DashboardController">
+    <children>
+        <AnchorPane prefHeight="700.0" prefWidth="1000.0">
+            <children>
+                <!-- NAVBAR -->
+                <VBox layoutY="0" spacing="10.0" style="-fx-background-color:skyblue;" prefWidth="974.0">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <padding>
+                            <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
+                        </padding>
 
-    <top>
-        <VBox style="-fx-padding: 20;">
-            <Label text="📊 Tableau de Bord"
-                   style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;" />
-            <Region HBox.hgrow="ALWAYS"/>
-            <Button text="↩ Retour" onAction="#retourAdmin"
-                    style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-background-radius: 8;" />
-        </VBox>
-    </top>
+                        <ImageView fitHeight="40" fitWidth="40" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@images/tawwa don 3.png"/>
+                            </image>
+                        </ImageView>
+                        <Label text="Tawwa Dons - Dashboard" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #0066ff;"/>
+                        <Pane HBox.hgrow="ALWAYS"/>
+                        <HBox spacing="20" alignment="CENTER_RIGHT">
+                            <Button text="↩ Retour" onAction="#retourAdmin" style="-fx-background-color: #ecf0f1; -fx-font-weight: bold;" />
+                        </HBox>
+                    </HBox>
+                </VBox>
 
-    <center>
-        <VBox spacing="30" style="-fx-padding: 20;">
-            <HBox spacing="30">
-                <Label fx:id="evalCountLabel" style="-fx-text-fill: white; -fx-font-size: 18px;" />
-                <Label fx:id="userCountLabel" style="-fx-text-fill: white; -fx-font-size: 18px;" />
-                <Label fx:id="accuracyLabel" style="-fx-text-fill: white; -fx-font-size: 18px;" />
-            </HBox>
+                <!-- CONTENU -->
+                <VBox spacing="30" AnchorPane.topAnchor="80.0" AnchorPane.bottomAnchor="20.0"
+                      AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
 
-            <HBox spacing="30">
-                <PieChart fx:id="pieChart" prefWidth="400" />
-                <BarChart fx:id="barChart" title="Réponses par Évaluation"
-                          prefWidth="400" animated="true">
-                    <xAxis>
-                        <CategoryAxis label="Évaluation"/>
-                    </xAxis>
-                    <yAxis>
-                        <NumberAxis label="Nombre de réponses"/>
-                    </yAxis>
-                </BarChart>
-            </HBox>
-        </VBox>
-    </center>
-</BorderPane>
+                    <HBox spacing="30">
+                        <Label fx:id="evalCountLabel" style="-fx-text-fill: white; -fx-font-size: 18px;" />
+                        <Label fx:id="userCountLabel" style="-fx-text-fill: white; -fx-font-size: 18px;" />
+                        <Label fx:id="accuracyLabel" style="-fx-text-fill: white; -fx-font-size: 18px;" />
+                    </HBox>
+
+                    <HBox spacing="30">
+                        <PieChart fx:id="pieChart" prefWidth="400" />
+                        <BarChart fx:id="barChart" title="Réponses par Évaluation" prefWidth="400" animated="true">
+                            <xAxis>
+                                <CategoryAxis label="Évaluation"/>
+                            </xAxis>
+                            <yAxis>
+                                <NumberAxis label="Nombre de réponses"/>
+                            </yAxis>
+                        </BarChart>
+                    </HBox>
+
+                </VBox>
+            </children>
+        </AnchorPane>
+    </children>
+</StackPane>

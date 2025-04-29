@@ -11,7 +11,7 @@ import java.util.List;
 
 public class PDFExporter {
 
-    public static void exportEvaluations(List<Evaluation> evaluations, String filePath) {
+    public static void exportEvaluation(List<Evaluation> Evaluation, String filePath) {
         Document document = new Document();
         try {
             PdfWriter.getInstance(document, new FileOutputStream(filePath));
@@ -34,11 +34,11 @@ public class PDFExporter {
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-            for (Evaluation eval : evaluations) {
+            for (Evaluation eval : Evaluation) {
                 table.addCell(String.valueOf(eval.getId()));
-                table.addCell(eval.getNom());
+                table.addCell(eval.getName());
                 table.addCell(eval.getType());
-                table.addCell(eval.getDateCreation().format(formatter));
+                table.addCell(eval.getCreatedAt().format(formatter));
             }
 
             document.add(table);

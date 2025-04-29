@@ -1,37 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx"
-            fx:controller="controllers.BrainChessController"
-            prefWidth="600.0" prefHeight="700.0"
-            style="-fx-background-color: linear-gradient(to bottom right, #1f1f1f, #121212);">
+<StackPane fx:id="rootPane" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+           fx:controller="controllers.BrainChessController">
+    <children>
+        <AnchorPane prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: linear-gradient(to bottom, #1e3c72, #2a5298);">
+            <children>
 
-    <VBox alignment="CENTER" spacing="20.0" AnchorPane.topAnchor="20.0" AnchorPane.bottomAnchor="20.0"
-          AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
+                <!-- NAVBAR -->
+                <VBox layoutY="0" spacing="8" prefWidth="1000.0" style="-fx-background-color: #3498db; -fx-background-radius: 0 0 15 15;">
+                    <HBox spacing="8" alignment="CENTER_LEFT">
+                        <padding>
+                            <Insets top="8" right="8" bottom="8" left="8"/>
+                        </padding>
 
-        <Label text="🧠 Brain Chess" style="-fx-text-fill: white;">
-            <font>
-                <Font size="28"/>
-            </font>
-        </Label>
+                        <ImageView fitHeight="30" fitWidth="30" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@images/tawwa don 3.png"/>
+                            </image>
+                        </ImageView>
 
-        <!-- Score et Timer -->
-        <HBox spacing="30" alignment="CENTER">
-            <Label fx:id="scoreLabel" text="Score: 0" style="-fx-text-fill: #2ecc71; -fx-font-size: 16px;"/>
-            <Label fx:id="timerLabel" text="Temps: 60s" style="-fx-text-fill: #e74c3c; -fx-font-size: 16px;"/>
-        </HBox>
+                        <Label text="Tawwa Dons - Brain Chess" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                        <Pane HBox.hgrow="ALWAYS"/>
 
-        <!-- Plateau de jeu -->
-        <GridPane fx:id="board" hgap="2" vgap="2" style="-fx-padding: 10;">
-            <!-- Les cellules sont ajoutées dynamiquement -->
-        </GridPane>
+                        <Button fx:id="retourButton" text="↩ Retour" onAction="#retour"
+                                style="-fx-background-color: white; -fx-text-fill: #3498db; -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 5 10;"/>
+                    </HBox>
+                </VBox>
 
-        <!-- Bouton Rejouer -->
-        <Button fx:id="replayButton" text="🔁 Rejouer"
-                style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 8 20;"/>
-    </VBox>
-</AnchorPane>
+                <!-- GAME LAYOUT -->
+                <VBox alignment="CENTER" spacing="20" AnchorPane.topAnchor="70.0" AnchorPane.bottomAnchor="10.0"
+                      AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+
+                    <Label text="♞ Brain Chess - Mode Cavalier"
+                           style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+                    <!-- Score et Timer -->
+                    <HBox spacing="20" alignment="CENTER">
+                        <Label fx:id="scoreLabel" text="🏆 Score: 0" style="-fx-text-fill: #2ecc71; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+                        <Label fx:id="timerLabel" text="⏳ Temps: 300s" style="-fx-text-fill: #e74c3c; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+                    </HBox>
+
+                    <!-- Echiquier -->
+                    <StackPane style="-fx-padding: 10; -fx-background-color: rgba(255,255,255,0.1); -fx-background-radius: 15;">
+                        <GridPane fx:id="board" hgap="2" vgap="2" style="-fx-alignment: center;">
+                            <!-- Cases échiquier générées dynamiquement -->
+                        </GridPane>
+                    </StackPane>
+
+                    <!-- Bouton Rejouer -->
+                    <Button fx:id="replayButton" text="🔁 Rejouer"
+                            style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 8 20;"/>
+                </VBox>
+
+            </children>
+        </AnchorPane>
+    </children>
+</StackPane>

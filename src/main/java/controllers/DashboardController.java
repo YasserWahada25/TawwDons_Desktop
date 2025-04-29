@@ -29,43 +29,48 @@ public class DashboardController {
         List<Evaluation> evaluations = evalDAO.getAll();
         List<Reponse> reponses = repDAO.getAll();
 
-        // Nombre total d'évaluations
+        // 📘 Nombre total d'évaluations
         evalCountLabel.setText("📘 Évaluations : " + evaluations.size());
 
-        // Utilisateurs uniques
+        // 👤 Nombre d'utilisateurs uniques
         long utilisateurs = reponses.stream()
                 .map(Reponse::getUtilisateur)
                 .distinct()
                 .count();
         userCountLabel.setText("👤 Utilisateurs : " + utilisateurs);
 
-        // Taux de bonnes réponses
+        // ✅ Taux de bonnes réponses
         long bonnes = reponses.stream().filter(Reponse::isBonne).count();
         long total = reponses.size();
         double pourcentage = total == 0 ? 0 : (bonnes * 100.0 / total);
         accuracyLabel.setText("✅ Réussite : " + String.format("%.1f", pourcentage) + "%");
 
-        // PieChart bonnes vs mauvaises
+        // 🍰 PieChart Bonnes vs Mauvaises
+        pieChart.getData().clear();
         pieChart.getData().addAll(
-                new PieChart.Data("Bonnes", bonnes),
-                new PieChart.Data("Mauvaises", total - bonnes)
+                new PieChart.Data("✅ Bonnes réponses", bonnes),
+                new PieChart.Data("❌ Mauvaises réponses", total - bonnes)
         );
         pieChart.setTitle("Distribution des Réponses");
 
-        // BarChart réponses par évaluation
+        // 📊 BarChart Activité par Évaluation
+        // Regrouper par ID d'évaluation (pas question !)
         Map<Integer, Long> repParEval = reponses.stream()
-                .collect(Collectors.groupingBy(Reponse::getQuestionId, Collectors.counting()));
+                .collect(Collectors.groupingBy(Reponse::getEvaluationId, Collectors.counting()));
 
+        barChart.getData().clear();
         XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Activité");
+
         for (Evaluation eval : evaluations) {
-            long count = repParEval.entrySet().stream()
-                    .filter(e -> evalDAO.getEvaluationIdFromQuestionId(e.getKey()) == eval.getId())
-                    .mapToLong(Map.Entry::getValue)
-                    .sum();
-            series.getData().add(new XYChart.Data<>(eval.getNom(), count));
+            long count = repParEval.getOrDefault(eval.getId(), 0L);
+            series.getData().add(new XYChart.Data<>(eval.getName(), count));
         }
+
         barChart.getData().add(series);
+        barChart.setTitle("Activité des Utilisateurs");
     }
+
     @FXML
     private void retourAdmin() {
         Navigation.goTo("Admin.fxml");

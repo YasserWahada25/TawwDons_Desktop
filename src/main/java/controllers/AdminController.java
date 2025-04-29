@@ -17,6 +17,7 @@ import models.Evaluation;
 import utils.PDFExporter;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public class AdminController {
@@ -25,7 +26,8 @@ public class AdminController {
     @FXML private ComboBox<String> typeBox;
     @FXML private TableView<Evaluation> tableView;
     @FXML private TableColumn<Evaluation, Integer> idCol;
-    @FXML private TableColumn<Evaluation, String> nomCol, typeCol, dateCol;
+    @FXML private TableColumn<Evaluation, String> nomCol, typeCol;
+    @FXML private TableColumn<Evaluation, Object> dateCol;
     @FXML private TextField searchField;
     @FXML private StackPane rootPane;
 
@@ -37,26 +39,26 @@ public class AdminController {
         typeBox.getItems().addAll("qcm", "numeric");
 
         idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
-        nomCol.setCellValueFactory(new PropertyValueFactory<>("nom"));
+        nomCol.setCellValueFactory(new PropertyValueFactory<>("name"));
         typeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
-        dateCol.setCellValueFactory(new PropertyValueFactory<>("dateCreation"));
+        dateCol.setCellValueFactory(new PropertyValueFactory<>("createdAt"));
 
         tableView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
-                nomField.setText(newVal.getNom());
+                nomField.setText(newVal.getName());
                 descriptionField.setText(newVal.getDescription());
                 typeBox.setValue(newVal.getType());
             }
         });
 
-        loadEvaluations();
+        loadEvaluation();
 
         searchField.textProperty().addListener((obs, oldVal, newVal) -> {
             List<Evaluation> all = dao.getAll();
             String lower = newVal.toLowerCase();
             tableView.getItems().setAll(
                     all.stream()
-                            .filter(e -> e.getNom().toLowerCase().contains(lower)
+                            .filter(e -> e.getName().toLowerCase().contains(lower)
                                     || e.getType().toLowerCase().contains(lower))
                             .toList()
             );
@@ -66,15 +68,14 @@ public class AdminController {
     @FXML
     private void exporterPDF() {
         try {
-            List<Evaluation> evaluations = dao.getAll();
-
+            List<Evaluation> Evaluation = dao.getAll();
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Exporter vers PDF");
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Fichier PDF", "*.pdf"));
             File file = fileChooser.showSaveDialog(tableView.getScene().getWindow());
 
             if (file != null) {
-                PDFExporter.exportEvaluations(evaluations, file.getAbsolutePath());
+                PDFExporter.exportEvaluation(Evaluation, file.getAbsolutePath());
                 showToast("✅ PDF exporté avec succès !");
             }
 
@@ -108,7 +109,7 @@ public class AdminController {
         }
     }
 
-    private void loadEvaluations() {
+    private void loadEvaluation() {
         List<Evaluation> list = dao.getAll();
         tableView.getItems().setAll(list);
         animateTable();
@@ -143,13 +144,13 @@ public class AdminController {
         }
 
         Evaluation e = new Evaluation();
-        e.setNom(nom);
+        e.setName(nom);
         e.setDescription(desc);
         e.setType(type);
 
         dao.add(e);
         clearForm();
-        loadEvaluations();
+        loadEvaluation();
         showToast("✅ Évaluation ajoutée !");
     }
 
@@ -161,13 +162,13 @@ public class AdminController {
             return;
         }
 
-        selected.setNom(nomField.getText().trim());
+        selected.setName(nomField.getText().trim());
         selected.setDescription(descriptionField.getText().trim());
         selected.setType(typeBox.getValue());
 
         dao.update(selected);
         clearForm();
-        loadEvaluations();
+        loadEvaluation();
         showToast("✏️ Évaluation modifiée.");
     }
 
@@ -185,7 +186,7 @@ public class AdminController {
                 if (response == ButtonType.OK) {
                     dao.delete(selected.getId());
                     clearForm();
-                    loadEvaluations();
+                    loadEvaluation();
                     showToast("🗑️ Évaluation supprimée.");
                 }
             });
@@ -219,99 +220,89 @@ public class AdminController {
         a.setContentText(message);
         a.showAndWait();
     }
-    @FXML
-    private void ouvrirListeBannis() {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("/views/Bannis.fxml"));
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Utilisateurs Bannis");
-            stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-            alert("Erreur", "Impossible d’ouvrir la liste des bannis.");
-        }
-    }
 
     @FXML
-    private void ouvrirQuestions() {
-        Evaluation selected = tableView.getSelectionModel().getSelectedItem();
-        if (selected == null) {
-            showToast("❗ Sélectionnez une évaluation.");
-            return;
-        }
-
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Questions.fxml"));
-            Parent root = loader.load();
-            QuestionsController controller = loader.getController();
-            controller.setEvaluation(selected);
-            Stage stage = (Stage) tableView.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Questions - " + selected.getNom());
-        } catch (Exception e) {
-            e.printStackTrace();
-            showToast("Erreur d'ouverture Questions.");
-        }
-    }
+    private void ouvrirListeBannis() { ouvrirPage("/views/Bannis.fxml", "Utilisateurs Bannis"); }
 
     @FXML
-    private void ouvrirReponses() {
-        Evaluation selected = tableView.getSelectionModel().getSelectedItem();
-        if (selected == null) {
-            showToast("❗ Sélectionnez une évaluation.");
-            return;
-        }
-
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Reponses.fxml"));
-            Parent root = loader.load();
-            ReponsesController controller = loader.getController();
-            controller.setEvaluation(selected);
-            Stage stage = (Stage) tableView.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Réponses - " + selected.getNom());
-        } catch (Exception e) {
-            e.printStackTrace();
-            showToast("Erreur d'ouverture Réponses.");
-        }
-    }
+    private void ouvrirQuestions() { ouvrirPageAvecEvaluation("/views/Questions.fxml", "Questions"); }
 
     @FXML
-    private void ouvrirArchives() {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("/views/Archives.fxml"));
-            Stage stage = (Stage) nomField.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("🗃️ Archives");
-        } catch (Exception e) {
-            e.printStackTrace();
-            showToast("❌ Erreur lors de l'ouverture des archives.");
-        }
-    }
+    private void ouvrirReponses() { ouvrirPageAvecEvaluation("/views/Reponses.fxml", "Réponses"); }
+
     @FXML
-    private void ouvrirDashboard() {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("/views/Dashboard.fxml"));
-            Stage stage = (Stage) nomField.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("📊 Tableau de Bord");
-        } catch (Exception e) {
-            e.printStackTrace();
-            showToast("❌ Erreur lors de l'ouverture du Dashboard.");
-        }
-    }
+    private void ouvrirArchives() { ouvrirPage("/views/Archives.fxml", "Archives"); }
 
+    @FXML
+    private void ouvrirDashboard() { ouvrirPage("/views/Dashboard.fxml", "Tableau de Bord"); }
 
-    @FXML private void retourAccueil() {
+    @FXML
+    private Button adminAccueilBtn;
+
+    @FXML
+    private void retourAccueil() {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/views/Acceuil.fxml"));
-            Stage stage = (Stage) nomField.getScene().getWindow();
+            Parent root = FXMLLoader.load(getClass().getResource("/MainInterface.fxml"));
+            Stage stage = (Stage) adminAccueilBtn.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("Accueil");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void ouvrirPage(String path, String title) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource(path));
+            Stage stage = (Stage) nomField.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle(title);
         } catch (Exception e) {
             e.printStackTrace();
-            alert("Erreur", "Retour impossible.");
+            showToast("❌ Erreur d'ouverture.");
+        }
+    }
+    @FXML
+    private void archiverEvaluation() {
+        Evaluation selected = tableView.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showToast("❗ Veuillez sélectionner une évaluation à archiver.");
+            return;
+        }
+
+        selected.setArchived(true);
+        dao.update(selected); // update dans DB
+        loadEvaluation(); // recharge sans les archivées
+        showToast("🗄 Évaluation archivée avec succès !");
+    }
+
+
+    private void ouvrirPageAvecEvaluation(String path, String title) {
+        Evaluation selected = tableView.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showToast("❗ Sélectionnez une évaluation.");
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
+            Parent root = loader.load();
+
+            if (path.contains("Questions")) {
+                QuestionsController controller = loader.getController();
+                controller.setEvaluation(selected);
+            } else if (path.contains("Reponses")) {
+                ReponsesController controller = loader.getController();
+                controller.setEvaluation(selected);
+            }
+
+            Stage stage = (Stage) tableView.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle(title + " - " + selected.getName());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            showToast("❌ Erreur d'ouverture page.");
         }
     }
 }

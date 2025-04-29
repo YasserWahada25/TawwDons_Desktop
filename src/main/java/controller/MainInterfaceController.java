@@ -33,6 +33,9 @@ public class MainInterfaceController {
     private Label userNameLabel;
     @FXML
     private Button userBtn;
+    @FXML
+    private Button adminBtn;
+
 
     private SessionManager sessionManager;
 
@@ -47,6 +50,8 @@ public class MainInterfaceController {
         menuPosterDon.setOnAction(event -> handlePosterDon());
         deconnexionButton.setOnAction(event -> handleDeconnexion());
         userBtn.setOnAction(this::goToUser);
+        adminBtn.setOnAction(this::goToAdmin);
+
 
 
         // Display the logged-in user's name
@@ -100,5 +105,18 @@ public class MainInterfaceController {
             menuListeArticles.setOnAction(e -> Router.navigateTo("/articleList.fxml"));
         if (btnHome != null)
             btnHome.setOnAction(e -> Router.navigateTo("/Home.fxml"));
+    }
+    @FXML
+    private void goToAdmin(ActionEvent event) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/views/Admin.fxml"));
+            Stage stage = (Stage) adminBtn.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Espace Admin");
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("❌ Erreur lors du chargement de l'interface Admin.");
+        }
     }
 } 

@@ -38,7 +38,7 @@ public class MiniJeuController {
         niveauBox.getItems().addAll("Facile", "Moyen", "Difficile");
         validerButton.setDisable(true);
         chronoLabel.setText("");
-        scoreLabel.setText("🧠 Score : 0");
+        scoreLabel.setText("\uD83E\uDDE0 Score : 0");
         chargerQuestionsStatiques();
     }
 
@@ -59,7 +59,7 @@ public class MiniJeuController {
 
         score = 0;
         currentIndex = 0;
-        scoreLabel.setText("🧠 Score : 0");
+        scoreLabel.setText("\uD83E\uDDE0 Score : 0");
         afficherQuestion();
     }
 
@@ -72,11 +72,10 @@ public class MiniJeuController {
         QuestionQCM q = questions.get(currentIndex);
         questionLabel.setText("Question " + (currentIndex + 1) + " : " + q.getQuestion());
 
-        choixGroup = new ToggleGroup(); // 🔁 Crée un nouveau groupe pour chaque question
-        choixBox.getChildren().clear(); // 🧽 Nettoie la grille
+        choixGroup = new ToggleGroup();
+        choixBox.getChildren().clear();
         choixBox.setAlignment(Pos.CENTER);
 
-        // Affichage des choix en 2 colonnes
         for (int i = 0; i < q.getChoix().size(); i++) {
             String opt = q.getChoix().get(i);
             RadioButton rb = new RadioButton(opt);
@@ -94,12 +93,20 @@ public class MiniJeuController {
 
     @FXML
     private void validerReponse() {
-        if (timer != null) timer.stop();
         RadioButton selected = (RadioButton) choixGroup.getSelectedToggle();
-        if (selected != null && selected.getText().equals(questions.get(currentIndex).getBonneReponse())) {
+
+        if (selected == null) {
+            showAlert("⚠ Veuillez sélectionner une réponse avant de valider !");
+            return;
+        }
+
+        if (timer != null) timer.stop();
+
+        if (selected.getText().equals(questions.get(currentIndex).getBonneReponse())) {
             score++;
         }
-        scoreLabel.setText("🧠 Score : " + score);
+
+        scoreLabel.setText("\uD83E\uDDE0 Score : " + score);
         currentIndex++;
         afficherQuestion();
     }
@@ -108,12 +115,15 @@ public class MiniJeuController {
         secondesRestantes = 60;
         chronoLabel.setText("⏳ Temps restant : 60s");
 
+        if (timer != null) timer.stop();
+
         timer = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
             secondesRestantes--;
             chronoLabel.setText("⏳ Temps restant : " + secondesRestantes + "s");
 
             if (secondesRestantes <= 0) {
                 timer.stop();
+                showAlert("⏳ Temps écoulé pour cette question !");
                 validerReponse();
             }
         }));
@@ -127,20 +137,18 @@ public class MiniJeuController {
         scoreDAO.enregistrer(result);
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("🎉 Fin du Jeu");
+        alert.setTitle("\uD83C\uDF89 Fin du Jeu");
         alert.setHeaderText("Bravo " + nom + " !");
-        alert.setContentText("Ton score est : " + score + " / 10");
+        alert.setContentText("Ton score est : " + score + " / " + questions.size());
         alert.showAndWait();
     }
 
     private void showAlert(String msg) {
         Alert a = new Alert(Alert.AlertType.WARNING);
+        a.setHeaderText(null);
         a.setContentText(msg);
-        a.show();
+        a.showAndWait();
     }
-
-
-
 
 private void chargerQuestionsStatiques() {
         // ✅ Facile

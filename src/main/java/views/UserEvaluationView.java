@@ -23,9 +23,9 @@ public class UserEvaluationView {
 
     public void show(Evaluation evaluation) {
         Stage stage = new Stage();
-        stage.setTitle("Évaluation : " + evaluation.getNom());
+        stage.setTitle("Évaluation : " + evaluation.getName());
 
-        Label titre = new Label("Évaluation : " + evaluation.getNom());
+        Label titre = new Label("Évaluation : " + evaluation.getName());
         Label description = new Label("Description : " + evaluation.getDescription());
 
         TextField utilisateurField = new TextField();

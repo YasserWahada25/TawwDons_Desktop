@@ -4,69 +4,56 @@ import java.time.LocalDateTime;
 
 public class Evaluation {
     private int id;
-    private String nom;
+    private String name;
     private String description;
     private String type;
-    private LocalDateTime dateCreation;
+    private LocalDateTime createdAt;
+    private boolean isArchived; // <<=== AJOUT
 
-    // Constructeur par défaut
-    public Evaluation() {
-        this.dateCreation = LocalDateTime.now();
-    }
+    public Evaluation() {}
 
-    // Constructeur complet
-    public Evaluation(int id, String nom, String description, String type, LocalDateTime dateCreation) {
+    // ✅ Le constructeur actuel (5 paramètres)
+    public Evaluation(int id, String name, String description, String type, LocalDateTime createdAt) {
         this.id = id;
-        this.nom = nom;
+        this.name = name;
         this.description = description;
         this.type = type;
-        this.dateCreation = dateCreation;
+        this.createdAt = createdAt;
+        this.isArchived = false; // par défaut non archivé
     }
 
-    // Getters et Setters
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
+    // ✅ NOUVEAU constructeur (6 paramètres)
+    public Evaluation(int id, String name, String description, String type, LocalDateTime createdAt, boolean isArchived) {
         this.id = id;
-    }
-
-    public String getNom() {
-        return nom;
-    }
-
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
+        this.name = name;
         this.description = description;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
         this.type = type;
+        this.createdAt = createdAt;
+        this.isArchived = isArchived;
     }
 
-    public LocalDateTime getDateCreation() {
-        return dateCreation;
-    }
+    // === GETTERS & SETTERS ===
 
-    public void setDateCreation(LocalDateTime dateCreation) {
-        this.dateCreation = dateCreation;
-    }
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
-    // Affichage personnalisé dans les ComboBox
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    public boolean isArchived() { return isArchived; }
+    public void setArchived(boolean archived) { isArchived = archived; }
     @Override
     public String toString() {
-        return nom;
+        return name; // ou getName() si ton champ est privé
     }
+
 }
