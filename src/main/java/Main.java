@@ -1,22 +1,14 @@
-// src/main/java/Main.java
 import javafx.application.Application;
+
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import utils.MyDataBase;
-import utils.Router;
-
-import java.sql.Connection;
 
 public class Main extends Application {
-
-    public static void main(String[] args) {
-        Connection connection = MyDataBase.getInstance().getConnection();
-        System.out.println("connecté à la base de données");
-        System.out.println(connection);
-        launch(args);
-    }
-
     @Override
+
     public void start(Stage primaryStage) {
         Router.setMainStage(primaryStage);
         Router.navigateTo("/home.fxml");
@@ -27,5 +19,17 @@ public class Main extends Application {
         );
         primaryStage.setTitle("TawwaDon App");
         primaryStage.show();
+
+    public void start(Stage primaryStage) throws Exception {
+        Parent root = FXMLLoader.load(getClass().getResource("/MainInterface.fxml"));
+        Scene scene = new Scene(root, 800, 600);
+        primaryStage.setTitle("TawwDons - Donation Management System");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+
     }
 }
