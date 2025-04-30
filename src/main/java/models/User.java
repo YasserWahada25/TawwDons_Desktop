@@ -1,5 +1,35 @@
 package models;
 
+
+public class User {
+    private int id;
+    private String nom;
+    private String prenom;
+    private String email;
+
+    public User(int id, String nom, String prenom, String email) {
+        this.id = id;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.email = email;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getNom() {
+        return nom;
+    }
+
+    public String getPrenom() {
+        return prenom;
+    }
+
+
+
+    public void setId(int id) {
+        this.id = id;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -97,6 +127,7 @@ public class User {
 
     public String getNom() {
         return nom;
+
     }
 
     public void setNom(String nom) {
@@ -110,6 +141,10 @@ public class User {
     public void setPrenom(String prenom) {
         this.prenom = prenom;
     }
+
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+}
 
     public String getEtat_compte() {
         return etat_compte;
@@ -159,3 +194,4 @@ public class User {
                 type_utilisateur.equals("professionnel"));
     }
 } 
+

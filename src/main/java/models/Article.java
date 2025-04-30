@@ -10,6 +10,8 @@ public class Article {
     private String image;
     private String categorie;
     private Date created_at;
+    private int likes;
+    private int dislikes;
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
@@ -31,4 +33,11 @@ public class Article {
 
     public Date getCreated_at() { return created_at; }
     public void setCreated_at(Date created_at) { this.created_at = created_at; }
+
+    // Getters & Setters
+    public int getLikes() { return likes; }
+    public void setLikes(int likes) { this.likes = likes; }
+
+    public int getDislikes() { return dislikes; }
+    public void setDislikes(int dislikes) { this.dislikes = dislikes; }
 }

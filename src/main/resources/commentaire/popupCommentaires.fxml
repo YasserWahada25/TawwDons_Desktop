@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.article.PopupCommentairesController"
+            prefHeight="400" prefWidth="500">
+
+    <children>
+        <VBox spacing="15" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
+              AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+
+            <!-- Titre -->
+            <Label text="Commentaires" style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+
+            <!-- Liste des commentaires (VBox dynamique) -->
+            <VBox fx:id="commentList" spacing="10" />
+
+            <!-- Bouton Fermer aligné à droite -->
+            <HBox alignment="CENTER_RIGHT">
+                <Button fx:id="closeBtn"
+                        text="Fermer"
+                        style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold;" />
+            </HBox>
+        </VBox>
+    </children>
+</AnchorPane>
