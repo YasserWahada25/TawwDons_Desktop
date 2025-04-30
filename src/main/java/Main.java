@@ -1,7 +1,6 @@
 // src/main/java/Main.java
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.Parent;
 import javafx.stage.Stage;
 import utils.MyDataBase;
 import utils.Router;
@@ -20,82 +19,13 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         Router.setMainStage(primaryStage);
+        Router.navigateTo("/home.fxml");
 
-
-        // 2. Charger la première page via le Router
-        Router.navigateTo("/articleList.fxml"); // Chemin relatif dans resources
-
-
+        Scene scene = primaryStage.getScene();
+        scene.getStylesheets().add(
+                getClass().getResource("/css/styles.css").toExternalForm()
+        );
         primaryStage.setTitle("TawwaDon App");
         primaryStage.show();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }
