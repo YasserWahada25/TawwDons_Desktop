@@ -2,6 +2,7 @@ package controllers.article;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -14,6 +15,7 @@ import javafx.scene.control.OverrunStyle;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import models.Commentaire;
 import models.CommentReaction;
@@ -21,7 +23,6 @@ import models.Reaction;
 import models.User;
 import services.*;
 import utils.SessionManager;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -121,14 +122,12 @@ public class ArticleDetailsController implements Initializable {
     }
 
     private VBox createCommentNode(Commentaire c) {
-        // Avatar + author
         ImageView avatar = new ImageView(new Image("file:images/1744625675981.jpg"));
         avatar.setFitWidth(40);
         avatar.setFitHeight(40);
         avatar.setClip(new javafx.scene.shape.Circle(20,20,20));
         Label nomPrenom = new Label(c.getUser().getPrenom() + " " + c.getUser().getNom());
         nomPrenom.setStyle("-fx-font-weight:bold; -fx-font-size:14px;");
-        // reaction emoji
         ImageView reactionImg = new ImageView();
         reactionImg.setFitWidth(20);
         reactionImg.setFitHeight(20);
@@ -141,7 +140,6 @@ public class ArticleDetailsController implements Initializable {
                 if (is != null) reactionImg.setImage(new Image(is));
             });
         }
-        // report icon
         ImageView reportIcon = new ImageView(
                 new Image(getClass().getResourceAsStream("/emojis/signaler.png"))
         );
@@ -150,7 +148,7 @@ public class ArticleDetailsController implements Initializable {
         Button btnReport = new Button();
         btnReport.setGraphic(reportIcon);
         btnReport.setStyle("-fx-background-color:transparent; -fx-cursor:hand;");
-        // hide “signaler” if currentUser is author
+
         boolean isAuthor = currentUser!=null && c.getUser().getId()==currentUser.getId();
         btnReport.setVisible(!isAuthor);
         btnReport.setOnAction(ev -> {
@@ -174,18 +172,13 @@ public class ArticleDetailsController implements Initializable {
         header.getChildren().addAll(spacerH, btnReport);
         header.setAlignment(Pos.CENTER_LEFT);
 
-        // content
         Label contenu = new Label(c.getContent());
         contenu.setWrapText(true);
         contenu.setMaxWidth(container.getWidth()-40);
         contenu.setTextOverrun(OverrunStyle.CLIP);
         contenu.setStyle("-fx-text-fill:#444; -fx-font-size:13px;");
-
-        // timestamp
         Label timeLabel = new Label(toRelative(c.getCreatedAt()));
         timeLabel.setStyle("-fx-text-fill:#888; -fx-font-size:11px;");
-
-        // buttons
         Button btnMod = new Button("Modifier");
         btnMod.setStyle("-fx-background-color:transparent; -fx-text-fill:#2980b9;");
         btnMod.setOnAction(e->{
@@ -214,8 +207,6 @@ public class ArticleDetailsController implements Initializable {
         Button btnReply = new Button("Répondre");
         btnReply.setStyle("-fx-background-color:transparent; -fx-text-fill:#555;");
         btnReply.setOnAction(e->showReplyPopup(c.getId()));
-
-        // assemble actions row
         Region spacerAction = new Region(); HBox.setHgrow(spacerAction,Priority.ALWAYS);
         HBox actions;
         if (isAuthor) {
@@ -224,8 +215,6 @@ public class ArticleDetailsController implements Initializable {
             actions = new HBox(10, timeLabel, spacerAction, btnReact, btnReply);
         }
         actions.setAlignment(Pos.CENTER_LEFT);
-
-        // final container
         VBox box = new VBox(5, header, contenu, actions);
         box.setPadding(new Insets(8));
         box.setStyle("""
@@ -278,7 +267,7 @@ public class ArticleDetailsController implements Initializable {
             ex.printStackTrace();
         }
     }
-
+/***
     private void ajouterCommentaire() {
         if (currentUser == null) {
             System.out.println("Aucun utilisateur connecté"); return;
@@ -323,6 +312,79 @@ public class ArticleDetailsController implements Initializable {
         commentInput.clear();
         afficherCommentaires();
     }
+***/
+    private void ajouterCommentaire() {
+        String txt = commentInput.getText().trim();
+        if (txt.length() < 3) {
+            new Alert(Alert.AlertType.WARNING, "Votre commentaire est trop court.").showAndWait();
+            return;
+        }
+        if (currentUser == null) {
+            new Alert(Alert.AlertType.WARNING, "Vous devez être connecté pour commenter.").showAndWait();
+            return;
+        }
+
+        try {
+            // 1) Afficher le loader
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/article/loading.fxml"));
+            Parent loadingRoot = loader.load();
+            Stage loadingStage = new Stage();
+            loadingStage.initOwner(container.getScene().getWindow());
+            loadingStage.initModality(Modality.APPLICATION_MODAL);
+            loadingStage.setScene(new Scene(loadingRoot));
+            loadingStage.setResizable(false);
+            loadingStage.show();
+
+
+            Task<Boolean> checkTask = new Task<>() {
+                @Override
+                protected Boolean call() throws Exception {
+                    JsonNode analysis = commentAnalyzer.analyze(txt);
+                    return !commentAnalyzer.shouldReject(analysis);
+                }
+            };
+
+            // 3) En cas de succès
+            checkTask.setOnSucceeded(evt -> {
+                loadingStage.close();
+                boolean isValid = checkTask.getValue();
+                if (isValid) {
+                    // enregistrer
+                    Commentaire c = new Commentaire();
+                    c.setContent(txt);
+                    c.setArticle(currentArticle);
+                    c.setUser(currentUser);
+                    c.setEtat("valide");
+                    c.setCreatedAt(LocalDateTime.now());
+                    commentaireService.ajouter(c);
+                    commentInput.clear();
+                    afficherCommentaires();
+                    new Alert(Alert.AlertType.INFORMATION, "✅ Commentaire enregistré.").showAndWait();
+                } else {
+                    new Alert(Alert.AlertType.ERROR,
+                            "❌ Votre commentaire a été rejeté (contenu inapproprié).")
+                            .showAndWait();
+                }
+            });
+
+            // 4) En cas d’erreur technique
+            checkTask.setOnFailed(evt -> {
+                loadingStage.close();
+                new Alert(Alert.AlertType.ERROR,
+                        "⚠️ Impossible de vérifier votre commentaire.").showAndWait();
+            });
+
+            // 5) Lancer la tâche
+            new Thread(checkTask, "CommentCheckThread").start();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR,
+                    "⚠️ Impossible d’afficher le loader.").showAndWait();
+        }
+    }
+
+
 
     private void handleLike() {
         if (currentUser == null) return;

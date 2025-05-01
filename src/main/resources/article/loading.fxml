@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+
+<?import javafx.scene.image.Image?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      alignment="CENTER" spacing="15"
+      styleClass="loader-pane">
+    <!-- Spinner animé -->
+    <ImageView fx:id="spinner"
+               fitWidth="100" fitHeight="100"
+               pickOnBounds="true" preserveRatio="true">
+        <image>
+            <Image url="@/loaders/spinner.gif"/>
+        </image>
+    </ImageView>
+
+    <!-- Texte animé -->
+    <Label fx:id="loadingText" text="Vérification en cours…"
+           styleClass="loader-text"/>
+</VBox>
