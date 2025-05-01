@@ -15,8 +15,10 @@ import javafx.scene.control.OverrunStyle;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import models.Commentaire;
 import models.CommentReaction;
 import models.Reaction;
@@ -181,6 +183,7 @@ public class ArticleDetailsController implements Initializable {
         timeLabel.setStyle("-fx-text-fill:#888; -fx-font-size:11px;");
         Button btnMod = new Button("Modifier");
         btnMod.setStyle("-fx-background-color:transparent; -fx-text-fill:#2980b9;");
+        /***
         btnMod.setOnAction(e->{
             TextInputDialog dlg = new TextInputDialog(c.getContent());
             dlg.setTitle("Modifier le commentaire");
@@ -193,6 +196,31 @@ public class ArticleDetailsController implements Initializable {
                         afficherCommentaires();
                     });
         });
+***/
+        btnMod.setOnAction(e -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(
+                        getClass().getResource("/article/editComment.fxml"));
+                Parent root = loader.load();
+
+                // récupérez le controller et initialisez-le
+                EditCommentController ctrl = loader.getController();
+                ctrl.init(c, this::afficherCommentaires);
+
+                // créez et affichez le dialog
+                Stage dialog = new Stage();
+                dialog.initOwner(container.getScene().getWindow());
+                dialog.initModality(Modality.APPLICATION_MODAL);
+                dialog.setTitle("Modifier le commentaire");
+                dialog.setScene(new Scene(root));
+                dialog.setResizable(false);
+                dialog.showAndWait();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                new Alert(Alert.AlertType.ERROR, "Impossible d'ouvrir le formulaire d'édition.").showAndWait();
+            }
+        });
+
         Button btnDel = new Button("Supprimer");
         btnDel.setStyle("-fx-background-color:transparent; -fx-text-fill:#c0392b;");
         btnDel.setOnAction(e->{
@@ -269,51 +297,6 @@ public class ArticleDetailsController implements Initializable {
     }
 /***
     private void ajouterCommentaire() {
-        if (currentUser == null) {
-            System.out.println("Aucun utilisateur connecté"); return;
-        }
-        String txt = commentInput.getText().trim();
-        if (txt.length() < 3) {
-            new Alert(Alert.AlertType.WARNING,
-                    "Votre commentaire est trop court.")
-                    .showAndWait();
-            return;
-        }
-        try {
-            JsonNode analysis = commentAnalyzer.analyze(txt);
-            if (commentAnalyzer.shouldReject(analysis)) {
-                new Alert(Alert.AlertType.ERROR,
-                        "Votre commentaire contient du contenu inapproprié.")
-                        .showAndWait();
-                return;
-            }
-        } catch (Exception e) {
-            new Alert(Alert.AlertType.ERROR,
-                    "Impossible de vérifier le contenu.")
-                    .showAndWait();
-            return;
-        }
-        int already = commentaireService
-                .countByUserAndArticle(currentUser.getId(),
-                        currentArticle.getId());
-        if (already >= 3) {
-            new Alert(Alert.AlertType.INFORMATION,
-                    "Vous avez déjà posté 3 commentaires sur cet article.")
-                    .showAndWait();
-            return;
-        }
-        Commentaire c = new Commentaire();
-        c.setContent(txt);
-        c.setArticle(currentArticle);
-        c.setUser(currentUser);
-        c.setEtat("valide");
-        c.setCreatedAt(LocalDateTime.now());
-        commentaireService.ajouter(c);
-        commentInput.clear();
-        afficherCommentaires();
-    }
-***/
-    private void ajouterCommentaire() {
         String txt = commentInput.getText().trim();
         if (txt.length() < 3) {
             new Alert(Alert.AlertType.WARNING, "Votre commentaire est trop court.").showAndWait();
@@ -383,7 +366,91 @@ public class ArticleDetailsController implements Initializable {
                     "⚠️ Impossible d’afficher le loader.").showAndWait();
         }
     }
+***/
 
+    private void ajouterCommentaire() {
+        String txt = commentInput.getText().trim();
+        if (txt.length() < 3) {
+            new Alert(Alert.AlertType.WARNING, "Votre commentaire est trop court.")
+                    .showAndWait();
+            return;
+        }
+        if (currentUser == null) {
+            new Alert(Alert.AlertType.WARNING, "Vous devez être connecté pour commenter.")
+                    .showAndWait();
+            return;
+        }
+
+        try {
+            // ── 1) Charger le loader.fxml et appliquer le CSS ──────────────────────
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/article/loading.fxml")
+            );
+            Parent loadingRoot = loader.load();
+
+            Scene loaderScene = new Scene(loadingRoot);
+            loaderScene.setFill(Color.TRANSPARENT);
+            loaderScene.getStylesheets().add(
+                    getClass().getResource("/css/styles.css").toExternalForm()
+            );
+
+            // ── 2) Stage transparent, pas de décor natif ──────────────────────────
+            Stage loaderStage = new Stage(StageStyle.TRANSPARENT);
+            loaderStage.initOwner(container.getScene().getWindow());
+            loaderStage.initModality(Modality.APPLICATION_MODAL);
+            loaderStage.setScene(loaderScene);
+            loaderStage.centerOnScreen();
+            loaderStage.show();
+
+            // ── 3) Tâche de vérification en background ────────────────────────────
+            Task<Boolean> checkTask = new Task<>() {
+                @Override
+                protected Boolean call() throws Exception {
+                    JsonNode analysis = commentAnalyzer.analyze(txt);
+                    return !commentAnalyzer.shouldReject(analysis);
+                }
+            };
+
+            // ── 4) Quand c'est validé ou rejeté ─────────────────────────────────
+            checkTask.setOnSucceeded(evt -> {
+                loaderStage.close();
+                boolean isValid = checkTask.getValue();
+                if (isValid) {
+                    Commentaire c = new Commentaire();
+                    c.setContent(txt);
+                    c.setArticle(currentArticle);
+                    c.setUser(currentUser);
+                    c.setEtat("valide");
+                    c.setCreatedAt(LocalDateTime.now());
+                    commentaireService.ajouter(c);
+                    commentInput.clear();
+                    afficherCommentaires();
+                    new Alert(Alert.AlertType.INFORMATION, "✅ Commentaire enregistré.")
+                            .showAndWait();
+                } else {
+                    new Alert(Alert.AlertType.ERROR,
+                            "❌ Votre commentaire a été rejeté (contenu inapproprié).")
+                            .showAndWait();
+                }
+            });
+
+            checkTask.setOnFailed(evt -> {
+                loaderStage.close();
+                new Alert(Alert.AlertType.ERROR,
+                        "⚠️ Impossible de vérifier votre commentaire.")
+                        .showAndWait();
+            });
+
+            // ── 5) On démarre tout ça dans un nouveau thread ───────────────────────
+            new Thread(checkTask, "CommentCheckThread").start();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR,
+                    "⚠️ Impossible d’afficher le loader.")
+                    .showAndWait();
+        }
+    }
 
 
     private void handleLike() {

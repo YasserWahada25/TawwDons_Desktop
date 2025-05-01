@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.control.*?>
+<?import javafx.collections.FXCollections?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
+<?import java.lang.String?>
 <AnchorPane xmlns="http://javafx.com/javafx/21.0.6"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="controllers.article.ModifierArticleController"
@@ -16,22 +18,39 @@
                 <Insets top="20" right="30" bottom="20" left="30"/>
             </padding>
 
-            <Label text="Modifier l'article" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+            <Label text="Modifier l'article"
+                   style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
 
-            <Label text="Titre" />
+            <Label text="Titre"/>
             <TextField fx:id="titreField" prefWidth="450"/>
 
-            <Label text="Categorie" />
-            <TextField fx:id="categorieField" prefWidth="450"/>
+            <Label text="Catégorie"/>
+            <!-- COMBOBOX à la place du TextField -->
+            <ComboBox fx:id="categorieField" prefWidth="450"
+                      promptText="Sélectionner une catégorie">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="dons"/>
+                        <String fx:value="evenement"/>
+                        <String fx:value="recrutement"/>
+                    </FXCollections>
+                </items>
+            </ComboBox>
 
-            <Label text="Description" />
-            <TextArea fx:id="descriptionField" prefWidth="450" prefHeight="100"/>
+            <Label text="Description"/>
+            <TextArea fx:id="descriptionField"
+                      prefWidth="450" prefHeight="100"/>
 
             <HBox spacing="10" alignment="CENTER_RIGHT">
-                <Label fx:id="errorLabel" layoutX="20" layoutY="10" style="-fx-text-fill: red;" text=""/>
-                <Button text="Annuler" style="-fx-background-color: red; -fx-text-fill: white;" onAction="#handleCancel"/>
-                <Button text="Modifier" style="-fx-background-color: #2196f3; -fx-text-fill: white;" onAction="#handleUpdate"/>
-
+                <Label fx:id="errorLabel"
+                       style="-fx-text-fill: red;"
+                       text=""/>
+                <Button text="Annuler"
+                        style="-fx-background-color: red; -fx-text-fill: white;"
+                        onAction="#handleCancel"/>
+                <Button text="Modifier"
+                        style="-fx-background-color: #2196f3; -fx-text-fill: white;"
+                        onAction="#handleUpdate"/>
             </HBox>
         </VBox>
     </children>
