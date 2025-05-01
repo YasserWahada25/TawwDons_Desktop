@@ -12,6 +12,8 @@ import java.util.List;
 
 public class CommentaireService {
 
+    private final UserService userService = new UserService();
+
     public void ajouter(Commentaire c) {
         String sql = "INSERT INTO commentaire (content, created_at, etat, article_id, user_id) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = MyDataBase.getInstance().getConnection();
@@ -63,50 +65,64 @@ public class CommentaireService {
     }
 
     public List<Commentaire> getCommentairesByArticleId(int articleId) {
-        List<Commentaire> list = new ArrayList<>();
-        String sql = "SELECT * FROM commentaire WHERE article_id = ? ORDER BY created_at DESC";
+        List<Commentaire> commentaires = new ArrayList<>();
+        String sql = """
+            SELECT c.*, u.id as uid, u.nom, u.prenom, u.email
+              FROM commentaire c
+              JOIN user u ON c.user_id = u.id
+             WHERE c.article_id = ?
+        """;
 
         try (Connection conn = MyDataBase.getInstance().getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            stmt.setInt(1, articleId);
-            ResultSet rs = stmt.executeQuery();
+            ps.setInt(1, articleId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Commentaire c = new Commentaire();
+                    c.setId(rs.getInt("id"));
+                    c.setContent(rs.getString("content"));
+                    c.setEtat(rs.getString("etat"));
+                    c.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
 
-            while (rs.next()) {
-                Commentaire c = new Commentaire();
-                c.setId(rs.getInt("id"));
-                c.setContent(rs.getString("content"));
-                c.setEtat(rs.getString("etat"));
-                c.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+                    User u = new User();
+                    u.setId(rs.getInt("uid"));
+                    u.setNom(rs.getString("nom"));
+                    u.setPrenom(rs.getString("prenom"));
+                    u.setEmail(rs.getString("email")); // ✅ nécessaire pour l’envoi email
+                    c.setUser(u);
 
-                Article a = new Article();
-                a.setId(rs.getInt("article_id"));
-                c.setArticle(a);
+                    Article a = new Article();
+                    a.setId(articleId);
+                    c.setArticle(a); // éviter le NullPointer dans getTitre()
 
-                User user = new User(1, "omar", "degani", "dagnouchamroush@gmail.com");
-                c.setUser(user);
-
-                list.add(c);
+                    commentaires.add(c);
+                }
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return list;
+        return commentaires;
     }
+
+
 
     public int countByUserAndArticle(int userId, int articleId) {
         String sql = "SELECT COUNT(*) FROM commentaire WHERE user_id = ? AND article_id = ?";
         try (Connection conn = MyDataBase.getInstance().getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setInt(1, userId);
             ps.setInt(2, articleId);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
             }
-        } catch (Exception e) {
+
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return 0;
@@ -116,8 +132,10 @@ public class CommentaireService {
         String sql = "UPDATE commentaire SET etat = 'non valide' WHERE id = ?";
         try (Connection conn = MyDataBase.getInstance().getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setInt(1, commentaireId);
             ps.executeUpdate();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -21,7 +21,7 @@
 
                 <ImageView fitHeight="40" fitWidth="40" pickOnBounds="true" preserveRatio="true">
                     <image>
-                        <Image url="@images/tawwa don 3.png"/>
+                        <Image url="@images/queen.png"/>
                     </image>
                 </ImageView>
                 <Label text="Tawwa Dons" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #0066ff;"/>

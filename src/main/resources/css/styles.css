@@ -14,3 +14,17 @@
     -fx-background-color: rgba(0,0,0,0.05);
     -fx-background-radius: 4;
 }
+
+.loader-pane {
+    -fx-padding: 20;
+    -fx-background-color: rgba(0, 0, 0, 0.6);
+    -fx-background-radius: 10;
+}
+
+.loader-text {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.4) , 2,0.0,0,1 );
+}
+

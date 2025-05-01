@@ -1,4 +1,3 @@
-
 package controllers.article;
 
 import javafx.fxml.FXML;
@@ -8,10 +7,14 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import models.Article;
 import services.ArticleService;
@@ -30,9 +33,9 @@ public class ArticleListController implements Initializable {
     @FXML private HBox paginationBox;
     @FXML private ComboBox<String> categorieFilterCombo;
 
-    @FXML private MenuItem menuListeDons;
-    @FXML private MenuItem menuPosterDon;
-    @FXML private MenuItem menuListeArticles;
+    @FXML private javafx.scene.control.MenuItem menuListeDons;
+    @FXML private javafx.scene.control.MenuItem menuPosterDon;
+    @FXML private javafx.scene.control.MenuItem menuListeArticles;
     @FXML private Button btnHome;
 
     private final ArticleService articleService = new ArticleService();
@@ -73,12 +76,14 @@ public class ArticleListController implements Initializable {
         articlesFlowPane.getChildren().clear();
 
         String selectedCategorie = categorieFilterCombo.getValue();
-        List<Article> filteredArticles = selectedCategorie.equals("Tous") ?
-                allArticles :
-                allArticles.stream().filter(a -> a.getCategorie().equalsIgnoreCase(selectedCategorie)).toList();
+        List<Article> filteredArticles = selectedCategorie.equals("Tous")
+                ? allArticles
+                : allArticles.stream()
+                .filter(a -> a.getCategorie().equalsIgnoreCase(selectedCategorie))
+                .toList();
 
         int start = (currentPage - 1) * articlesPerPage;
-        int end = Math.min(start + articlesPerPage, filteredArticles.size());
+        int end   = Math.min(start + articlesPerPage, filteredArticles.size());
         List<Article> articlesToShow = filteredArticles.subList(start, end);
 
         for (Article article : articlesToShow) {
@@ -91,16 +96,22 @@ public class ArticleListController implements Initializable {
         paginationBox.getChildren().clear();
 
         String selectedCategorie = categorieFilterCombo.getValue();
-        List<Article> filteredArticles = selectedCategorie.equals("Tous") ?
-                allArticles :
-                allArticles.stream().filter(a -> a.getCategorie().equalsIgnoreCase(selectedCategorie)).toList();
+        List<Article> filteredArticles = selectedCategorie.equals("Tous")
+                ? allArticles
+                : allArticles.stream()
+                .filter(a -> a.getCategorie().equalsIgnoreCase(selectedCategorie))
+                .toList();
 
         int totalPages = (int) Math.ceil((double) filteredArticles.size() / articlesPerPage);
 
         for (int i = 1; i <= totalPages; i++) {
             Button pageBtn = new Button(String.valueOf(i));
             if (i == currentPage) {
-                pageBtn.setStyle("-fx-background-color: #2979ff; -fx-text-fill: white; -fx-font-weight: bold;");
+                pageBtn.setStyle("""
+                    -fx-background-color: #2979ff;
+                    -fx-text-fill: white;
+                    -fx-font-weight: bold;
+                """);
             }
             int page = i;
             pageBtn.setOnAction(e -> {
@@ -113,11 +124,11 @@ public class ArticleListController implements Initializable {
     }
 
     private VBox createArticleCard(Article article) {
+        // Image de l’article
         ImageView imageView = new ImageView();
         imageView.setFitWidth(280);
         imageView.setFitHeight(160);
         imageView.setPreserveRatio(true);
-
         if (article.getImage() != null) {
             File imageFile = new File("images/" + article.getImage());
             if (imageFile.exists()) {
@@ -125,18 +136,26 @@ public class ArticleListController implements Initializable {
             }
         }
 
+        // Titre
         Label titreLabel = new Label(article.getTitre().toUpperCase());
         titreLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
 
+        // Description abrégée
         String desc = article.getDescription();
         if (desc.length() > 100) desc = desc.substring(0, 100) + "...";
         Label descLabel = new Label(desc);
         descLabel.setWrapText(true);
         descLabel.setStyle("-fx-text-fill: #444;");
 
-        Button readMoreBtn = new Button("\uD83D\uDD0D Read More");
-        readMoreBtn.setStyle("-fx-text-fill: #2979ff; -fx-background-color: transparent; -fx-font-weight: bold;");
-
+        // Bouton Read More avec icône
+        ImageView readIcon = new ImageView(
+                new Image(getClass().getResourceAsStream("/icons/moree.png"), 100, 50, true, true)
+        );
+        Button readMoreBtn = new Button("", readIcon);
+        readMoreBtn.setStyle("""
+            -fx-background-color: transparent;
+            -fx-cursor: hand;
+        """);
         readMoreBtn.setOnAction(e -> {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/articleDetails.fxml"));
@@ -152,10 +171,19 @@ public class ArticleListController implements Initializable {
             }
         });
 
+        // Assemblage de la carte
         VBox card = new VBox(10, imageView, titreLabel, descLabel, readMoreBtn);
         card.setPadding(new Insets(10));
         card.setPrefWidth(300);
-        card.setStyle("-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 4);");
+        card.setStyle("""
+            -fx-background-color: white;
+            -fx-background-radius: 10;
+            -fx-effect: dropshadow(
+                three-pass-box,
+                rgba(0,0,0,0.05),
+                10, 0, 0, 4
+            );
+        """);
         return card;
     }
 }

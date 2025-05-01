@@ -19,6 +19,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import models.Article;
 import services.ArticleService;
+import java.time.format.DateTimeFormatter;
+import javafx.scene.layout.StackPane;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -164,4 +167,6 @@ public class ArticleList implements Initializable {
 
         return card;
     }
+
+
 }
