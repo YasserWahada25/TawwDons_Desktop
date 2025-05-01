@@ -1,4 +1,4 @@
-package controllers;
+package controllers.dons;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -26,23 +26,40 @@ public class ListDonsController {
     @FXML private MenuItem menuPosterDon;
     @FXML private MenuItem menuListeArticles;
     @FXML private Button btnHome;
-
+    @FXML private Button btnDemanderDon;
+    @FXML private Button btnVoirDemandes;
+    @FXML private Button btngererDemandeRecu;
 
     private final DonsService donsService = new DonsService();
+    private final boolean isBeneficiaire = true;
 
     @FXML
     public void initialize() {
+        if (isBeneficiaire) {
+
+            btnVoirDemandes.setVisible(true);
+            btnVoirDemandes.setManaged(true); // important si tu veux qu'il prenne de l'espace
+            btnVoirDemandes.setOnAction(e -> Router.navigateTo("/Dons/ListDemandePourDonneur.fxml"));
+       //     btngererDemandeRecu.setVisible(false);
+        } else {
+            btnVoirDemandes.setVisible(false);
+            btnVoirDemandes.setManaged(false);
+          //  btngererDemandeRecu.setVisible(true);
+           // btngererDemandeRecu.setOnAction(e -> Router.navigateTo("/ListDemandePourBeneficiaire.fxml"));
+
+        }
+
         setupNavigation();
         afficherDons();
     }
 
     private void setupNavigation() {
-        menuListeDons.setOnAction(e -> Router.navigateTo("/ListDons.fxml"));
-        menuPosterDon.setOnAction(e -> Router.navigateTo("/AddDons.fxml"));
+        menuListeDons.setOnAction(e -> Router.navigateTo("/Dons/ListDons.fxml"));
+        menuPosterDon.setOnAction(e -> Router.navigateTo("/Dons/AddDons.fxml"));
         menuListeArticles.setOnAction(e -> Router.navigateTo("/articleList.fxml"));
         btnHome.setOnAction(e -> Router.navigateTo("/Home.fxml"));
-
-
+        btnVoirDemandes.setOnAction(e -> Router.navigateTo("/Dons/ListDemandePourDonneur.fxml"));
+        btngererDemandeRecu.setOnAction(e -> Router.navigateTo("/Dons/ListDemandePourBeneficiaire.fxml"));
 
     }
 
@@ -99,6 +116,29 @@ public class ListDonsController {
         }
 
         popupPane.setVisible(true);
+
+        btnDemanderDon.setVisible(isBeneficiaire);
+        btnDemanderDon.setOnAction(e -> {
+            int userId = 2; // Remplacer plus tard par Session.getCurrentUser().getId()
+            if (donsService.existeDemandeEnAttente(don.getId(), userId)) {
+                showAlert("Demande existante", "Vous avez déjà une demande en attente ou acceptée pour ce don.");
+            } else {
+                // Insertion en BDD
+                if (donsService.ajouterDemandeDon(don.getId(), userId)) {
+                    showAlert("Succès", "Votre demande pour le don \"" + don.getTitre() + "\" a été envoyée avec succès.");
+                } else {
+                    showAlert("Erreur", "Erreur lors de l'envoi de votre demande de don.");
+                }
+            }
+        });
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     @FXML

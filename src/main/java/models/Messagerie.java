@@ -23,6 +23,14 @@ public class Messagerie {
         this.contenu = contenu;
         this.dateEnvoi = dateEnvoi;
     }
+    public Messagerie(int expediteurId, int destinataireId, int demandeDonId, String contenu) {
+        this.expediteurId = expediteurId;
+        this.destinataireId = destinataireId;
+        this.demandeDonId = demandeDonId;
+        this.contenu = contenu;
+        this.dateEnvoi = java.time.LocalDateTime.now();
+    }
+
 
     public int getId() {
         return id;

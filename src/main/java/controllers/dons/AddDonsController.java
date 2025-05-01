@@ -1,4 +1,4 @@
-package controllers;
+package controllers.dons;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -39,8 +39,8 @@ public class AddDonsController {
         creerDonBtn.setOnAction(e -> creerDon());
 
         // Routage via Router
-        menuListeDons.setOnAction(e -> Router.navigateTo("/ListDons.fxml"));
-        menuPosterDon.setOnAction(e -> Router.navigateTo("/AddDons.fxml"));
+        menuListeDons.setOnAction(e -> Router.navigateTo("/Dons/ListDons.fxml"));
+        menuPosterDon.setOnAction(e -> Router.navigateTo("/Dons/AddDons.fxml"));
         menuListeArticles.setOnAction(e -> Router.navigateTo("/articleList.fxml"));
         btnHome.setOnAction(e -> Router.navigateTo("/Home.fxml"));
 

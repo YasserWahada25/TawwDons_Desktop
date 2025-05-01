@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.dons.ChatController"
+            prefWidth="700" prefHeight="500">
+
+    <VBox spacing="10" AnchorPane.topAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" AnchorPane.bottomAnchor="10">
+        <Label text="💬 Conversation" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+
+        <ScrollPane fitToWidth="true" fitToHeight="true" VBox.vgrow="ALWAYS">
+            <VBox fx:id="messagesBox" spacing="10">
+                <padding>
+                    <Insets top="10" right="10" bottom="10" left="10"/>
+                </padding>
+            </VBox>
+        </ScrollPane>
+
+        <HBox spacing="10">
+            <TextField fx:id="messageField" promptText="Écrivez un message..." HBox.hgrow="ALWAYS"/>
+            <Button fx:id="btnEnvoyer" text="Envoyer" />
+        </HBox>
+    </VBox>
+</AnchorPane>

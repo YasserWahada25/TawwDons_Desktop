@@ -6,7 +6,7 @@
 <?import javafx.geometry.Insets?>
 
 <?import javafx.scene.image.Image?>
-<AnchorPane fx:controller="controllers.ListDonsController"
+<AnchorPane fx:controller="controllers.dons.ListDonsController"
             prefHeight="700.0" prefWidth="1000.0"
             xmlns="http://javafx.com/javafx/23.0.1"
             xmlns:fx="http://javafx.com/fxml/1">
@@ -22,7 +22,7 @@
 
                 <ImageView fitHeight="40" fitWidth="40" pickOnBounds="true" preserveRatio="true" >
                     <image>
-                        <Image url="@images/tawwa don 3.png" />
+                        <Image url="@../images/tawwa don 3.png" />
                     </image>
                 </ImageView>
                 <Label text="Tawwa Dons" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #0066ff;" />
@@ -78,10 +78,17 @@
             <Label text="Liste des Dons Disponibles"
                    style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #1c2a4d;" />
 
+            <Button fx:id="btnVoirDemandes"
+                    text="Voir mes demandes"
+                    visible="false"
+                    managed="false"
+                    style="-fx-background-color: #00cfff; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 16; -fx-background-radius: 10;" />
+
+
             <HBox spacing="10">
                 <ComboBox promptText="Toutes les catégories" />
                 <TextField promptText="Rechercher un don..." />
-                <Button text="Gérer les demandes reçues" style="-fx-background-color: #ffc107;" />
+                <Button  fx:id="btngererDemandeRecu" text="Gérer les demandes reçues" style="-fx-background-color: #ffc107;" />
             </HBox>
 
             <!-- CONTAINER DYNAMIQUE -->
@@ -91,6 +98,10 @@
                 </padding>
             </FlowPane>
         </VBox>
+
+
+
+
 
         <!-- POPUP DETAILS -->
         <StackPane fx:id="popupPane" visible="false"
@@ -113,8 +124,17 @@
                 <Label fx:id="popupUser" text="Ajouté par : ..." />
                 <Label fx:id="popupEmail" text="Email : ..." />
 
-                <Button text="Fermer" onAction="#closePopup"
-                        style="-fx-background-color: #6c757d; -fx-text-fill: white;" />
+                <HBox spacing="10" alignment="CENTER">
+                    <Button fx:id="btnDemanderDon"
+                            text="Demander Don"
+                            style="-fx-background-color: #28a745; -fx-text-fill: white;"
+                            visible="false" />
+
+                    <Button text="Fermer"
+                            onAction="#closePopup"
+                            style="-fx-background-color: #6c757d; -fx-text-fill: white;" />
+                </HBox>
+
             </VBox>
         </StackPane>
 

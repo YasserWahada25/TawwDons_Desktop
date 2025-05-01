@@ -9,6 +9,10 @@ public class DemandeDons {
     private String statut;       // En attente, Acceptée, Refusée, Validée
     private LocalDate dateDemande;
     private boolean chatActif;
+    private String donTitre;
+    private String beneficiaireNom;
+
+
 
     public DemandeDons() {
         this.dateDemande = LocalDate.now();
@@ -77,6 +81,22 @@ public class DemandeDons {
 
     public void activerChat() {
         this.chatActif = true;
+    }
+
+    public String getDonTitre() {
+        return donTitre;
+    }
+
+    public void setDonTitre(String donTitre) {
+        this.donTitre = donTitre;
+    }
+    public String getBeneficiaireNom() {
+        return beneficiaireNom;
+    }
+
+    // Setter
+    public void setBeneficiaireNom(String beneficiaireNom) {
+        this.beneficiaireNom = beneficiaireNom;
     }
 }
 

@@ -36,8 +36,8 @@ public class ListOffresController {
     }
 
     private void setupNavigation() {
-        menuListeDons.setOnAction(e -> Router.navigateTo("/ListDons.fxml"));
-        menuPosterDon.setOnAction(e -> Router.navigateTo("/AddDons.fxml"));
+        menuListeDons.setOnAction(e -> Router.navigateTo("/Dons/ListDons.fxml"));
+        menuPosterDon.setOnAction(e -> Router.navigateTo("/Dons/AddDons.fxml"));
         menuListeOffres.setOnAction(e -> Router.navigateTo("/offre/ListOffres.fxml"));
         menuPosterOffre.setOnAction(e -> Router.navigateTo("/offre/AddOffre.fxml"));
         btnHome.setOnAction(e -> Router.navigateTo("/Home.fxml"));

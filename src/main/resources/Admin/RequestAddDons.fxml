@@ -6,7 +6,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/23.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controllers.RequestDonsController"
+            fx:controller="controllers.dons.RequestDonsController"
             prefWidth="1200" prefHeight="700">
 
     <!-- ✅ SIDEBAR -->
@@ -43,13 +43,12 @@
     <center>
         <VBox spacing="20">
             <padding><Insets top="30" right="30" bottom="30" left="30"/></padding>
-
             <Label text="Dons en Attente de Validation"
                    style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #1c2a4d;" />
 
             <TableView fx:id="donsTable" prefHeight="500">
                 <columns>
-                    <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
+                    <TableColumn fx:id="colId" text="ID" prefWidth="50" visible="false"/>
                     <TableColumn fx:id="colTitre" text="Titre" prefWidth="200"/>
                     <TableColumn fx:id="colDescription" text="Description" prefWidth="400"/>
                     <TableColumn fx:id="colDate" text="Date De Création" prefWidth="150"/>

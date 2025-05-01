@@ -14,7 +14,7 @@
     <children>
 
         <!-- NAVBAR -->
-        <VBox spacing="10.0" prefWidth="1200.0" style="-fx-background-color: white;">
+        <VBox spacing="10.0" prefWidth="1200.0" style="-fx-background-color: skyblue;">
             <HBox spacing="10" alignment="CENTER_LEFT">
                 <padding>
                     <Insets top="10" bottom="10" left="10" right="10"/>

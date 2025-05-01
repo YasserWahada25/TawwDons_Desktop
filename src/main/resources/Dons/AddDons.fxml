@@ -8,7 +8,7 @@
 <?import javafx.collections.FXCollections?>
 <?import java.lang.String?>
 
-<AnchorPane fx:controller="controllers.AddDonsController" prefHeight="650.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:controller="controllers.dons.AddDonsController" prefHeight="650.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
     <children>
 
         <!-- NAVBAR -->
@@ -20,7 +20,7 @@
 
                 <ImageView fitHeight="40" fitWidth="40" pickOnBounds="true" preserveRatio="true" >
                     <image>
-                        <Image url="@images/tawwa don 3.png" />
+                        <Image url="@../images/tawwa don 3.png" />
                     </image>
                 </ImageView>
 
