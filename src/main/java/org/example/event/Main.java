@@ -20,7 +20,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         Router.setMainStage(primaryStage);
-        Router.navigateTo("/Admin/ajouterArticle.fxml");
+        Router.navigateTo("/login.fxml");
 
         Scene scene = primaryStage.getScene();
         scene.getStylesheets().add(

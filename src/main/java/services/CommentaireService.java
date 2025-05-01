@@ -107,6 +107,8 @@ public class CommentaireService {
         return commentaires;
     }
 
+
+
     public int countByUserAndArticle(int userId, int articleId) {
         String sql = "SELECT COUNT(*) FROM commentaire WHERE user_id = ? AND article_id = ?";
         try (Connection conn = MyDataBase.getInstance().getConnection();
