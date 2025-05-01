@@ -23,8 +23,19 @@ public class ReplyPopupController implements Initializable {
     private int commentId;
     private CommentReplyService replyService;
     private Runnable onUpdate;
-    private static final int CURRENT_USER_ID = 1;
+    private User currentUser;
 
+    /**
+     * À appeler avant init(...) pour injecter l’utilisateur courant
+     */
+    public void setCurrentUser(User user) {
+        this.currentUser = user;
+    }
+
+    /**
+     * Initialise le popup avec l’ID du commentaire, le service et un callback de mise à jour.
+     * currentUser doit avoir été injecté préalablement via setCurrentUser().
+     */
     public void init(int commentId,
                      CommentReplyService service,
                      Runnable onUpdate) {
@@ -32,6 +43,7 @@ public class ReplyPopupController implements Initializable {
         this.replyService = service;
         this.onUpdate     = onUpdate;
 
+        // Configuration de l’affichage des replies
         repliesList.setCellFactory(lv -> new ListCell<>() {
             private final Label name    = new Label();
             private final Label content = new Label();
@@ -59,16 +71,15 @@ public class ReplyPopupController implements Initializable {
         btnSend.setOnAction(e -> {
             String txt = replyInput.getText().trim();
             if (txt.isEmpty()) return;
+
+            // Création de la reply
             CommentReply r = new CommentReply();
             Commentaire parent = new Commentaire();
             parent.setId(commentId);
             r.setCommentaire(parent);
-            User u = new User(1,"Degani", "Omar", "dagnouchamroush@gmail.com");
-            u.setId(CURRENT_USER_ID);
-            u.setPrenom("omar");
-            u.setNom("degani");
-            u.setEmail("dagnouchamroush@gmail.com");
-            r.setUser(u);
+
+            // Utiliser l’utilisateur injecté
+            r.setUser(currentUser);
 
             r.setContent(txt);
             r.setCreatedAt(LocalDateTime.now());
@@ -83,7 +94,7 @@ public class ReplyPopupController implements Initializable {
         });
 
         btnClose.setOnAction(e ->
-                ((Stage)btnClose.getScene().getWindow()).close()
+                ((Stage) btnClose.getScene().getWindow()).close()
         );
     }
 
@@ -94,5 +105,6 @@ public class ReplyPopupController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        // pas d’action particulière au chargement FXML
     }
 }

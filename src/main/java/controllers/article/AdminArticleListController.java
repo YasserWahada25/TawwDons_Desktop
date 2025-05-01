@@ -16,8 +16,6 @@ import models.Article;
 import services.ArticleService;
 import services.CommentReportService;
 import utils.Router;
-import org.kordamp.ikonli.javafx.FontIcon;
-
 
 import java.io.IOException;
 import java.net.URL;
@@ -34,9 +32,6 @@ public class AdminArticleListController implements Initializable {
     @FXML private TableColumn<Article,Void>   colActions;
     @FXML private TextField                 searchField;
 
-
-    // Sidebar routing
-
     @FXML private MenuItem menuArticleList;
     @FXML private MenuItem menuArticleForm;
     @FXML private Button   btnDonsRequests;
@@ -46,18 +41,11 @@ public class AdminArticleListController implements Initializable {
     private final CommentReportService commentReportService = new CommentReportService();
 
     @Override
-
     public void initialize(URL url, ResourceBundle rb) {
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        // Initialize table columns
-        colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colTitre.setCellValueFactory(new PropertyValueFactory<>("titre"));
         colImage.setCellValueFactory(new PropertyValueFactory<>("image"));
         colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
         colCategorie.setCellValueFactory(new PropertyValueFactory<>("categorie"));
-
-
-        // Sidebar navigation
 
         if (menuArticleList != null)
             menuArticleList.setOnAction(e -> Router.navigateTo("/Admin/adminArticleList.fxml"));
@@ -66,10 +54,7 @@ public class AdminArticleListController implements Initializable {
         if (btnDonsRequests != null)
             btnDonsRequests.setOnAction(e -> Router.navigateTo("/Admin/RequestAddDons.fxml"));
         if (btnDashboard != null)
-            btnDashboard.setOnAction(e -> System.out.println("Dashboard clicked! (to implement)"));
-
-
-        // Load data
+            btnDashboard.setOnAction(e -> System.out.println("Dashboard clické ! (à implémenter)"));
 
         loadArticles();
 
@@ -92,9 +77,6 @@ public class AdminArticleListController implements Initializable {
         });
 
         addActionButtonsToTable();
-
-
-        // Search filter
 
         searchField.textProperty().addListener((obs, oldText, newText) -> {
             List<Article> filtered = articleService.getAll().stream()
@@ -133,20 +115,6 @@ public class AdminArticleListController implements Initializable {
 
                 btnEdit.setOnAction(ev -> {
                     Article art = getTableView().getItems().get(getIndex());
-        colActions.setCellFactory(param -> new TableCell<>() {
-            private final FontIcon editIcon = new FontIcon("fa-pencil");
-            private final FontIcon deleteIcon = new FontIcon("fa-trash");
-            private final FontIcon viewIcon = new FontIcon("fa-eye");
-            private final HBox pane = new HBox(10, editIcon, deleteIcon, viewIcon);
-
-            {
-                editIcon.setStyle("-fx-icon-color: #2980b9;");
-                deleteIcon.setStyle("-fx-icon-color: #c0392b;");
-                viewIcon.setStyle("-fx-icon-color: #2ecc71;");
-                pane.setAlignment(Pos.CENTER);
-
-                editIcon.setOnMouseClicked(event -> {
-                    Article article = getTableView().getItems().get(getIndex());
                     try {
                         FXMLLoader loader = new FXMLLoader(
                                 getClass().getResource("/Admin/modifierArticle.fxml")
@@ -181,7 +149,6 @@ public class AdminArticleListController implements Initializable {
 
                 btnView.setOnAction(event -> {
                     Article article = getTableView().getItems().get(getIndex());
-
                     try {
                         FXMLLoader loader = new FXMLLoader(getClass()
                                 .getResource("/commentaire/popupCommentaires.fxml"));
@@ -201,8 +168,6 @@ public class AdminArticleListController implements Initializable {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    System.out.println("View clicked for article: " + article.getTitre());
-                    // Détail à implémenter plus tard
                 });
 
                 pane.setAlignment(Pos.CENTER);

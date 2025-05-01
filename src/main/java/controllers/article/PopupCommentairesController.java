@@ -1,4 +1,3 @@
-// src/main/java/controllers/article/PopupCommentairesController.java
 package controllers.article;
 
 import javafx.fxml.FXML;
@@ -31,7 +30,6 @@ public class PopupCommentairesController implements Initializable {
     private final CommentReportService reportService      = new CommentReportService();
     private final EmailService emailService               = new EmailService();
 
-
     public void setArticleId(int articleId) {
         this.articleId = articleId;
         loadComments();
@@ -44,14 +42,12 @@ public class PopupCommentairesController implements Initializable {
         );
     }
 
-
     private void loadComments() {
         commentList.getChildren().clear();
 
         List<Commentaire> list = commentaireService.getCommentairesByArticleId(articleId);
 
         for (Commentaire c : list) {
-
             Label authorLbl = new Label(c.getUser().getPrenom() + " " + c.getUser().getNom());
             authorLbl.setStyle("-fx-font-weight:bold; -fx-font-size:14px;");
 
@@ -72,9 +68,11 @@ public class PopupCommentairesController implements Initializable {
             btnDisable.setOnAction(ev -> {
                 c.setEtat("non valide");
                 commentaireService.modifier(c);
+
+                String fullName = c.getUser().getPrenom() + " " + c.getUser().getNom();
                 emailService.sendCommentDisabled(
                         c.getUser().getEmail(),
-                        c.getArticle().getTitre(),
+                        fullName,
                         c.getContent()
                 );
                 loadComments();
@@ -89,10 +87,10 @@ public class PopupCommentairesController implements Initializable {
             btnDelete.setStyle("-fx-background-color: transparent; -fx-cursor: hand;");
             btnDelete.setVisible(isFlagged);
             btnDelete.setOnAction(ev -> {
-
+                String fullName = c.getUser().getPrenom() + " " + c.getUser().getNom();
                 emailService.sendCommentDeleted(
                         c.getUser().getEmail(),
-                        c.getArticle().getTitre(),
+                        fullName,
                         c.getContent()
                 );
                 reportService.deleteReportsForComment(c.getId());
@@ -100,8 +98,10 @@ public class PopupCommentairesController implements Initializable {
 
                 loadComments();
             });
+
             VBox icons = new VBox(2, btnDisable, btnDelete);
             icons.setAlignment(Pos.CENTER_RIGHT);
+
             HBox commentLine = new HBox(5, body, hSpacer, icons);
             commentLine.setAlignment(Pos.CENTER_LEFT);
 
@@ -110,7 +110,6 @@ public class PopupCommentairesController implements Initializable {
             );
             dateLbl.setStyle("-fx-text-fill: #888; -fx-font-size: 11px;");
 
-            // 8) Assemblage final
             VBox item = new VBox(2, authorLbl, commentLine, dateLbl);
             item.setPadding(new Insets(5));
             item.setStyle("""
@@ -119,6 +118,7 @@ public class PopupCommentairesController implements Initializable {
                 -fx-border-radius: 6;
                 -fx-background-radius: 6;
             """);
+
             commentList.getChildren().add(item);
         }
     }

@@ -6,11 +6,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.scene.control.OverrunStyle;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.OverrunStyle;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -20,6 +20,7 @@ import models.CommentReaction;
 import models.Reaction;
 import models.User;
 import services.*;
+import utils.SessionManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,24 +52,28 @@ public class ArticleDetailsController implements Initializable {
     @FXML private Button btnDislike;
 
     private models.Article currentArticle;
+    private User currentUser;
 
-    // Services
-    private final ArticleService           articleService         = new ArticleService();
-    private final CommentaireService       commentaireService     = new CommentaireService();
-    private final ReactionService          reactionService        = new ReactionService();
-    private final CommentReactionService   commentReactionService = new CommentReactionService();
-    private final CommentReplyService      commentReplyService    = new CommentReplyService();
-    private final CommentReportService     commentReportService   = new CommentReportService();
-    private final EmailService             emailService           = new EmailService();
-    private final CommentAnalyzer          commentAnalyzer        =
-            new CommentAnalyzer("1608670126", "Az9aNCSbfTmc56AZNQbnjWzTMcbx9WgN");
-
-    private static final int CURRENT_USER_ID = 1;
+    private final ArticleService articleService = new ArticleService();
+    private final CommentaireService commentaireService = new CommentaireService();
+    private final ReactionService reactionService = new ReactionService();
+    private final CommentReactionService commentReactionService = new CommentReactionService();
+    private final CommentReplyService commentReplyService = new CommentReplyService();
+    private final CommentReportService commentReportService = new CommentReportService();
+    private final EmailService emailService = new EmailService();
+    private final CommentAnalyzer commentAnalyzer = new CommentAnalyzer("1608670126", "Az9aNCSbfTmc56AZNQbnjWzTMcbx9WgN");
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         Platform.runLater(() -> container.requestFocus());
+
+        // 🔗 Récupérer l'utilisateur connecté
+        currentUser = SessionManager.getCurrentUser();
+        if (currentUser != null) {
+            System.out.println("👤 Utilisateur connecté : " + currentUser.getPrenom() + " " + currentUser.getNom());
+        } else {
+            System.out.println("❗ Aucun utilisateur connecté !");
+        }
 
         btnPosterComment.setOnAction(e -> ajouterCommentaire());
         btnLike.setOnAction(e -> handleLike());
@@ -88,7 +93,6 @@ public class ArticleDetailsController implements Initializable {
         likesLabel.setText(String.valueOf(article.getLikes()));
         dislikesLabel.setText(String.valueOf(article.getDislikes()));
 
-        // Image
         if (article.getImage() != null) {
             File f = new File("images/" + article.getImage());
             imageView.setImage(f.exists() ? new Image(f.toURI().toString()) : null);
@@ -123,7 +127,6 @@ public class ArticleDetailsController implements Initializable {
     }
 
     private VBox createCommentNode(Commentaire c) {
-        // Avatar
         ImageView avatar = new ImageView(new Image("file:images/1744625675981.jpg"));
         avatar.setFitWidth(40);
         avatar.setFitHeight(40);
@@ -135,13 +138,15 @@ public class ArticleDetailsController implements Initializable {
         ImageView reactionImg = new ImageView();
         reactionImg.setFitWidth(20);
         reactionImg.setFitHeight(20);
-        Optional<CommentReaction> crOpt = Optional.ofNullable(
-                commentReactionService.find(CURRENT_USER_ID, c.getId())
-        );
-        crOpt.ifPresent(cr -> {
-            var is = getClass().getResourceAsStream("/emojis/" + cr.getType());
-            if (is != null) reactionImg.setImage(new Image(is));
-        });
+        if (currentUser != null) {
+            Optional<CommentReaction> crOpt = Optional.ofNullable(
+                    commentReactionService.find(currentUser.getId(), c.getId())
+            );
+            crOpt.ifPresent(cr -> {
+                var is = getClass().getResourceAsStream("/emojis/" + cr.getType());
+                if (is != null) reactionImg.setImage(new Image(is));
+            });
+        }
 
         ImageView reportIcon = new ImageView(
                 new Image(getClass().getResourceAsStream("/emojis/signaler.png"))
@@ -152,6 +157,7 @@ public class ArticleDetailsController implements Initializable {
         btnReport.setGraphic(reportIcon);
         btnReport.setStyle("-fx-background-color: transparent; -fx-cursor: hand;");
         btnReport.setOnAction(ev -> {
+            if (currentUser == null) return;
             TextInputDialog dlg = new TextInputDialog();
             dlg.setTitle("Signaler le commentaire");
             dlg.setHeaderText("Pourquoi ce commentaire ?");
@@ -159,9 +165,8 @@ public class ArticleDetailsController implements Initializable {
             dlg.showAndWait()
                     .filter(r -> !r.trim().isEmpty())
                     .ifPresent(r -> {
-                        commentReportService.report(CURRENT_USER_ID, c.getId(), r.trim());
-                        new Alert(Alert.AlertType.INFORMATION,
-                                "Commentaire signalé. Merci.")
+                        commentReportService.report(currentUser.getId(), c.getId(), r.trim());
+                        new Alert(Alert.AlertType.INFORMATION, "Commentaire signalé. Merci.")
                                 .showAndWait();
                     });
         });
@@ -205,7 +210,9 @@ public class ArticleDetailsController implements Initializable {
 
         Button btnReact = new Button("Réagir");
         btnReact.setStyle("-fx-background-color:transparent; -fx-text-fill:#555;");
-        btnReact.setOnAction(e -> showEmojiPopup(btnReact, c, reactionImg));
+        btnReact.setOnAction(e -> {
+            if (currentUser != null) showEmojiPopup(btnReact, c, reactionImg);
+        });
 
         Button btnReply = new Button("Répondre");
         btnReply.setStyle("-fx-background-color:transparent; -fx-text-fill:#555;");
@@ -228,22 +235,18 @@ public class ArticleDetailsController implements Initializable {
     }
 
     private void showEmojiPopup(Button anchor, Commentaire cmt, ImageView reactionImg) {
+        if (currentUser == null) return;
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/emojiPicker.fxml"));
             Parent pane = loader.load();
             EmojiPickerController ctrl = loader.getController();
-            ctrl.init(
-                    CURRENT_USER_ID,
-                    cmt.getId(),
-                    commentReactionService,
-                    () -> {
-                        var cr = commentReactionService.find(CURRENT_USER_ID, cmt.getId());
-                        if (cr != null) {
-                            var is = getClass().getResourceAsStream("/emojis/" + cr.getType());
-                            if (is != null) reactionImg.setImage(new Image(is));
-                        }
-                    }
-            );
+            ctrl.init(currentUser.getId(), cmt.getId(), commentReactionService, () -> {
+                var cr = commentReactionService.find(currentUser.getId(), cmt.getId());
+                if (cr != null) {
+                    var is = getClass().getResourceAsStream("/emojis/" + cr.getType());
+                    if (is != null) reactionImg.setImage(new Image(is));
+                }
+            });
             Stage pop = new Stage();
             pop.initOwner(container.getScene().getWindow());
             pop.setScene(new Scene(pane));
@@ -258,6 +261,7 @@ public class ArticleDetailsController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/replyPopup.fxml"));
             Parent pane = loader.load();
             ReplyPopupController ctrl = loader.getController();
+            ctrl.setCurrentUser(currentUser);
             ctrl.init(commentId, commentReplyService, this::afficherCommentaires);
             Stage pop = new Stage();
             pop.initOwner(container.getScene().getWindow());
@@ -269,6 +273,12 @@ public class ArticleDetailsController implements Initializable {
     }
 
     private void ajouterCommentaire() {
+        if (currentUser == null) {
+            System.out.println("Aucun utilisateur connecté");
+            return;
+        } else {
+            System.out.println("Utilisateur connecté : " + currentUser.getPrenom() + " " + currentUser.getNom());
+        }
         String txt = commentInput.getText().trim();
         if (txt.length() < 3) {
             new Alert(Alert.AlertType.WARNING, "Votre commentaire est trop court.").showAndWait();
@@ -279,33 +289,25 @@ public class ArticleDetailsController implements Initializable {
         try {
             analysis = commentAnalyzer.analyze(txt);
         } catch (IOException | InterruptedException e) {
-            new Alert(Alert.AlertType.ERROR,
-                    "Impossible de vérifier le contenu. Veuillez réessayer.")
-                    .showAndWait();
+            new Alert(Alert.AlertType.ERROR, "Impossible de vérifier le contenu. Veuillez réessayer.").showAndWait();
             return;
         }
 
         if (commentAnalyzer.shouldReject(analysis)) {
-            new Alert(Alert.AlertType.ERROR,
-                    "Votre commentaire contient du contenu inapproprié et n'a pas été publié.")
-                    .showAndWait();
+            new Alert(Alert.AlertType.ERROR, "Votre commentaire contient du contenu inapproprié.").showAndWait();
             return;
         }
 
-        int already = commentaireService.countByUserAndArticle(
-                CURRENT_USER_ID, currentArticle.getId()
-        );
+        int already = commentaireService.countByUserAndArticle(currentUser.getId(), currentArticle.getId());
         if (already >= 3) {
-            new Alert(Alert.AlertType.INFORMATION,
-                    "Vous avez déjà posté 3 commentaires sur cet article.")
-                    .showAndWait();
+            new Alert(Alert.AlertType.INFORMATION, "Vous avez déjà posté 3 commentaires sur cet article.").showAndWait();
             return;
         }
 
         Commentaire c = new Commentaire();
         c.setContent(txt);
         c.setArticle(currentArticle);
-        c.setUser(new User(CURRENT_USER_ID, "omar", "degani", "dagnouchamroush@gmail.com"));
+        c.setUser(currentUser);
         c.setEtat("valide");
         c.setCreatedAt(LocalDateTime.now());
         commentaireService.ajouter(c);
@@ -315,46 +317,44 @@ public class ArticleDetailsController implements Initializable {
     }
 
     private void handleLike() {
-        Reaction ex = reactionService.findByUserAndArticle(
-                CURRENT_USER_ID, currentArticle.getId()
-        );
+        if (currentUser == null) return;
+        Reaction ex = reactionService.findByUserAndArticle(currentUser.getId(), currentArticle.getId());
         if (ex == null) {
-            reactionService.add(new Reaction(CURRENT_USER_ID, currentArticle.getId(), true));
+            reactionService.add(new Reaction(currentUser.getId(), currentArticle.getId(), true));
             articleService.incrementLikes(currentArticle.getId());
-            currentArticle.setLikes(currentArticle.getLikes()+1);
+            currentArticle.setLikes(currentArticle.getLikes() + 1);
         } else if (ex.isLike()) {
-            reactionService.remove(CURRENT_USER_ID, currentArticle.getId());
+            reactionService.remove(currentUser.getId(), currentArticle.getId());
             articleService.decrementLikes(currentArticle.getId());
-            currentArticle.setLikes(currentArticle.getLikes()-1);
+            currentArticle.setLikes(currentArticle.getLikes() - 1);
         } else {
-            reactionService.update(new Reaction(CURRENT_USER_ID, currentArticle.getId(), true));
+            reactionService.update(new Reaction(currentUser.getId(), currentArticle.getId(), true));
             articleService.decrementDislikes(currentArticle.getId());
             articleService.incrementLikes(currentArticle.getId());
-            currentArticle.setDislikes(currentArticle.getDislikes()-1);
-            currentArticle.setLikes(currentArticle.getLikes()+1);
+            currentArticle.setDislikes(currentArticle.getDislikes() - 1);
+            currentArticle.setLikes(currentArticle.getLikes() + 1);
         }
         likesLabel.setText(String.valueOf(currentArticle.getLikes()));
         dislikesLabel.setText(String.valueOf(currentArticle.getDislikes()));
     }
 
     private void handleDislike() {
-        Reaction ex = reactionService.findByUserAndArticle(
-                CURRENT_USER_ID, currentArticle.getId()
-        );
+        if (currentUser == null) return;
+        Reaction ex = reactionService.findByUserAndArticle(currentUser.getId(), currentArticle.getId());
         if (ex == null) {
-            reactionService.add(new Reaction(CURRENT_USER_ID, currentArticle.getId(), false));
+            reactionService.add(new Reaction(currentUser.getId(), currentArticle.getId(), false));
             articleService.incrementDislikes(currentArticle.getId());
-            currentArticle.setDislikes(currentArticle.getDislikes()+1);
+            currentArticle.setDislikes(currentArticle.getDislikes() + 1);
         } else if (!ex.isLike()) {
-            reactionService.remove(CURRENT_USER_ID, currentArticle.getId());
+            reactionService.remove(currentUser.getId(), currentArticle.getId());
             articleService.decrementDislikes(currentArticle.getId());
-            currentArticle.setDislikes(currentArticle.getDislikes()-1);
+            currentArticle.setDislikes(currentArticle.getDislikes() - 1);
         } else {
-            reactionService.update(new Reaction(CURRENT_USER_ID, currentArticle.getId(), false));
+            reactionService.update(new Reaction(currentUser.getId(), currentArticle.getId(), false));
             articleService.decrementLikes(currentArticle.getId());
             articleService.incrementDislikes(currentArticle.getId());
-            currentArticle.setLikes(currentArticle.getLikes()-1);
-            currentArticle.setDislikes(currentArticle.getDislikes()+1);
+            currentArticle.setLikes(currentArticle.getLikes() - 1);
+            currentArticle.setDislikes(currentArticle.getDislikes() + 1);
         }
         likesLabel.setText(String.valueOf(currentArticle.getLikes()));
         dislikesLabel.setText(String.valueOf(currentArticle.getDislikes()));
