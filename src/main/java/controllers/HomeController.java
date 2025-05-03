@@ -39,7 +39,7 @@ public class HomeController {
         menuListeDons.setOnAction(event -> Router.navigateTo("/ListDons.fxml"));
         menuPosterDon.setOnAction(event -> Router.navigateTo("/AddDons.fxml"));
         btnHome.setOnAction(event -> Router.navigateTo("/Home.fxml"));
-        menuArticleList.setOnAction(event -> Router.navigateTo("/articleList.fxml"));
+        menuArticleList.setOnAction(event -> Router.navigateTo("/article/articleList.fxml"));
         menuOffreList.setOnAction(event -> Router.navigateTo("/offre/ListOffres.fxml"));
     }
 }

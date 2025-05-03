@@ -5,7 +5,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -19,8 +18,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import models.Article;
 import services.ArticleService;
-import java.time.format.DateTimeFormatter;
-import javafx.scene.layout.StackPane;
 
 
 import java.io.File;
@@ -144,7 +141,7 @@ public class ArticleList implements Initializable {
         readMoreBtn.setOnAction(e -> {
             System.out.println("✅ Bouton 'Read More' cliqué !");
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/articleDetails.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/article/articleDetails.fxml"));
                 Parent root = loader.load();
                 ArticleDetailsController controller = loader.getController();
                 controller.setArticle(article);

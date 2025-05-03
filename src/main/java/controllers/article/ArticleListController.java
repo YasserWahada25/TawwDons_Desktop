@@ -4,7 +4,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -67,7 +66,7 @@ public class ArticleListController implements Initializable {
         if (menuPosterDon != null)
             menuPosterDon.setOnAction(e -> Router.navigateTo("/AddDons.fxml"));
         if (menuListeArticles != null)
-            menuListeArticles.setOnAction(e -> Router.navigateTo("/articleList.fxml"));
+            menuListeArticles.setOnAction(e -> Router.navigateTo("/article/articleList.fxml"));
         if (btnHome != null)
             btnHome.setOnAction(e -> Router.navigateTo("/Home.fxml"));
     }
@@ -158,7 +157,7 @@ public class ArticleListController implements Initializable {
         """);
         readMoreBtn.setOnAction(e -> {
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/articleDetails.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/article/articleDetails.fxml"));
                 Parent root = loader.load();
                 ArticleDetailsController controller = loader.getController();
                 controller.setArticle(article);

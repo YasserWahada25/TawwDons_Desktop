@@ -102,7 +102,7 @@ public class MainInterfaceController {
         if (menuPosterDon != null)
             menuPosterDon.setOnAction(e -> Router.navigateTo("/AddDons.fxml"));
         if (menuListeArticles != null)
-            menuListeArticles.setOnAction(e -> Router.navigateTo("/articleList.fxml"));
+            menuListeArticles.setOnAction(e -> Router.navigateTo("/article/articleList.fxml"));
         if (btnHome != null)
             btnHome.setOnAction(e -> Router.navigateTo("/Home.fxml"));
     }

@@ -41,7 +41,7 @@ public class AddDonsController {
         // Routage via Router
         menuListeDons.setOnAction(e -> Router.navigateTo("/ListDons.fxml"));
         menuPosterDon.setOnAction(e -> Router.navigateTo("/AddDons.fxml"));
-        menuListeArticles.setOnAction(e -> Router.navigateTo("/articleList.fxml"));
+        menuListeArticles.setOnAction(e -> Router.navigateTo("/article/articleList.fxml"));
         btnHome.setOnAction(e -> Router.navigateTo("/Home.fxml"));
 
 
