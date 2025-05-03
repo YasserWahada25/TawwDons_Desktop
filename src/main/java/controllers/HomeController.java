@@ -29,10 +29,10 @@ public class HomeController {
         System.out.println("✅ HomeController chargé");
 
         // Redirection vers la page Liste des Dons
-        menuListeDons.setOnAction(event -> Router.navigateTo("/Dons/ListDons.fxml"));
+        menuListeDons.setOnAction(event -> Router.navigateTo("/ListDons.fxml"));
 
         // Redirection vers la page Ajouter un Don
-        menuPosterDon.setOnAction(event -> Router.navigateTo("/Dons/AddDons.fxml"));
+        menuPosterDon.setOnAction(event -> Router.navigateTo("/AddDons.fxml"));
 
         btnHome.setOnAction(event -> Router.navigateTo("/Home.fxml"));
 

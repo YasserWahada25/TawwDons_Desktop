@@ -20,7 +20,7 @@
 
                 <ImageView fitHeight="40" fitWidth="40" pickOnBounds="true" preserveRatio="true" >
                     <image>
-                        <Image url="@../images/tawwa don 3.png" />
+                        <Image url="@../images/queen.png" />
                     </image>
                 </ImageView>
 

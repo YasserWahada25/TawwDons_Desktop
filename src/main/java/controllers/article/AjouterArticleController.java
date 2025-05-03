@@ -16,7 +16,7 @@ public class AjouterArticleController {
 
     @FXML private TextField titreField;
     @FXML private TextArea contenuField;
-    @FXML private TextField categorieField;
+    @FXML private ComboBox<String> categorieField;
     @FXML private Button chooseFileButton;
     @FXML private Label fileNameLabel;
     @FXML private Label errorLabel;
@@ -34,6 +34,9 @@ public class AjouterArticleController {
 
     @FXML
     public void initialize() {
+        categorieField.getItems().clear();
+        categorieField.getItems().addAll("dons", "evenement", "recrutement");
+        categorieField.setPromptText("Sélectionner une catégorie");
         chooseFileButton.setOnAction(event -> handleChooseFile());
         ajouterBtn.setOnAction(event -> handleAjoutArticle());
 
@@ -70,7 +73,7 @@ public class AjouterArticleController {
     private void handleAjoutArticle() {
         String titre = titreField.getText();
         String description = contenuField.getText();
-        String categorie = categorieField.getText();
+        String categorie = categorieField.getValue();
 
         if (titre == null || titre.trim().isEmpty()) {
             errorLabel.setText("❌ Le titre est obligatoire.");
@@ -100,10 +103,6 @@ public class AjouterArticleController {
 
         if (categorie == null || categorie.trim().isEmpty()) {
             errorLabel.setText("❌ La catégorie est obligatoire.");
-            return;
-        }
-        if (!categorie.matches("^[A-Za-z0-9\\s'.]+$")) {
-            errorLabel.setText("❌ Catégorie invalide.");
             return;
         }
 
@@ -141,7 +140,7 @@ public class AjouterArticleController {
     private void resetForm() {
         titreField.clear();
         contenuField.clear();
-        categorieField.clear();
+        categorieField.getSelectionModel().clearSelection();
         fileNameLabel.setText("Aucun fichier choisi");
         imagePreview.setImage(null);
         selectedFile = null;

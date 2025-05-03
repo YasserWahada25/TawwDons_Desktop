@@ -1,3 +1,4 @@
+// ✅ ChatController.java corrigé avec bien la méthode `setParticipants`
 package controllers.dons;
 
 import javafx.application.Platform;
@@ -11,7 +12,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import models.Messagerie;
 import services.MessagerieService;
-import websocket.ChatSocketClient; // CORRIGÉ
+import websocket.ChatSocketClient;
+import websocket.WebSocketLauncher;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -42,15 +44,18 @@ public class ChatController {
         btnEnvoyer.setOnAction(e -> envoyerMessage());
     }
 
-    public void setParticipants(int demandeId, int userId, String role, int autreUserId) {
+    // ✅ Cette méthode est bien reconnue
+    public void setParticipants(int demandeId, int expediteurId, String role, int destinataireId) {
         this.demandeId = demandeId;
-        this.expediteurId = userId;
+        this.expediteurId = expediteurId;
         this.role = role;
-        this.destinataireId = autreUserId;
+        this.destinataireId = destinataireId;
 
-        // Nouvelle instance avec URI passé dans constructeur personnalisé
+        // Connexion WebSocket
         socketClient = new ChatSocketClient();
-        socketClient.connect("ws://localhost:8080/chat");
+      //  socketClient.connect("ws://localhost:8080/chat");
+        socketClient.connect(WebSocketLauncher.getWebSocketUri());
+
 
         socketClient.setOnMessageReceived(message -> Platform.runLater(this::afficherMessages));
 
@@ -62,7 +67,7 @@ public class ChatController {
         if (!contenu.isEmpty()) {
             Messagerie message = new Messagerie(expediteurId, destinataireId, demandeId, contenu);
             messagerieService.envoyerMessage(message);
-            socketClient.send("update"); // Notifie les autres clients de recharger
+            socketClient.send("update");
             afficherMessages();
             messageField.clear();
         }

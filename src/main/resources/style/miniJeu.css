@@ -1,0 +1,57 @@
+.root {
+    -fx-background-color: linear-gradient(to bottom, #0d0d0d, #1a1a1a);
+    -fx-font-family: 'Segoe UI', sans-serif;
+}
+
+.titre {
+    -fx-font-size: 24px;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 20 0 10 0;
+}
+
+.question-box {
+    -fx-background-color: linear-gradient(to right, #ff00cc, #3333ff);
+    -fx-background-radius: 20;
+    -fx-padding: 15;
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+    -fx-max-width: 600px;
+}
+
+.choice-button {
+    -fx-background-color: transparent;
+    -fx-border-color: linear-gradient(to right, #39ff14, #00ffff);
+    -fx-border-width: 2;
+    -fx-border-radius: 15;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-padding: 12 20;
+    -fx-background-radius: 15;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, #00ffff, 5, 0.5, 0, 0);
+}
+
+.choice-button:hover {
+    -fx-background-color: rgba(0, 255, 255, 0.1);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.text-field, .combo-box {
+    -fx-background-color: #121212;
+    -fx-text-fill: white;
+    -fx-border-color: #00ffff;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 8;
+}
+
+.button {
+    -fx-background-color: #ff8c00;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+}

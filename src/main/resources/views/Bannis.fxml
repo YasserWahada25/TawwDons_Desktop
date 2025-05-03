@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.Image?>
+
+<StackPane fx:id="rootPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.BannisController">
+    <children>
+        <AnchorPane prefHeight="700.0" prefWidth="1000.0">
+            <children>
+                <!-- NAVBAR -->
+                <VBox layoutY="0" spacing="10.0" style="-fx-background-color:skyblue;" prefWidth="974.0">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <padding>
+                            <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
+                        </padding>
+
+                        <ImageView fitHeight="40" fitWidth="40" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@images/tawwa don 3.png"/>
+                            </image>
+                        </ImageView>
+                        <Label text="Tawwa Dons - Bannissements" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #0066ff;"/>
+                        <Pane HBox.hgrow="ALWAYS"/>
+                        <HBox spacing="20" alignment="CENTER_RIGHT">
+                            <Button fx:id="retourButton" text="↩ Retour" onAction="#retour" style="-fx-background-color: #ecf0f1; -fx-font-weight: bold;" />
+                        </HBox>
+                    </HBox>
+                </VBox>
+
+                <!-- TABLE VIEW -->
+                <VBox layoutY="80" spacing="20" AnchorPane.topAnchor="80" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" AnchorPane.bottomAnchor="10">
+                    <padding>
+                        <Insets top="20" right="20" bottom="20" left="20"/>
+                    </padding>
+
+                    <TableView fx:id="banTable">
+                        <columns>
+                            <TableColumn fx:id="utilisateurCol" text="Utilisateur" prefWidth="200" />
+                            <TableColumn fx:id="motCol" text="Mot Interdit" prefWidth="200" />
+                            <TableColumn fx:id="dateCol" text="Date de ban" prefWidth="200" />
+                        </columns>
+                    </TableView>
+
+                    <HBox spacing="10" alignment="CENTER">
+                        <Button text="🗑️ Débannir" onAction="#debannirSelection" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                        <Button text="↩ Retour" onAction="#retour" style="-fx-background-color: #7f8c8d; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                    </HBox>
+                </VBox>
+            </children>
+        </AnchorPane>
+    </children>
+</StackPane>

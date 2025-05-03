@@ -19,7 +19,7 @@
         <HBox spacing="15" alignment="CENTER">
             <ImageView fitHeight="50" fitWidth="50" pickOnBounds="true" preserveRatio="true">
                 <image>
-                    <Image url="@/images/tawwa don 3.png"/>
+                    <Image url="@/images/talk.png"/>
                 </image>
             </ImageView>
             <Label text="Mes Demandes de Dons"

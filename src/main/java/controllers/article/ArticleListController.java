@@ -20,6 +20,7 @@ import utils.Router;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -52,9 +53,9 @@ public class ArticleListController implements Initializable {
 
     private void setupNavigation() {
         if (menuListeDons != null)
-            menuListeDons.setOnAction(e -> Router.navigateTo("/Dons/ListDons.fxml"));
+            menuListeDons.setOnAction(e -> Router.navigateTo("/ListDons.fxml"));
         if (menuPosterDon != null)
-            menuPosterDon.setOnAction(e -> Router.navigateTo("/Dons/AddDons.fxml"));
+            menuPosterDon.setOnAction(e -> Router.navigateTo("/AddDons.fxml"));
         if (menuListeArticles != null)
             menuListeArticles.setOnAction(e -> Router.navigateTo("/articleList.fxml"));
         if (btnHome != null)

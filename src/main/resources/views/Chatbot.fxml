@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<StackPane fx:id="rootPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ChatController" style="-fx-background-color: #f4f6f8;">
+    <children>
+        <AnchorPane prefHeight="700.0" prefWidth="1000.0">
+            <children>
+
+                <!-- NAVBAR -->
+                <VBox layoutY="0" spacing="0" prefWidth="1000.0" style="-fx-background-color: #3498db; -fx-padding: 10;">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <ImageView fitHeight="45" fitWidth="45" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@images/tawwa don 3.png"/>
+                            </image>
+                        </ImageView>
+
+                        <Label text="Tawwa Dons - ChatBot" style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+
+                        <Pane HBox.hgrow="ALWAYS" />
+
+                        <Button fx:id="retourButton" text="↩ Retour" onAction="#retour"
+                                style="-fx-background-color: white; -fx-text-fill: #3498db;
+                                       -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 8 20;"/>
+                    </HBox>
+                </VBox>
+
+                <!-- MAIN CONTENT -->
+                <VBox spacing="10" AnchorPane.topAnchor="70.0" AnchorPane.bottomAnchor="20.0"
+                      AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
+
+                    <!-- TITLE -->
+                    <Label text="🤖 Assistant Santé &amp; Éducation"
+                           style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2c3e50; -fx-padding: 0 0 15 10;" />
+
+                    <!-- CHAT AREA -->
+                    <ScrollPane fx:id="scrollPane" fitToWidth="true" style="-fx-background-color: transparent;">
+                        <VBox fx:id="chatBox" spacing="12" style="-fx-padding: 15;" />
+                    </ScrollPane>
+
+                    <!-- INPUT AREA -->
+                    <HBox spacing="10" style="-fx-padding: 10;">
+                        <TextField fx:id="chatInput" promptText="Pose ta question..." HBox.hgrow="ALWAYS"
+                                   style="-fx-background-color: white; -fx-border-color: #ccc; -fx-border-radius: 10;
+                                          -fx-background-radius: 10; -fx-padding: 10; -fx-font-size: 14px;" />
+                        <Button text="Envoyer" onAction="#envoyer"
+                                style="-fx-background-color: #2ecc71; -fx-text-fill: white;
+                                       -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 10 20;"/>
+                    </HBox>
+                </VBox>
+
+            </children>
+        </AnchorPane>
+    </children>
+</StackPane>
