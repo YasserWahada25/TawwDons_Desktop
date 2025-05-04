@@ -1,4 +1,4 @@
-package service;
+package services;
 
 import models.User;
 import utils.MyDataBase;
@@ -14,7 +14,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Base64;
-import org.mindrot.jbcrypt.BCrypt;
+//import org.mindrot.jbcrypt.BCrypt;
 
 public class UserService {
     
@@ -88,6 +88,37 @@ public class UserService {
             }
         }
         
+        return null;
+    }
+
+    public User findById(int id) {
+        String sql = "SELECT id, email, password, roles, nom, prenom, etat_compte, "
+                + "type_utilisateur, reset_token, google_id "
+                + "FROM user WHERE id = ?";
+        try (Connection conn = MyDataBase.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                User u = new User(
+                        rs.getInt("id"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("roles"),
+                        rs.getString("nom"),
+                        rs.getString("prenom"),
+                        rs.getString("etat_compte"),
+                        rs.getString("type_utilisateur"),
+                        rs.getString("reset_token"),
+                        rs.getString("google_id")
+                );
+                rs.close();
+                return u;
+            }
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return null;
     }
     
@@ -209,6 +240,37 @@ public class UserService {
         boolean isMatch = verifyPassword(password, hashedPassword);
         System.out.println("Password Match: " + isMatch);
     }
+
+    public User getUserByEmailAndPassword(String email, String hashedPassword) {
+        try (Connection conn = MyDataBase.getInstance().getConnection()) {
+            String query = "SELECT * FROM user WHERE email = ? AND password = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, email);
+            stmt.setString(2, hashedPassword);
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return new User(
+                        rs.getInt("id"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("roles"),
+                        rs.getString("nom"),
+                        rs.getString("prenom"),
+                        rs.getString("etat_compte"),
+                        rs.getString("type_utilisateur"),
+                        rs.getString("reset_token"),
+                        rs.getString("google_id")
+                );
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
     public boolean validateUser(String email, String hashedPassword) {
         try {

@@ -6,7 +6,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.geometry.Insets?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17.0.1"
+<BorderPane xmlns="http://javafx.com/javafx/21.0.6"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="controllers.article.AdminArticleListController"
             prefWidth="1200" prefHeight="700"
@@ -67,14 +67,14 @@
             <!-- Table des articles -->
             <TableView fx:id="tableView" prefHeight="500">
                 <columns>
-                    <TableColumn fx:id="colId" text="ID" prefWidth="50" />
-                    <TableColumn fx:id="colTitre" text="Titre" prefWidth="150" />
-                    <TableColumn fx:id="colImage" text="Image Name" prefWidth="150" />
-                    <TableColumn fx:id="colDescription" text="Description" prefWidth="300" />
-                    <TableColumn fx:id="colCategorie" text="Categorie" prefWidth="150" />
-                    <TableColumn fx:id="colActions" text="Actions" prefWidth="150" />
-                </columns>
-            </TableView>
-        </VBox>
-    </center>
-</BorderPane>
+
+                       <TableColumn fx:id="colTitre" text="Titre" prefWidth="150" />
+                       <TableColumn fx:id="colImage" text="Image Name" prefWidth="150" />
+                       <TableColumn fx:id="colDescription" text="Description" prefWidth="270" />
+                       <TableColumn fx:id="colCategorie" text="Categorie" prefWidth="150" />
+                       <TableColumn fx:id="colActions" text="Actions" prefWidth="240" />
+                   </columns>
+               </TableView>
+           </VBox>
+       </center>
+   </BorderPane>

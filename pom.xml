@@ -118,6 +118,12 @@
             <artifactId>poi-ooxml</artifactId>
             <version>5.2.3</version> <!-- pour les fichiers .xlsx -->
         </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20231013</version>
+        </dependency>
+
         <!-- Testing -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
