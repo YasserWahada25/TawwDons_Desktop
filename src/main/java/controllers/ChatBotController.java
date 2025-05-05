@@ -5,15 +5,18 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.stage.FileChooser;
 import okhttp3.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
 import utils.Router;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.TimeUnit;
-
 
 public class ChatBotController {
 
@@ -33,14 +36,86 @@ public class ChatBotController {
     private Button backButton;
 
     @FXML
+    private Button uploadPdfButton;
+
+    private String currentOfferProfession;
+    private boolean isProfessionCompatible = false;
+
+    @FXML
     public void initialize() {
         // Initialisation du chat
         setupChat();
+        setupPdfUpload();
     }
 
     private void setupChat() {
         // Ajouter un message de bienvenue
         addMessage("Assistant", "Bonjour ! Je suis votre assistant AI. Comment puis-je vous aider ?");
+    }
+
+    private void setupPdfUpload() {
+        uploadPdfButton.setOnAction(event -> handlePdfUpload());
+    }
+
+    private void handlePdfUpload() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(
+            new FileChooser.ExtensionFilter("PDF Files", "*.pdf")
+        );
+
+        File selectedFile = fileChooser.showOpenDialog(null);
+        if (selectedFile != null) {
+            analyzePdf(selectedFile);
+        }
+    }
+
+    private void analyzePdf(File pdfFile) {
+        try {
+            // Extraire le texte du PDF
+            String pdfText = extractTextFromPdf(pdfFile);
+            
+            // Analyser le contenu avec Gemini
+            String prompt = "Analyse ce CV et extrait la profession principale mentionnée. Réponds uniquement avec la profession, sans phrases supplémentaires.\n\n" + pdfText;
+            
+            new Thread(() -> {
+                String profession = callGeminiAPI(prompt);
+                javafx.application.Platform.runLater(() -> {
+                    if (currentOfferProfession != null) {
+                        compareProfessions(profession, currentOfferProfession);
+                    } else {
+                        addMessage("Assistant", "Profession trouvée dans le CV : " + profession);
+                    }
+                });
+            }).start();
+
+        } catch (IOException e) {
+            addMessage("Assistant", "Erreur lors de l'analyse du PDF : " + e.getMessage());
+        }
+    }
+
+    private String extractTextFromPdf(File pdfFile) throws IOException {
+        try (PDDocument document = PDDocument.load(pdfFile)) {
+            PDFTextStripper stripper = new PDFTextStripper();
+            return stripper.getText(document);
+        }
+    }
+
+    private void compareProfessions(String cvProfession, String offerProfession) {
+        String prompt = "Compare ces deux professions et dis si elles sont compatibles ou similaires. " +
+                       "Profession du CV : " + cvProfession + "\n" +
+                       "Profession de l'offre : " + offerProfession + "\n" +
+                       "Réponds uniquement avec 'Compatible' ou 'Non compatible' suivi d'une brève explication.";
+
+        new Thread(() -> {
+            String comparison = callGeminiAPI(prompt);
+            javafx.application.Platform.runLater(() -> {
+                addMessage("Assistant", comparison);
+            });
+        }).start();
+    }
+
+    public void setCurrentOfferProfession(String profession) {
+        this.currentOfferProfession = profession;
     }
 
     @FXML
@@ -91,6 +166,11 @@ public class ChatBotController {
     }
 
     private String callGeminiAPI(String prompt) {
+        // Vérifier si la question est dans le contexte approprié
+        if (!isValidContext(prompt)) {
+            return "Je suis désolé, je ne peux répondre qu'aux questions concernant les dons et la santé. Pourriez-vous reformuler votre question dans ce contexte ?";
+        }
+
         String apiKey = "AIzaSyCGvIXkpsIwFejR_3h9W_aqz20WFaVqwzc"; // sécurise dans un vrai projet !
         String endpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent?key=" + apiKey;
 
@@ -101,10 +181,12 @@ public class ChatBotController {
                 .readTimeout(30, TimeUnit.SECONDS)
                 .build();
 
-        // Création du corps JSON
+        // Création du corps JSON avec contexte spécifique
         JSONObject message = new JSONObject()
                 .put("role", "user")
-                .put("parts", new JSONArray().put(new JSONObject().put("text", prompt)));
+                .put("parts", new JSONArray().put(new JSONObject().put("text", 
+                    "Tu es un assistant spécialisé dans les dons et la santé. Réponds uniquement aux questions sur ces sujets. " +
+                    "Question: " + prompt)));
 
         JSONObject json = new JSONObject()
                 .put("contents", new JSONArray().put(message));
@@ -145,6 +227,23 @@ public class ChatBotController {
         } catch (Exception e) {
             return "Erreur API: " + e.getMessage();
         }
+    }
+
+    private boolean isValidContext(String prompt) {
+        // Liste de mots-clés liés aux dons et à la santé
+        String[] healthKeywords = {"santé", "médical", "don", "sang", "organe", "greffe", "maladie", 
+                                 "traitement", "médecin", "hôpital", "donneur", "receveur", "transfusion"};
+        
+        prompt = prompt.toLowerCase();
+        
+        // Vérifier si au moins un mot-clé est présent dans la question
+        for (String keyword : healthKeywords) {
+            if (prompt.contains(keyword)) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 
     private void addMessage(String sender, String message) {

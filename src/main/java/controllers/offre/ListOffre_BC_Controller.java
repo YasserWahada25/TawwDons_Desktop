@@ -70,11 +70,11 @@ public class ListOffre_BC_Controller extends BaseNavigationController {
     private void setupTable() {
         titreColumn.setCellValueFactory(new PropertyValueFactory<>("titreOffre"));
         descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("descriptionOffre"));
-        dateColumn.setCellValueFactory(new PropertyValueFactory<>("dateOffre"));
+
         
         titreColumn.setPrefWidth(200);
         descriptionColumn.setPrefWidth(600);
-        dateColumn.setPrefWidth(200);
+
         actionsColumn.setPrefWidth(200);
         
         descriptionColumn.setMinWidth(300);

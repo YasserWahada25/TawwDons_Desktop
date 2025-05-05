@@ -4,10 +4,19 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import models.Condidat;
+import models.Offre;
 import services.CondidatService;
+import services.OffreService;
 import utils.Router;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
+import okhttp3.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 public class AddCondidat_fr_Controller {
 
@@ -26,8 +35,11 @@ public class AddCondidat_fr_Controller {
     @FXML private MenuItem menuPosterOffre;
 
     private final CondidatService condidatService = new CondidatService();
+    private final OffreService offreService = new OffreService();
     private File selectedCvFile;
     private int offreId;
+    private String offreProfession;
+    private boolean isProfessionCompatible = false;
 
     @FXML
     public void initialize() {
@@ -47,6 +59,11 @@ public class AddCondidat_fr_Controller {
                 String idStr = url.substring(url.indexOf("id=") + 3);
                 try {
                     offreId = Integer.parseInt(idStr);
+                    // Récupérer la profession de l'offre
+                    Offre offre = offreService.getOffreById(offreId);
+                    if (offre != null) {
+                        offreProfession = offre.getTitreOffre();
+                    }
                 } catch (NumberFormatException e) {
                     showAlert(Alert.AlertType.ERROR, "Erreur", "ID d'offre invalide");
                     Router.navigateTo("/offre/ListOffres.fxml");
@@ -68,6 +85,7 @@ public class AddCondidat_fr_Controller {
         emailField.setStyle(requiredStyle);
         telephoneField.setStyle(requiredStyle);
         cvField.setStyle(requiredStyle);
+        saveButton.setDisable(true);
     }
 
     private void setupNavigation() {
@@ -137,6 +155,7 @@ public class AddCondidat_fr_Controller {
             if (selectedCvFile != null) {
                 cvField.setText(selectedCvFile.getAbsolutePath());
                 cvField.setStyle("-fx-border-color: #2ecc71;");
+                analyzeCV(selectedCvFile);
             }
         } catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "Erreur", 
@@ -147,6 +166,12 @@ public class AddCondidat_fr_Controller {
     @FXML
     private void handleSaveButtonClick() {
         try {
+            if (!isProfessionCompatible) {
+                showAlert(Alert.AlertType.ERROR, "Erreur", 
+                         "Vous ne pouvez pas postuler car votre CV ne correspond pas à l'offre.");
+                return;
+            }
+
             if (!validateFields()) {
                 showAlert(Alert.AlertType.ERROR, "Erreur de validation", 
                          "Veuillez remplir tous les champs obligatoires correctement.");
@@ -219,5 +244,112 @@ public class AddCondidat_fr_Controller {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    private void analyzeCV(File cvFile) {
+        try {
+            // Extraire le texte du PDF
+            String cvText = extractTextFromPdf(cvFile);
+            
+            // Analyser le contenu avec Gemini
+            String prompt = "Analyse ce CV et extrait la profession principale mentionnée. Réponds uniquement avec la profession, sans phrases supplémentaires.\n\n" + cvText;
+            
+            new Thread(() -> {
+                String cvProfession = callGeminiAPI(prompt);
+                javafx.application.Platform.runLater(() -> {
+                    if (offreProfession != null) {
+                        compareProfessions(cvProfession, offreProfession);
+                    }
+                });
+            }).start();
+
+        } catch (IOException e) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de l'analyse du CV : " + e.getMessage());
+        }
+    }
+
+    private String extractTextFromPdf(File pdfFile) throws IOException {
+        try (PDDocument document = PDDocument.load(pdfFile)) {
+            PDFTextStripper stripper = new PDFTextStripper();
+            return stripper.getText(document);
+        }
+    }
+
+    private String callGeminiAPI(String prompt) {
+        String apiKey = "AIzaSyCGvIXkpsIwFejR_3h9W_aqz20WFaVqwzc";
+        String endpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent?key=" + apiKey;
+
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .build();
+
+        JSONObject message = new JSONObject()
+                .put("role", "user")
+                .put("parts", new JSONArray().put(new JSONObject().put("text", prompt)));
+
+        JSONObject json = new JSONObject()
+                .put("contents", new JSONArray().put(message));
+
+        RequestBody body = RequestBody.create(MediaType.get("application/json; charset=utf-8"), json.toString());
+
+        Request request = new Request.Builder()
+                .url(endpoint)
+                .post(body)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                return "Erreur: " + response.code() + " - " + response.message();
+            }
+
+            String responseBody = response.body().string();
+            JSONObject result = new JSONObject(responseBody);
+
+            if (!result.has("candidates") || result.getJSONArray("candidates").length() == 0) {
+                return "Erreur: Format de réponse inattendu";
+            }
+
+            return result
+                    .getJSONArray("candidates")
+                    .getJSONObject(0)
+                    .getJSONObject("content")
+                    .getJSONArray("parts")
+                    .getJSONObject(0)
+                    .getString("text");
+
+        } catch (Exception e) {
+            return "Erreur API: " + e.getMessage();
+        }
+    }
+
+    private void compareProfessions(String cvProfession, String offerProfession) {
+        String prompt = "Compare ces deux professions et dis si elles sont compatibles ou similaires. " +
+                       "Profession du CV : " + cvProfession + "\n" +
+                       "Profession de l'offre : " + offerProfession + "\n" +
+                       "Réponds uniquement avec 'Compatible' ou 'Non compatible' suivi d'une brève explication.";
+
+        new Thread(() -> {
+            String comparison = callGeminiAPI(prompt);
+            javafx.application.Platform.runLater(() -> {
+                if (comparison.toLowerCase().contains("non compatible")) {
+                    isProfessionCompatible = false;
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Incompatibilité de profession");
+                    alert.setHeaderText("Postulation impossible");
+                    alert.setContentText(comparison + "\n\nVeuillez sélectionner un CV correspondant à l'offre.");
+                    alert.getButtonTypes().setAll(ButtonType.OK);
+                    
+                    alert.showAndWait();
+                    cvField.clear();
+                    selectedCvFile = null;
+                    saveButton.setDisable(true);
+                } else {
+                    isProfessionCompatible = true;
+                    saveButton.setDisable(false);
+                }
+            });
+        }).start();
     }
 } 

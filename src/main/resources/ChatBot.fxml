@@ -18,6 +18,8 @@
             <Button fx:id="backButton" text="Retour" onAction="#handleBackButtonClick"
                     style="-fx-background-color: #6c757d; -fx-text-fill: white;"/>
             <Label text="Assistant AI" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+            <Button fx:id="uploadPdfButton" text="Analyser CV (PDF)"
+                    style="-fx-background-color: #28a745; -fx-text-fill: white;"/>
         </HBox>
     </top>
 
