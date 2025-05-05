@@ -1,28 +1,89 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
+<?import java.net.URL?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="controllers.dons.ChatController"
             prefWidth="700" prefHeight="500">
 
-    <VBox spacing="10" AnchorPane.topAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" AnchorPane.bottomAnchor="10">
-        <Label text="💬 Conversation" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+    <stylesheets>
+        <URL value="@/style/chat.css"/>
+    </stylesheets>
 
-        <ScrollPane fitToWidth="true" fitToHeight="true" VBox.vgrow="ALWAYS">
-            <VBox fx:id="messagesBox" spacing="10">
+    <VBox spacing="10"
+          AnchorPane.topAnchor="10"
+          AnchorPane.leftAnchor="10"
+          AnchorPane.rightAnchor="10"
+          AnchorPane.bottomAnchor="10"
+          styleClass="chat-container">
+
+        <HBox fx:id="chatHeader"
+              spacing="10"
+              alignment="CENTER_LEFT"
+              styleClass="chat-header">
+
+            <ImageView fx:id="headerAvatar"
+                       fitWidth="32" fitHeight="32">
+                <image>
+                    <Image url="@/images/avatar2.png"/>
+                </image>
+            </ImageView>
+
+            <VBox spacing="2">
+                <!-- id renommé pour correspondre à ChatController.lblInterlocuteur -->
+                <Label fx:id="lblInterlocuteur"
+                       text="Nom Utilisateur"
+                       styleClass="header-name"/>
+                <Label fx:id="headerStatus"
+                       text="En ligne il y a 1 h"
+                       styleClass="header-status"/>
+            </VBox>
+
+            <Pane HBox.hgrow="ALWAYS"/>
+
+            <!-- actions -->
+            <Button fx:id="btnCall"
+                    styleClass="header-btn-call"
+                    text="📞"/>
+            <Button fx:id="btnVideo"
+                    styleClass="header-btn-video"
+                    text="📹"/>
+            <MenuButton fx:id="btnOptions"
+                        styleClass="header-btn-options"
+                        text="⋯"/>
+        </HBox>
+
+        <Label text="💬 Conversation"
+               styleClass="chat-title"/>
+
+        <ScrollPane fitToWidth="true"
+                    fitToHeight="true"
+                    VBox.vgrow="ALWAYS"
+                    styleClass="chat-scroll">
+            <VBox fx:id="messagesBox"
+                  spacing="8"
+                  styleClass="messages-box">
                 <padding>
                     <Insets top="10" right="10" bottom="10" left="10"/>
                 </padding>
             </VBox>
         </ScrollPane>
 
-        <HBox spacing="10">
-            <TextField fx:id="messageField" promptText="Écrivez un message..." HBox.hgrow="ALWAYS"/>
-            <Button fx:id="btnEnvoyer" text="Envoyer" />
+        <HBox spacing="10"
+              styleClass="input-box"
+              alignment="CENTER_LEFT">
+            <TextField fx:id="messageField"
+                       promptText="Écrivez un message..."
+                       HBox.hgrow="ALWAYS"
+                       styleClass="input-field"/>
+            <Button fx:id="btnEnvoyer"
+                    styleClass="send-button"/>
         </HBox>
     </VBox>
 </AnchorPane>

@@ -13,21 +13,18 @@ public class ChatSocketClient {
 
     public void connect(String uri) {
         try {
-
             System.out.println("Tentative de connexion à : " + uri);
-            WebSocketContainer container = ContainerProvider.getWebSocketContainer();
-            container.connectToServer(this, new URI(uri));
+            WebSocketContainer c = ContainerProvider.getWebSocketContainer();
+            c.connectToServer(this, new URI(uri));
         } catch (Exception e) {
-            System.err.println("Erreur WebSocket : " + e.getMessage());
             e.printStackTrace();
         }
     }
 
-
     @OnOpen
     public void onOpen(Session session) {
         this.session = session;
-        System.out.println("[Socket] Connexion ouverte avec le serveur");
+        System.out.println("[Socket] Ouverte");
     }
 
     @OnMessage
@@ -39,19 +36,19 @@ public class ChatSocketClient {
 
     @OnClose
     public void onClose(Session session, CloseReason reason) {
-        System.out.println("[Socket] Connexion fermée: " + reason);
         this.session = null;
+        System.out.println("[Socket] Fermée: " + reason);
     }
 
     @OnError
-    public void onError(Session session, Throwable throwable) {
-        System.err.println("[Socket] Erreur: " + throwable.getMessage());
+    public void onError(Session session, Throwable t) {
+        t.printStackTrace();
     }
 
-    public void send(String message) {
+    public void send(String msg) {
         try {
             if (session != null && session.isOpen()) {
-                session.getBasicRemote().sendText(message);
+                session.getBasicRemote().sendText(msg);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -60,5 +57,13 @@ public class ChatSocketClient {
 
     public void setOnMessageReceived(Consumer<String> handler) {
         this.messageHandler = handler;
+    }
+
+    public void disconnect() {
+        try {
+            if (session != null && session.isOpen()) session.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

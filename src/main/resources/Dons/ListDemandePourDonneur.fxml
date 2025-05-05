@@ -37,7 +37,7 @@
                    style="-fx-background-color: white; -fx-border-color: #ccc;">
             <columns>
                 <TableColumn fx:id="colDon" text="📦 Don" prefWidth="220"/>
-                <TableColumn fx:id="colBeneficiaire" text="👤 Bénéficiaire" prefWidth="180"/>
+                <TableColumn fx:id="colBeneficiaire" text="👤 Bénéficiaire" prefWidth="180" visible="false"/>
                 <TableColumn fx:id="colDate" text="📅 Date" prefWidth="140"/>
                 <TableColumn fx:id="colStatut" text="📌 Statut" prefWidth="140"/>
                 <TableColumn fx:id="colAction" text="⚙️ Actions" prefWidth="250"/>

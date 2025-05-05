@@ -36,7 +36,7 @@
         <TableView fx:id="tableDemandes" prefHeight="500" prefWidth="900"
                    style="-fx-background-color: white; -fx-border-color: #ccc;">
             <columns>
-                <TableColumn fx:id="colDon" text="📦 Don" prefWidth="180" visible="false"/>
+                <TableColumn fx:id="colDon" text="📦 Don" prefWidth="180" />
                 <TableColumn fx:id="colDate" text="📅 Date de Demande" prefWidth="200"/>
                 <TableColumn fx:id="colStatut" text="📌 Statut" prefWidth="200"/>
                 <TableColumn fx:id="colAction" text="⚙️ Actions" prefWidth="200"/>

@@ -171,6 +171,7 @@ public class DonsService {
         FROM demande_dons dd
         JOIN dons d ON dd.dons_id = d.id
         WHERE d.donneur_id = ?
+    
     """;
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {

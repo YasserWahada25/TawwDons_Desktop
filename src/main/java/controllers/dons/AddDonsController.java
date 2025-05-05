@@ -5,8 +5,10 @@ import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import models.Dons;
+import models.User;
 import services.DonsService;
 import utils.Router;
+import utils.SessionManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,12 +29,21 @@ public class AddDonsController {
     @FXML private MenuItem menuListeArticles;
     @FXML private Button btnHome;
 
-
     @FXML private File imageFile;
     @FXML private final DonsService donsService = new DonsService();
 
+    private User currentUser;
+
     @FXML
     public void initialize() {
+        currentUser = SessionManager.getCurrentUser();
+
+        if (currentUser == null || !currentUser.getRoles().contains("DONNEUR")) {
+            showAlert("Accès refusé", "Vous devez être connecté en tant que donneur.");
+            Router.navigateTo("/Home.fxml");
+            return;
+        }
+
         categorieCombo.getItems().addAll("vetements", "nourriture", "electronique", "meubles", "autre");
 
         choisirImageBtn.setOnAction(e -> choisirImage());
@@ -43,10 +54,6 @@ public class AddDonsController {
         menuPosterDon.setOnAction(e -> Router.navigateTo("/Dons/AddDons.fxml"));
         menuListeArticles.setOnAction(e -> Router.navigateTo("/articleList.fxml"));
         btnHome.setOnAction(e -> Router.navigateTo("/Home.fxml"));
-
-
-
-
     }
 
     @FXML
@@ -80,13 +87,18 @@ public class AddDonsController {
 
     @FXML
     private void creerDon() {
+        if (currentUser == null) {
+            showAlert("Erreur", "Aucun utilisateur connecté.");
+            return;
+        }
+
         Dons don = new Dons();
         don.setTitre(titreField.getText());
         don.setDescription(descriptionArea.getText());
         don.setDateCreation(datePicker.getValue());
         don.setCategorie(categorieCombo.getValue());
         don.setImageUrl(imageFile != null ? imageFile.getName() : "");
-        don.setDonneurId(1);
+        don.setDonneurId(currentUser.getId());
         don.setValide(false);
 
         String erreur = don.validate();
