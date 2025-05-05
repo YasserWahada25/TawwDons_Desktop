@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.geometry.Insets?>
+
+<?import javafx.scene.image.Image?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.dons.ListDemandePourDonneur"
+            prefHeight="650.0" prefWidth="1000.0"
+            style="-fx-background-color: linear-gradient(to bottom, #ffffff, #f4f4f4);">
+
+    <VBox spacing="25" alignment="TOP_CENTER" prefWidth="950" layoutX="25" layoutY="10">
+        <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+        <!-- Header avec logo + titre -->
+        <HBox spacing="15" alignment="CENTER">
+            <ImageView fitHeight="70" fitWidth="70" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="@/images/pawn.png"/>
+                </image>
+            </ImageView>
+            <Label text="Mes Demandes Reçues"
+                   style="-fx-font-size: 28px; -fx-text-fill: #2c3e50; -fx-font-weight: bold;"/>
+        </HBox>
+
+        <!-- Retour Button -->
+        <HBox alignment="TOP_LEFT" prefWidth="900">
+            <Button fx:id="btnRetour" text="← Retour"
+                    style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold;"/>
+        </HBox>
+
+        <!-- TableView -->
+        <TableView fx:id="tableDemandes" prefHeight="500" prefWidth="950"
+                   style="-fx-background-color: white; -fx-border-color: #ccc;">
+            <columns>
+                <TableColumn fx:id="colDon" text="📦 Don" prefWidth="220"/>
+                <TableColumn fx:id="colBeneficiaire" text="👤 Bénéficiaire" prefWidth="180" visible="false"/>
+                <TableColumn fx:id="colDate" text="📅 Date" prefWidth="140"/>
+                <TableColumn fx:id="colStatut" text="📌 Statut" prefWidth="140"/>
+                <TableColumn fx:id="colAction" text="⚙️ Actions" prefWidth="250"/>
+            </columns>
+        </TableView>
+    </VBox>
+</AnchorPane>
