@@ -102,7 +102,7 @@ public class ReponseDAO extends BaseDAO implements ICRUD<Reponse> {
     }
 
     @Override
-    public List<Reponse> getAll() {
+   /* public List<Reponse> getAll() {
         List<Reponse> list = new ArrayList<>();
         String sql = "SELECT * FROM reponse";
         try (Statement stmt = connection.createStatement();
@@ -116,12 +116,38 @@ public class ReponseDAO extends BaseDAO implements ICRUD<Reponse> {
                         rs.getTimestamp("date_reponse").toLocalDateTime(),
                         rs.getBoolean("bonne")
                 ));
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }*/
+    public List<Reponse> getAll() {
+        List<Reponse> list = new ArrayList<>();
+        String sql = "SELECT r.*, q.evaluation_id FROM reponse r JOIN question q ON r.question_id = q.id";
+
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                Reponse rep = new Reponse(
+                        rs.getInt("id"),
+                        rs.getInt("question_id"),
+                        rs.getString("utilisateur"),
+                        rs.getString("reponse"),
+                        rs.getTimestamp("date_reponse").toLocalDateTime(),
+                        rs.getBoolean("bonne")
+                );
+                rep.setEvaluationId(rs.getInt("evaluation_id")); // ✅ Ici on remplit bien le champ
+                list.add(rep);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return list;
     }
+
 
     public List<Reponse> getByUtilisateur(String utilisateur) {
         List<Reponse> list = new ArrayList<>();

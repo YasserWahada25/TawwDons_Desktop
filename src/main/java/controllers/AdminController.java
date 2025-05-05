@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class AdminController {
+    @FXML private Button pdfButton; // Assure-toi que ce bouton est bien défini dans ton FXML avec fx:id="pdfButton"
 
     @FXML private TextField nomField, descriptionField;
     @FXML private ComboBox<String> typeBox;
@@ -83,6 +84,39 @@ public class AdminController {
             e.printStackTrace();
             showToast("❌ Erreur lors de l’export.");
         }
+    }
+    @FXML
+    private void telechargerPDF() {
+        try {
+            List<Evaluation> evaluations = new EvaluationDAO().getAll();
+
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Enregistrer le PDF");
+            fileChooser.setInitialFileName("evaluations.pdf");
+            fileChooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("Fichiers PDF", "*.pdf")
+            );
+
+            Stage stage = (Stage) pdfButton.getScene().getWindow();
+            File file = fileChooser.showSaveDialog(stage);
+
+            if (file != null) {
+                PDFExporter.exportEvaluation(evaluations, file.getAbsolutePath());
+                showAlert("✅ Succès", "PDF enregistré avec succès dans :\n" + file.getAbsolutePath());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert("❌ Erreur", "Une erreur est survenue lors de l'export.");
+        }
+    }
+
+    private void showAlert(String titre, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(titre);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     @FXML
@@ -242,7 +276,7 @@ public class AdminController {
     @FXML
     private void retourAccueil() {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/MainInterface.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/Home.fxml"));
             Stage stage = (Stage) adminAccueilBtn.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("Accueil");

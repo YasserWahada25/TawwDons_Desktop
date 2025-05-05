@@ -1,0 +1,70 @@
+.main-container {
+    -fx-background-color: linear-gradient(to bottom right, #dcedc8, #c5e1a5);
+}
+
+.navbar {
+    -fx-background-color: #33691e;
+    -fx-background-radius: 0 0 10 10;
+}
+
+.title {
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.retour-button {
+    -fx-background-color: white;
+    -fx-text-fill: #33691e;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+}
+
+.board-container {
+    -fx-padding: 10;
+    -fx-background-color: #ffffff30;
+    -fx-background-radius: 10;
+    -fx-alignment: center;
+}
+
+.board {
+    -fx-alignment: center;
+}
+
+.sidebar {
+    -fx-background-color: #f1f8e9;
+    -fx-background-radius: 0 0 0 10;
+    -fx-pref-width: 150;
+}
+
+.label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #2e7d32;
+    -fx-font-weight: bold;
+}
+
+.piece-button {
+    -fx-background-color: transparent;
+    -fx-border-color: #2e7d32;
+    -fx-border-width: 2;
+    -fx-border-radius: 5;
+    -fx-padding: 5;
+}
+
+.piece-button:selected {
+    -fx-background-color: #a5d6a7;
+}
+
+.info-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #1b5e20;
+    -fx-font-weight: bold;
+}
+
+.replay-button {
+    -fx-background-color: #43a047;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10;
+    -fx-padding: 8 20;
+}

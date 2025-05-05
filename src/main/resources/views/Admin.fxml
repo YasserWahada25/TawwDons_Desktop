@@ -43,7 +43,9 @@
                         <Button text="🗄 Archiver" onAction="#archiverEvaluation" style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-font-weight: bold;"/> <!-- 🔥 AJOUT ICI -->
 
                         <Button text="💃 Hestorique" onAction="#ouvrirArchives" style="-fx-background-color: #7f8c8d; -fx-text-fill: white; -fx-font-weight: bold;"/>
-                        <Button text="📄 Exporter PDF" onAction="#exporterPDF" style="-fx-background-color: #16a085; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                        <Button fx:id="pdfButton" text="📄 Exporter en PDF" onAction="#telechargerPDF"
+                                style="-fx-background-color: #27ae60; -fx-text-fill: white;"/>
+
                         <Button text="✏️ Modifier" onAction="#modifierEvaluation" style="-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-weight: bold;"/>
                         <Button text="🗑 Supprimer" onAction="#supprimerEvaluation" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold;"/>
                         <Button text="👮 Liste des bannis" onAction="#ouvrirListeBannis" style="-fx-background-color: #c0392b; -fx-text-fill: white; -fx-font-weight: bold;"/>

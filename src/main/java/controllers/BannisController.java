@@ -30,9 +30,10 @@ public class BannisController {
     }
 
     private void setupColumns() {
-        utilisateurCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().utilisateur));
-        motCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().mot));
-        dateCol.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().date));
+        // Utiliser les getters !
+        utilisateurCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getUtilisateur()));
+        motCol.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMot()));
+        dateCol.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getDate()));
     }
 
     private void loadBannis() {
@@ -55,7 +56,8 @@ public class BannisController {
         }
 
         try {
-            banDAO.debannir(selected.utilisateur);
+            // Utiliser getUtilisateur()
+            banDAO.debannir(selected.getUtilisateur());
             loadBannis();
             showAlert("Succès", "Utilisateur débanni avec succès !");
         } catch (Exception e) {
