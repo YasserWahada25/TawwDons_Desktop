@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.LoginHistoryController"
+            prefWidth="900" prefHeight="600">
+
+    <!-- Sidebar -->
+    <left>
+        <VBox style="-fx-background-color: #f8f9fa;" spacing="15" prefWidth="200" alignment="TOP_LEFT">
+            <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+            <Label text="Creative Tim" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+            <Separator/>
+
+            <Button fx:id="btnDashboard" text="Dashboard" maxWidth="Infinity" onAction="#navigateToDashboard"/>
+            <Button fx:id="btnDonsRequests" text="Dons Requests" maxWidth="Infinity" onAction="#navigateToDonsRequests"/>
+            <Button fx:id="btnUserList" text="Liste Utilisateurs" maxWidth="Infinity" onAction="#navigateToUserList"/>
+            <Button text="Retour" maxWidth="Infinity" onAction="#goBack"/>
+        </VBox>
+    </left>
+
+    <!-- Content -->
+    <center>
+        <VBox alignment="CENTER" spacing="20">
+            <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+            
+            <Label text="Historique des Connexions" 
+                   style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #333;"/>
+            
+            <HBox alignment="CENTER_RIGHT" spacing="10">
+                <Button text="Rafraîchir" onAction="#refreshData"
+                        style="-fx-background-color: #3498db; -fx-text-fill: white;"/>
+                <ComboBox fx:id="userFilterComboBox" promptText="Filtrer par utilisateur"/>
+            </HBox>
+            
+            <TableView fx:id="historyTable" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn text="Nom" prefWidth="120" fx:id="nomColumn"/>
+                    <TableColumn text="Prénom" prefWidth="120" fx:id="prenomColumn"/>
+                    <TableColumn text="Email" prefWidth="200" fx:id="emailColumn"/>
+                    <TableColumn text="Type" prefWidth="120" fx:id="typeColumn"/>
+                    <TableColumn text="Dernière connexion" prefWidth="220" fx:id="lastLoginColumn"/>
+                </columns>
+            </TableView>
+            
+            <VBox alignment="CENTER" spacing="10">
+                <Label text="Statistiques de connexion" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                <HBox spacing="50" alignment="CENTER">
+                    <VBox alignment="CENTER" style="-fx-background-color: #e8f4f8; -fx-padding: 15; -fx-background-radius: 8;">
+                        <Label fx:id="totalLoginsLabel" text="Total des connexions: 0"
+                               style="-fx-font-size: 14px;"/>
+                    </VBox>
+                    <VBox alignment="CENTER" style="-fx-background-color: #e8f8e8; -fx-padding: 15; -fx-background-radius: 8;">
+                        <Label fx:id="lastLoginDateLabel" text="Dernière connexion: --" 
+                               style="-fx-font-size: 14px;"/>
+                    </VBox>
+                    <VBox alignment="CENTER" style="-fx-background-color: #f8e8e8; -fx-padding: 15; -fx-background-radius: 8;">
+                        <Label fx:id="inactiveUsersLabel" text="Utilisateurs inactifs: 0" 
+                               style="-fx-font-size: 14px;"/>
+                    </VBox>
+                </HBox>
+            </VBox>
+        </VBox>
+    </center>
+
+</BorderPane> 

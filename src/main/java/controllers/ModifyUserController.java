@@ -217,4 +217,19 @@ public class ModifyUserController {
         alert.setContentText(content);
         alert.showAndWait();
     }
-} 
+    
+    @FXML
+    public void navigateToConnectionHistory() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ConnectionHistory.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) nomField.getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            errorLabel.setText("Erreur lors de la navigation vers l'historique de connexion.");
+        }
+    }
+}

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.ConnectionHistoryController"
+            prefHeight="600.0" prefWidth="900.0"
+            stylesheets="/styles/styles.css">
+    <top>
+        <VBox spacing="10" styleClass="header-container">
+            <padding>
+                <Insets top="20" right="20" bottom="10" left="20"/>
+            </padding>
+            <HBox alignment="CENTER_LEFT" spacing="20">
+                <Button text="Retour à l'accueil" onAction="#navigateToHome" styleClass="btn-secondary"/>
+                <Button text="Tableau de bord" onAction="#navigateToDashboard" styleClass="btn-secondary"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="Actualiser" onAction="#refreshData" styleClass="btn-primary"/>
+            </HBox>
+            <Label text="Historique de Connexion" styleClass="page-title">
+                <font>
+                    <Font name="System Bold" size="24.0"/>
+                </font>
+            </Label>
+            <Label fx:id="userInfoLabel" text="Historique de connexion pour: [Nom Utilisateur]" styleClass="subtitle"/>
+            <Label fx:id="totalConnectionsLabel" text="Total des connexions: 0" styleClass="subtitle"/>
+        </VBox>
+    </top>
+    
+    <center>
+        <SplitPane dividerPositions="0.5" orientation="VERTICAL">
+            <VBox spacing="10">
+                <padding>
+                    <Insets top="10" right="20" bottom="10" left="20"/>
+                </padding>
+                <Label text="Vos Connexions" styleClass="section-title">
+                    <font>
+                        <Font name="System Bold" size="18.0"/>
+                    </font>
+                </Label>
+                <TableView fx:id="connectionHistoryTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="dateColumn" text="Date de connexion" prefWidth="300"/>
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                    </columnResizePolicy>
+                </TableView>
+            </VBox>
+            
+            <VBox spacing="10">
+                <padding>
+                    <Insets top="10" right="20" bottom="20" left="20"/>
+                </padding>
+                <Label text="Utilisateurs Connectés en Même Temps" styleClass="section-title">
+                    <font>
+                        <Font name="System Bold" size="18.0"/>
+                    </font>
+                </Label>
+                <Label text="Liste des utilisateurs qui étaient connectés au même moment que vous" styleClass="subtitle"/>
+                <TableView fx:id="connectedUsersTable" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="userNameColumn" text="Nom" prefWidth="200"/>
+                        <TableColumn fx:id="userEmailColumn" text="Email" prefWidth="250"/>
+                        <TableColumn fx:id="userTypeColumn" text="Type d'utilisateur" prefWidth="150"/>
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                    </columnResizePolicy>
+                </TableView>
+            </VBox>
+        </SplitPane>
+    </center>
+</BorderPane>

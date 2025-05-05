@@ -11,6 +11,7 @@ import utils.Router;
 import utils.SessionManager;
 import models.User;
 import java.io.IOException;
+import javafx.scene.control.Menu;
 
 public class HomeController {
 
@@ -28,6 +29,9 @@ public class HomeController {
 
     @FXML
     private MenuItem menuOffreList;
+    
+    @FXML
+    private MenuItem menuConnectionHistory;
 
     @FXML
     private Button btnRegister;
@@ -59,6 +63,11 @@ public class HomeController {
         menuArticleList.setOnAction(event -> Router.navigateTo("/articleList.fxml"));
 
         menuOffreList.setOnAction(event -> Router.navigateTo("/offre/ListOffres.fxml"));
+        
+        // Redirection vers l'historique de connexion
+        if (menuConnectionHistory != null) {
+            menuConnectionHistory.setOnAction(event -> navigateToConnectionHistory());
+        }
 
         // Redirection vers la page d'inscription/déconnexion
         btnRegister.setOnAction(event -> {
@@ -146,6 +155,26 @@ public class HomeController {
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Failed to load Login.fxml");
+        }
+    }
+    
+    @FXML
+    public void navigateToConnectionHistory() {
+        if (!sessionManager.isLoggedIn()) {
+            navigateToLogin();
+            return;
+        }
+        
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ConnectionHistory.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) btnHome.getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Failed to load ConnectionHistory.fxml");
         }
     }
 }

@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -61,12 +62,40 @@ public class UserService {
                 user.setReset_token(rs.getString("reset_token"));
                 user.setGoogle_id(rs.getString("google_id"));
                 
+                // Check if user is banned - get the block_expiration field
+                java.sql.Date blockExpirationDate = rs.getDate("block_expiration");
+                if (blockExpirationDate != null) {
+                    user.setBlock_expiration(blockExpirationDate);
+                    
+                    // Check if ban is still active
+                    if (user.isBanned()) {
+                        System.out.println("Login rejected: User is banned until " + blockExpirationDate);
+                        rs.close();
+                        stmt.close();
+                        
+                        // Setting a special field to indicate this user is banned
+                        // This will be checked in the controller
+                        user.setEtat_compte("banned");
+                        return user; // Return the user object with banned state
+                    }
+                }
+                
+                // Get last login date if available
+                java.sql.Timestamp lastLoginTime = rs.getTimestamp("last_login_date");
+                if (lastLoginTime != null) {
+                    user.setLast_login_date(new Date(lastLoginTime.getTime()));
+                }
+                
                 rs.close();
                 stmt.close();
                 
                 // Verify the password using SHA-256
                 if (verifyPassword(password, storedPassword)) {
                     System.out.println("Password matched!");
+                    
+                    // Update last login date
+                    updateLastLoginDate(user.getEmail());
+                    
                     return user;
                 } else {
                     System.out.println("Password does not match");
@@ -299,7 +328,7 @@ public class UserService {
     // Method to fetch all users from the database
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
-        String query = "SELECT nom, prenom, email, roles FROM user"; // Use the correct table name
+        String query = "SELECT * FROM user"; // Use the correct table name and get all fields
 
         try (Connection connection = MyDataBase.getInstance().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -307,10 +336,14 @@ public class UserService {
 
             while (resultSet.next()) {
                 User user = new User();
+                user.setId(resultSet.getInt("id"));
                 user.setNom(resultSet.getString("nom"));
                 user.setPrenom(resultSet.getString("prenom"));
                 user.setEmail(resultSet.getString("email"));
                 user.setRoles(resultSet.getString("roles"));
+                user.setEtat_compte(resultSet.getString("etat_compte"));
+                user.setType_utilisateur(resultSet.getString("type_utilisateur"));
+                user.setBlock_expiration(resultSet.getDate("block_expiration"));
                 users.add(user);
             }
         } catch (SQLException e) {
@@ -449,6 +482,202 @@ public class UserService {
             System.out.println("Error updating password: " + e.getMessage());
             e.printStackTrace();
             return false;
+        }
+    }
+
+    /**
+     * Ban a user with a specified expiration date
+     * @param email The user's email
+     * @param expirationDate The date when the ban expires
+     * @return true if successfully banned, false otherwise
+     */
+    public boolean banUser(String email, Date expirationDate) {
+        try {
+            Connection conn = MyDataBase.getInstance().getConnection();
+            String query = "UPDATE user SET block_expiration = ? WHERE email = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            
+            java.sql.Date sqlDate = new java.sql.Date(expirationDate.getTime());
+            stmt.setDate(1, sqlDate);
+            stmt.setString(2, email);
+            
+            int rowsAffected = stmt.executeUpdate();
+            stmt.close();
+            
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            System.out.println("Error banning user: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    /**
+     * Unban a user
+     * @param email The user's email
+     * @return true if successfully unbanned, false otherwise
+     */
+    public boolean unbanUser(String email) {
+        try {
+            Connection conn = MyDataBase.getInstance().getConnection();
+            String query = "UPDATE user SET block_expiration = NULL WHERE email = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, email);
+            
+            int rowsAffected = stmt.executeUpdate();
+            stmt.close();
+            
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            System.out.println("Error unbanning user: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    /**
+     * Get all banned users
+     * @return List of banned users
+     */
+    public List<User> getBannedUsers() {
+        List<User> bannedUsers = new ArrayList<>();
+        String query = "SELECT * FROM user WHERE block_expiration IS NOT NULL AND block_expiration > NOW()";
+        
+        try (Connection connection = MyDataBase.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            while (resultSet.next()) {
+                User user = new User();
+                user.setId(resultSet.getInt("id"));
+                user.setEmail(resultSet.getString("email"));
+                user.setRoles(resultSet.getString("roles"));
+                user.setNom(resultSet.getString("nom"));
+                user.setPrenom(resultSet.getString("prenom"));
+                user.setEtat_compte(resultSet.getString("etat_compte"));
+                user.setType_utilisateur(resultSet.getString("type_utilisateur"));
+                user.setBlock_expiration(resultSet.getDate("block_expiration"));
+                bannedUsers.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return bannedUsers;
+    }
+
+    // Method to update last login date
+    public boolean updateLastLoginDate(String email) {
+        if (email == null || email.trim().isEmpty()) {
+            System.out.println("Error: Cannot update login date for null or empty email");
+            return false;
+        }
+        
+        try {
+            Connection conn = MyDataBase.getInstance().getConnection();
+            
+            // First check if the user exists
+            String checkQuery = "SELECT id FROM user WHERE email = ?";
+            PreparedStatement checkStmt = conn.prepareStatement(checkQuery);
+            checkStmt.setString(1, email);
+            ResultSet rs = checkStmt.executeQuery();
+            
+            if (!rs.next()) {
+                System.out.println("Error: User with email " + email + " not found");
+                rs.close();
+                checkStmt.close();
+                return false;
+            }
+            
+            rs.close();
+            checkStmt.close();
+            
+            // Update the last login date with current timestamp
+            String query = "UPDATE user SET last_login_date = CURRENT_TIMESTAMP() WHERE email = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, email);
+            
+            int rowsAffected = stmt.executeUpdate();
+            stmt.close();
+            
+            if (rowsAffected > 0) {
+                System.out.println("Successfully updated last login date for user: " + email);
+                return true;
+            } else {
+                System.out.println("No rows affected when updating last login date for: " + email);
+                return false;
+            }
+        } catch (SQLException e) {
+            System.out.println("Error updating last login date: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    // Method to get login history for all users
+    public List<User> getUserLoginHistory() {
+        List<User> users = new ArrayList<>();
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        
+        try {
+            conn = MyDataBase.getInstance().getConnection();
+            System.out.println("Getting user login history...");
+            
+            // Modified query to get ALL users, not just those with login history
+            // And sort them so that users who have logged in appear first
+            String query = "SELECT id, email, nom, prenom, roles, type_utilisateur, etat_compte, google_id, " +
+                           "block_expiration, last_login_date " +
+                           "FROM user " +
+                           "ORDER BY last_login_date IS NULL, last_login_date DESC";
+            
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(query);
+            
+            int count = 0;
+            while (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("id"));
+                user.setEmail(rs.getString("email"));
+                user.setNom(rs.getString("nom"));
+                user.setPrenom(rs.getString("prenom"));
+                user.setRoles(rs.getString("roles"));
+                user.setType_utilisateur(rs.getString("type_utilisateur"));
+                user.setEtat_compte(rs.getString("etat_compte"));
+                user.setGoogle_id(rs.getString("google_id"));
+                
+                // Handle dates
+                java.sql.Date blockExpirationDate = rs.getDate("block_expiration");
+                if (blockExpirationDate != null) {
+                    user.setBlock_expiration(new Date(blockExpirationDate.getTime()));
+                }
+                
+                java.sql.Timestamp lastLoginTime = rs.getTimestamp("last_login_date");
+                if (lastLoginTime != null) {
+                    user.setLast_login_date(new Date(lastLoginTime.getTime()));
+                    count++;
+                }
+                
+                users.add(user);
+            }
+            
+            System.out.println("Retrieved " + users.size() + " total users, " + count + " with login history");
+            return users;
+            
+        } catch (SQLException e) {
+            System.out.println("Error getting login history: " + e.getMessage());
+            e.printStackTrace();
+            return users; // Return empty list on error
+        } finally {
+            // Close resources in finally block
+            try {
+                if (rs != null) rs.close();
+                if (stmt != null) stmt.close();
+                // Don't close the connection here as it's shared
+            } catch (SQLException e) {
+                System.out.println("Error closing resources: " + e.getMessage());
+            }
         }
     }
 

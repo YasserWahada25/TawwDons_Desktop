@@ -46,7 +46,7 @@ public class RequestDonsController {
             btnDonsRequests.setOnAction(e -> Router.navigateTo("/Admin/RequestAddDons.fxml"));
 
         if (btnDashboard != null)
-            btnDashboard.setOnAction(e -> System.out.println("Dashboard cliqué (non encore implémenté)"));
+            btnDashboard.setOnAction(e -> Router.navigateTo("/views/Dashboard.fxml"));
     }
 
     private void loadDons() {

@@ -1,43 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
 
 <BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="controllers.DashboardController"
-            style="-fx-background-color: #1e1e1e;" prefWidth="900" prefHeight="600">
+            style="-fx-background-color: #f5f5f5;" prefWidth="900" prefHeight="600">
 
     <top>
-        <VBox style="-fx-padding: 20;">
-            <Label text="📊 Tableau de Bord"
-                   style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;" />
-            <Region HBox.hgrow="ALWAYS"/>
-            <Button text="↩ Retour" onAction="#retourAdmin"
-                    style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-background-radius: 8;" />
+        <VBox style="-fx-padding: 20;" spacing="10">
+            <Label text="Tableau de bord administrateur"
+                   style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+            <HBox spacing="10">
+                <Button text="Retour à la liste des utilisateurs" onAction="#retourUserList"
+                        style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-background-radius: 8;" />
+            </HBox>
         </VBox>
     </top>
 
     <center>
-        <VBox spacing="30" style="-fx-padding: 20;">
-            <HBox spacing="30">
-                <Label fx:id="evalCountLabel" style="-fx-text-fill: white; -fx-font-size: 18px;" />
-                <Label fx:id="userCountLabel" style="-fx-text-fill: white; -fx-font-size: 18px;" />
-                <Label fx:id="accuracyLabel" style="-fx-text-fill: white; -fx-font-size: 18px;" />
-            </HBox>
-
-            <HBox spacing="30">
-                <PieChart fx:id="pieChart" prefWidth="400" />
-                <BarChart fx:id="barChart" title="Réponses par Évaluation"
-                          prefWidth="400" animated="true">
-                    <xAxis>
-                        <CategoryAxis label="Évaluation"/>
-                    </xAxis>
-                    <yAxis>
-                        <NumberAxis label="Nombre de réponses"/>
-                    </yAxis>
-                </BarChart>
-            </HBox>
+        <VBox alignment="CENTER" spacing="20" style="-fx-padding: 20;">
+            <Label text="Tableau de bord" 
+                   style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+            <Label text="Cette page est vide" 
+                   style="-fx-font-size: 14px;" />
         </VBox>
     </center>
 </BorderPane>

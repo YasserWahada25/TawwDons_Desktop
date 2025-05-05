@@ -50,8 +50,7 @@
 
             <Label text="Account Pages" style="-fx-font-weight: bold; -fx-padding: 10 0 0 0;" />
             <Button text="Profile" maxWidth="Infinity" onAction="#navigateToProfile"/>
-            <Button text="Dashboard" maxWidth="Infinity"/>
-            <Button text="Statistiques" maxWidth="Infinity" style="-fx-background-color: #3498db; -fx-text-fill: white;" onAction="#navigateToStatistics"/>
+            <Button text="Dashboard" maxWidth="Infinity" onAction="#navigateToDashboard"/>
         </VBox>
     </left>
 
@@ -88,10 +87,6 @@
                         <Button fx:id="unbanButton" prefHeight="35" prefWidth="120"
                                 style="-fx-background-color: linear-gradient(to bottom, #3498db, #2980b9); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10;"
                                 text="Débannir" onAction="#handleUnbanButtonAction"/>
-                        
-                        <Button fx:id="loginHistoryButton" prefHeight="35" prefWidth="160"
-                                style="-fx-background-color: linear-gradient(to bottom, #27ae60, #2ecc71); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10;"
-                                text="Historique Connexion" onAction="#handleLoginHistoryButtonAction"/>
                     </HBox>
                 </children>
             </AnchorPane>

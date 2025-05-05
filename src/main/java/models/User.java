@@ -3,6 +3,7 @@ package models;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Date;
 
 public class User {
     private Integer id;
@@ -15,6 +16,8 @@ public class User {
     private String type_utilisateur;
     private String reset_token;
     private String google_id;
+    private Date block_expiration;
+    private Date last_login_date;
 
     public User() {
         this.etat_compte = "verrouillé"; // Default state for all accounts
@@ -32,6 +35,42 @@ public class User {
         this.type_utilisateur = type_utilisateur;
         this.reset_token = reset_token;
         this.google_id = google_id;
+        this.block_expiration = null;
+        this.last_login_date = null;
+    }
+
+    public User(Integer id, String email, String password, String roles, String nom, String prenom, 
+               String etat_compte, String type_utilisateur, String reset_token, String google_id, 
+               Date block_expiration) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.etat_compte = etat_compte;
+        this.type_utilisateur = type_utilisateur;
+        this.reset_token = reset_token;
+        this.google_id = google_id;
+        this.block_expiration = block_expiration;
+        this.last_login_date = null;
+    }
+
+    public User(Integer id, String email, String password, String roles, String nom, String prenom, 
+               String etat_compte, String type_utilisateur, String reset_token, String google_id, 
+               Date block_expiration, Date last_login_date) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.etat_compte = etat_compte;
+        this.type_utilisateur = type_utilisateur;
+        this.reset_token = reset_token;
+        this.google_id = google_id;
+        this.block_expiration = block_expiration;
+        this.last_login_date = last_login_date;
     }
 
     // Getters and setters
@@ -141,6 +180,33 @@ public class User {
 
     public void setGoogle_id(String google_id) {
         this.google_id = google_id;
+    }
+
+    public Date getBlock_expiration() {
+        return block_expiration;
+    }
+
+    public void setBlock_expiration(Date block_expiration) {
+        this.block_expiration = block_expiration;
+    }
+    
+    public Date getLast_login_date() {
+        return last_login_date;
+    }
+    
+    public void setLast_login_date(Date last_login_date) {
+        this.last_login_date = last_login_date;
+    }
+    
+    // Helper method to check if user is currently banned
+    public boolean isBanned() {
+        if (block_expiration == null) {
+            return false;
+        }
+        
+        // Check if ban has expired
+        Date now = new Date();
+        return block_expiration.after(now);
     }
 
     // Similar to Symfony's validation

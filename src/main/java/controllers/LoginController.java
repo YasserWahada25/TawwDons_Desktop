@@ -11,6 +11,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import services.UserService;
 import services.GoogleAuthService;
+import services.ConnectionHistoryService;
 import java.io.IOException;
 import models.User;
 import utils.MyDataBase;
@@ -48,6 +49,7 @@ import javax.imageio.ImageIO;
 import java.io.ByteArrayOutputStream;
 import services.EmailService;
 import java.security.SecureRandom;
+import javafx.scene.control.DialogPane;
 
 public class LoginController {
 
@@ -67,6 +69,7 @@ public class LoginController {
 
     private final UserService userService = new UserService();
     private final GoogleAuthService googleAuthService = new GoogleAuthService();
+    private final ConnectionHistoryService connectionHistoryService = new ConnectionHistoryService();
     private final SessionManager sessionManager = SessionManager.getInstance();
 
     @FXML
@@ -74,73 +77,80 @@ public class LoginController {
         String email = emailField.getText();
         String password = passwordField.getText();
 
-        // Validate email and password
-        if (email.isEmpty() || password.isEmpty()) {
-            showAlert("Erreur", "Champs vides", "Veuillez remplir tous les champs.");
+        // Validate inputs
+        if (email == null || email.trim().isEmpty()) {
+            showAlert("Erreur", "Email invalide", "Veuillez saisir votre adresse email.");
             return;
         }
 
-        // Validate email format
-        if (!isValidEmail(email)) {
-            showAlert("Erreur", "Email invalide", "Veuillez entrer une adresse email valide.");
+        if (password == null || password.trim().isEmpty()) {
+            showAlert("Erreur", "Mot de passe invalide", "Veuillez saisir votre mot de passe.");
             return;
         }
-        
-        // Check if captcha verification is required
-        if (captchaRequired) {
-            if (captchaInputField == null || !validateCaptcha()) {
-                showAlert("Erreur", "Captcha incorrect", "Veuillez entrer le captcha correctement.");
-                generateNewCaptcha();
-                return;
-            }
+
+        // If CAPTCHA is shown, validate it
+        if (captchaRequired && !validateCaptcha()) {
+            showAlert("Erreur", "CAPTCHA incorrect", "Veuillez saisir correctement le texte du CAPTCHA.");
+            generateNewCaptcha(); // Generate a new CAPTCHA after failed attempt
+            return;
         }
 
-        // Authenticate user
-        User user = userService.authenticate(email, password);
-        if (user != null) {
-            System.out.println("Login successful");
-            // Reset failed attempts on successful login
-            failedLoginAttempts = 0;
-            captchaRequired = false;
+        try {
+            // Initialize connection history table if needed
+            connectionHistoryService.createTableIfNotExists();
             
-            // Remove captcha if present
-            if (captchaContainer != null && loginVBox.getChildren().contains(captchaContainer)) {
-                loginVBox.getChildren().remove(captchaContainer);
-            }
-            
-            // Store user in session
-            sessionManager.setCurrentUser(user);
-            
-            // Navigate to the home interface
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Home.fxml"));
-                Parent root = loader.load();
+            // Authenticate the user
+            User user = userService.authenticate(email, password);
+
+            if (user != null) {
+                // Check if the user is banned
+                if (user.isBanned()) {
+                    showAlert(AlertType.ERROR, "Accès refusé", "Compte banni", 
+                        "Votre compte est actuellement banni. Date d'expiration: " + user.getBlock_expiration());
+                    return;
+                }
                 
-                // Get the controller and update UI
-                HomeController homeController = loader.getController();
-                homeController.updateUI(user);
+                // Update login history/stats
+                userService.updateLastLoginDate(email);
                 
-                Stage stage = (Stage) emailField.getScene().getWindow();
-                Scene scene = new Scene(root);
-                stage.setScene(scene);
-                stage.show();
-            } catch (IOException e) {
-                e.printStackTrace();
-                showAlert("Erreur", "Échec du chargement", "Impossible de charger la page d'accueil.");
-            }
-        } else {
-            // Increment failed attempts
-            failedLoginAttempts++;
-            
-            // Check if we need to show captcha
-            if (failedLoginAttempts >= MAX_FAILED_ATTEMPTS && !captchaRequired) {
-                captchaRequired = true;
-                showCaptcha();
-                showAlert("Sécurité", "Vérification requise", "Après plusieurs tentatives échouées, veuillez compléter le captcha pour continuer.");
+                // Record connection in connection history
+                connectionHistoryService.recordConnection(user.getId());
+                
+                // Reset failed login counter on success
+                failedLoginAttempts = 0;
+                captchaRequired = false;
+                
+                // Store current user in session and navigate to home
+                sessionManager.setCurrentUser(user);
+                
+                // Navigate to the appropriate page based on role
+                // If user is admin, go to admin panel, otherwise go to home
+                if (user.getRoles().contains("ADMIN") || 
+                    user.getRoles().contains("ROLE_ADMIN") || 
+                    "admin".equalsIgnoreCase(user.getType_utilisateur())) {
+                    
+                    navigateToAdminPanel();
+                } else {
+                    navigateToHome(user);
+                }
             } else {
-                showAlert("Erreur", "Échec de la connexion", "Email ou mot de passe incorrect. Tentatives restantes avant captcha: " + 
-                         (MAX_FAILED_ATTEMPTS - failedLoginAttempts) + ".");
+                // Invalid credentials
+                failedLoginAttempts++;
+                
+                if (failedLoginAttempts >= MAX_FAILED_ATTEMPTS) {
+                    captchaRequired = true;
+                    showCaptcha();
+                    showAlert("Erreur", "Plusieurs tentatives échouées", 
+                              "Après plusieurs échecs, vous devez compléter un CAPTCHA pour continuer.");
+                } else {
+                    showAlert("Erreur", "Authentification échouée", 
+                              "Email ou mot de passe incorrect. Tentative " + failedLoginAttempts + "/" + MAX_FAILED_ATTEMPTS);
+                }
             }
+        } catch (Exception e) {
+            showAlert("Erreur", "Erreur d'authentification", 
+                      "Une erreur s'est produite lors de l'authentification: " + e.getMessage());
+            e.printStackTrace();
         }
     }
     
@@ -346,6 +356,9 @@ public class LoginController {
                                 userService.updateUser(existingUser);
                             }
                             
+                            // Update last login date
+                            userService.updateLastLoginDate(existingUser.getEmail());
+                            
                             // Log the user in
                             loginUser(existingUser);
                         } else {
@@ -407,6 +420,9 @@ public class LoginController {
                     User registeredUser = userService.getUserByEmail(newUser.getEmail());
                     
                     if (registeredUser != null) {
+                        // Update last login date for the new user
+                        userService.updateLastLoginDate(registeredUser.getEmail());
+                        
                         // Login the user
                         loginUser(registeredUser);
                     } else {
@@ -446,14 +462,53 @@ public class LoginController {
         // Store user in session
         sessionManager.setCurrentUser(user);
         
-        // Navigate to the home interface
+        // Record connection in connection history
+        connectionHistoryService.recordConnection(user.getId());
+        
+        // Check if user is admin
+        boolean isAdmin = false;
+        
+        // Different ways admin role might be stored in the database
+        if (user.getRoles() != null) {
+            String roles = user.getRoles().toLowerCase();
+            isAdmin = roles.contains("admin") || 
+                     roles.contains("role_admin") || 
+                     roles.contains("\"admin\"") || 
+                     roles.contains("\"role_admin\"");
+        }
+        
+        // Also check type_utilisateur for admin
+        if (user.getType_utilisateur() != null) {
+            String userType = user.getType_utilisateur().toLowerCase();
+            isAdmin = isAdmin || userType.contains("admin");
+        }
+        
+        System.out.println("Google login - User roles: " + user.getRoles());
+        System.out.println("Google login - User type: " + user.getType_utilisateur());
+        System.out.println("Google login - Is admin? " + isAdmin);
+        
+        // Navigate to the appropriate interface based on user role
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Home.fxml"));
-            Parent root = loader.load();
+            FXMLLoader loader;
+            Parent root;
             
-            // Get the controller and update UI
-            HomeController homeController = loader.getController();
-            homeController.updateUI(user);
+            if (isAdmin) {
+                // If admin, navigate to UserList
+                System.out.println("Google login - Navigating to Admin/UserList.fxml");
+                loader = new FXMLLoader(getClass().getResource("/Admin/UserList.fxml"));
+                root = loader.load();
+                
+                // No need to update UI as UserListController handles this
+            } else {
+                // If regular user, navigate to Home
+                System.out.println("Google login - Navigating to Home.fxml");
+                loader = new FXMLLoader(getClass().getResource("/Home.fxml"));
+                root = loader.load();
+                
+                // Get the controller and update UI
+                HomeController homeController = loader.getController();
+                homeController.updateUI(user);
+            }
             
             Stage stage = (Stage) emailField.getScene().getWindow();
             Scene scene = new Scene(root);
@@ -557,6 +612,48 @@ public class LoginController {
             showAlert(AlertType.INFORMATION, "Reset Email Sent", 
                       "Password reset instructions", 
                       "If an account exists with that email, we've sent password reset instructions.");
+        }
+    }
+
+    /**
+     * Navigate to admin panel
+     */
+    private void navigateToAdminPanel() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Admin/UserList.fxml"));
+            Parent root = loader.load();
+            
+            Stage stage = (Stage) emailField.getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Erreur", "Échec du chargement", "Impossible de charger le panneau d'administration.");
+        }
+    }
+    
+    /**
+     * Navigate to home page
+     */
+    private void navigateToHome(User user) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Home.fxml"));
+            Parent root = loader.load();
+            
+            // Get the controller and update UI if needed
+            HomeController homeController = loader.getController();
+            if (homeController != null) {
+                homeController.updateUI(user);
+            }
+            
+            Stage stage = (Stage) emailField.getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Erreur", "Échec du chargement", "Impossible de charger la page d'accueil.");
         }
     }
 } 
