@@ -35,13 +35,14 @@
                 <MenuButton text="RECRUTEMENT">
                     <items>
                         <MenuItem fx:id="miListeOffres" text="Liste des offres"/>
-                        <MenuItem fx:id="miPosterOffre" text="Poster une offre"/>
-                    </items>
-                </MenuButton>
-                <Button fx:id="btnLogin" text="Login" style="-fx-background-color:transparent;"/>
-                <Button fx:id="btnRegister" text="Register"
-                        style="-fx-background-color:#6c757d; -fx-text-fill:white;"/>
-            </HBox>
-        </HBox>
-    </children>
-</VBox>
+                        <!--   <MenuItem fx:id="miPosterOffre" text="Poster une offre"/> -->
+                       </items>
+                   </MenuButton>
+                   <Button fx:id="btnEvaluations" text="Évaluations"/>
+                   <Button fx:id="btnLogin" text="Login" style="-fx-background-color:transparent;"/>
+                   <Button fx:id="btnRegister" text="Register"
+                           style="-fx-background-color:#6c757d; -fx-text-fill:white;"/>
+               </HBox>
+           </HBox>
+       </children>
+   </VBox>

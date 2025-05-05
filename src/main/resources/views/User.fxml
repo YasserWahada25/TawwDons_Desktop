@@ -11,6 +11,11 @@
             style="-fx-background-color: linear-gradient(to bottom right, #ffffff, #e0f7fa);">
 
     <!-- ========== SIDEBAR ========== -->
+
+    <top>
+        <fx:include source="/navbar.fxml"/>
+    </top>
+
     <left>
         <VBox spacing="18" alignment="TOP_CENTER"
               style="-fx-background-color: #ecf0f1; -fx-padding: 30; -fx-border-radius: 0 15 15 0;">

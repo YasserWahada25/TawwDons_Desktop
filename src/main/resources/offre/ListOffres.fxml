@@ -20,55 +20,8 @@
     <children>
 
         <!-- NAVBAR -->
-        <VBox prefWidth="1200.0" spacing="10.0" style="-fx-background-color: white;">
-            <HBox alignment="CENTER_LEFT" spacing="10">
-                <padding>
-                    <Insets bottom="10" left="10" right="10" top="10" />
-                </padding>
 
-                <ImageView fitHeight="40" fitWidth="40" preserveRatio="true">
-                    <image>
-                        <Image url="@/images/queen.png" />
-                    </image>
-                </ImageView>
-
-                <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #0066ff;" text="Tawwa Dons" />
-                <Pane HBox.hgrow="ALWAYS" />
-                <HBox alignment="CENTER_RIGHT" spacing="20">
-                    <Button fx:id="btnHome" onAction="#navigateToHome" text="Home" />
-
-                    <MenuButton text="SERVICES">
-                        <items>
-                            <MenuItem fx:id="menuPosterDon" text="Poster un don" />
-                        </items>
-                    </MenuButton>
-                    <MenuButton text="EVALUATION">
-                        <items>
-                            <MenuItem text="Liste des évaluations" />
-                        </items>
-                    </MenuButton>
-                    <MenuButton text="BLOG">
-                        <items>
-                            <MenuItem fx:id="menuArticleList" text="Les Articles" />
-                        </items>
-                    </MenuButton>
-                    <MenuButton text="RECRUTEMENT">
-                        <items>
-                            <MenuItem fx:id="menuOffreList" text="Liste des offres" />
-                        </items>
-                    </MenuButton>
-                    <MenuButton text="EVENEMENT">
-                        <items>
-                            <MenuItem text="Liste des événements" />
-                        </items>
-                    </MenuButton>
-                    <Button style="-fx-background-color: transparent;" text="🔔" />
-                    <Button fx:id="btnLogin" onAction="#navigateToLogin" style="-fx-background-color: transparent;" text="Login" />
-                    <Button fx:id="btnRegister" onAction="#navigateToRegister" style="-fx-background-color: #6c757d; -fx-text-fill: white;" text="Register" />
-                </HBox>
-            </HBox>
-        </VBox>
-
+        <fx:include source="/navbar.fxml"/>
         <!-- TITRE + FILTRE -->
         <VBox layoutY="100" spacing="20" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="80.0">
             <padding>
