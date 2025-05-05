@@ -79,38 +79,38 @@
                 <Label text="Offre :" GridPane.rowIndex="0" GridPane.columnIndex="0"
                        style="-fx-font-weight: bold;"/>
                 <ComboBox fx:id="offreComboBox" prefWidth="300" GridPane.rowIndex="0" GridPane.columnIndex="1"
-                         style="-fx-background-color: white; -fx-border-color: #bdc3c7; -fx-border-radius: 3;"/>
+                          style="-fx-background-color: white; -fx-border-color: #bdc3c7; -fx-border-radius: 3;"/>
 
                 <!-- Nom -->
                 <Label text="Nom :" GridPane.rowIndex="1" GridPane.columnIndex="0"
                        style="-fx-font-weight: bold;"/>
                 <TextField fx:id="nomField" prefWidth="300" GridPane.rowIndex="1" GridPane.columnIndex="1"
-                         style="-fx-background-color: white; -fx-border-color: #bdc3c7; -fx-border-radius: 3;"/>
+                           style="-fx-background-color: white; -fx-border-color: #bdc3c7; -fx-border-radius: 3;"/>
 
                 <!-- Prénom -->
                 <Label text="Prénom :" GridPane.rowIndex="2" GridPane.columnIndex="0"
                        style="-fx-font-weight: bold;"/>
                 <TextField fx:id="prenomField" prefWidth="300" GridPane.rowIndex="2" GridPane.columnIndex="1"
-                         style="-fx-background-color: white; -fx-border-color: #bdc3c7; -fx-border-radius: 3;"/>
+                           style="-fx-background-color: white; -fx-border-color: #bdc3c7; -fx-border-radius: 3;"/>
 
                 <!-- Email -->
                 <Label text="Email :" GridPane.rowIndex="3" GridPane.columnIndex="0"
                        style="-fx-font-weight: bold;"/>
                 <TextField fx:id="emailField" prefWidth="300" GridPane.rowIndex="3" GridPane.columnIndex="1"
-                         style="-fx-background-color: white; -fx-border-color: #bdc3c7; -fx-border-radius: 3;"/>
+                           style="-fx-background-color: white; -fx-border-color: #bdc3c7; -fx-border-radius: 3;"/>
 
                 <!-- Téléphone -->
                 <Label text="Téléphone :" GridPane.rowIndex="4" GridPane.columnIndex="0"
                        style="-fx-font-weight: bold;"/>
                 <TextField fx:id="telephoneField" prefWidth="300" GridPane.rowIndex="4" GridPane.columnIndex="1"
-                         style="-fx-background-color: white; -fx-border-color: #bdc3c7; -fx-border-radius: 3;"/>
+                           style="-fx-background-color: white; -fx-border-color: #bdc3c7; -fx-border-radius: 3;"/>
 
                 <!-- CV -->
                 <Label text="CV :" GridPane.rowIndex="5" GridPane.columnIndex="0"
                        style="-fx-font-weight: bold;"/>
                 <HBox spacing="10" GridPane.rowIndex="5" GridPane.columnIndex="1">
                     <TextField fx:id="cvField" prefWidth="250" editable="false"
-                             style="-fx-background-color: white; -fx-border-color: #bdc3c7; -fx-border-radius: 3;"/>
+                               style="-fx-background-color: white; -fx-border-color: #bdc3c7; -fx-border-radius: 3;"/>
                     <Button fx:id="browseButton" text="Parcourir" onAction="#handleBrowseButtonClick"
                             style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-padding: 8 15;"/>
                 </HBox>

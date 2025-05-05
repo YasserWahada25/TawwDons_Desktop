@@ -56,7 +56,7 @@ public class LoginController {
 
     private void navigateToMainInterface() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/navbar.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/offre/ListOffre_BC.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) emailField.getScene().getWindow();
