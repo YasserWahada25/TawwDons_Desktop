@@ -28,14 +28,18 @@
         <TableView fx:id="eventTable" prefHeight="550" prefWidth="800">
             <columns>
                 <TableColumn fx:id="idColumn" prefWidth="-200" text="id" />
-                <TableColumn fx:id="nomColumn" prefWidth="200" text="Nom Événement" />
+                <TableColumn fx:id="nomColumn" prefWidth="200" text="Nom Evénement" />
                 <TableColumn fx:id="descriptionColumn" prefWidth="300" text="Description" />
                 <TableColumn fx:id="imageColumn" prefWidth="200" text="Image" />
-                <TableColumn fx:id="categorieColumn" prefWidth="200" text="Catégorie" />
+                <TableColumn fx:id="dateColumn" prefWidth="100" text="Date" />
+                <TableColumn fx:id="locationColumn" text="Location" prefWidth="120" />
                 <TableColumn fx:id="actionsColumn" prefWidth="150" text="Actions" />
                 <TableColumn fx:id="participantsCountColumn" prefWidth="100" text="Participants" />
+                <TableColumn fx:id="categorieColumn" prefWidth="200" text="Catégorie" />
+
             </columns>
         </TableView>
+
 
         <VBox alignment="TOP_CENTER" spacing="10" styleClass="details-container">
             <VBox spacing="5">
@@ -55,6 +59,11 @@
                           prefHeight="150"
                           prefWidth="250" />
             </VBox>
+
+            <Label style="-fx-font-weight: bold; -fx-padding: 5 0 0 0;" text="Météo" />
+            <Label fx:id="temperatureLabel"
+                   style="-fx-text-fill: #2c3e50; -fx-font-style: italic;"
+                   text="Température: Chargement..." />
         </VBox>
     </HBox>
 
@@ -63,6 +72,7 @@
         <Button text="Statistiques" onAction="#handleShowStatistics" styleClass="action-button"/>
         <Button text="Trier par participants ▼" onAction="#handleSortByParticipants" styleClass="action-button"/>
         <Button text="Réinitialiser le tri" onAction="#handleResetSort" styleClass="action-button"/>
+        <Button text="Voir sur la carte" onAction="#handleOpenMap" styleClass="action-button"/>
 
 
     </HBox>

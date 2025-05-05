@@ -1,9 +1,8 @@
 package org.example.event.model;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
+
+import java.time.LocalDate;
 
 public class event {
     private final IntegerProperty id = new SimpleIntegerProperty();
@@ -11,19 +10,31 @@ public class event {
     private final StringProperty description = new SimpleStringProperty();
     private final StringProperty image = new SimpleStringProperty();
     private final IntegerProperty categorie_id = new SimpleIntegerProperty();
+    private final ObjectProperty<LocalDate> date = new SimpleObjectProperty<>();
+    private final StringProperty location = new SimpleStringProperty();
+    private final BooleanProperty cancelled = new SimpleBooleanProperty(false);
 
-    public event(int id, String nom, String description, String image, int cateegorie_id) {
+    public event(int id, String nom, String description, String image, int cateegorie_id, LocalDate date, String location) {
         setId(id);
         setNom(nom);
         setDescription(description);
         setImage(image);
+        setCategorie_id(cateegorie_id);
+        setDate(date);
+        setLocation(location);
     }
-    public event(int id, String nom, String description, String image) {
+    public event(int id, String nom, String description, String image, int cateegorie_id, LocalDate date, String location, boolean cancelled) {
         setId(id);
         setNom(nom);
         setDescription(description);
         setImage(image);
+        setCategorie_id(cateegorie_id);
+        setDate(date);
+        setLocation(location);
+        setCancelled(cancelled);
+
     }
+
     public int getId() {
         return id.get();
     }
@@ -55,11 +66,49 @@ public class event {
         this.image.set(image);
     }
 
-    public int getCateegorie_id() {
+    public int getCategorie_id() {
         return categorie_id.get();
     }
     public void setCategorie_id(int categorie_id) {
         this.categorie_id.set(categorie_id);
+    }
+
+    public void setDate(LocalDate date) {
+        this.date.set(date);
+    }
+
+    // Getter pour la propriété date
+    public LocalDate getDate() {
+        return date.get();
+    }
+
+    // Property getter pour le binding JavaFX
+    public ObjectProperty<LocalDate> dateProperty() {
+        return date;
+    }
+    public String getLocation() {
+        return location.get();
+    }
+
+    public void setLocation(String location) {
+        this.location.set(location);
+    }
+
+    public StringProperty locationProperty() {
+        return location;
+    }
+
+    // Méthodes pour l'annulation
+    public boolean isCancelled() {
+        return cancelled.get();
+    }
+
+    public BooleanProperty cancelledProperty() {
+        return cancelled;
+    }
+
+    public void setCancelled(boolean cancelled) {
+        this.cancelled.set(cancelled);
     }
 
     @Override
@@ -70,6 +119,9 @@ public class event {
                 ", description=" + description +
                 ", image=" + image +
                 ", categorie_id=" + categorie_id +
+                ", date=" + date +
+                ", location=" + location +
+                ", cancelled=" + cancelled +
                 '}';
     }
 }

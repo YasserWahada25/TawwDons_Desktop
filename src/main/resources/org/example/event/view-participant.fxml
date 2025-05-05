@@ -16,7 +16,7 @@
     <HBox spacing="20">
         <TableView fx:id="participantTable" prefHeight="550" prefWidth="800">
             <columns>
-                <TableColumn fx:id="idColumn" prefWidth="50" text="ID" />
+                <TableColumn fx:id="idColumn" prefWidth="50" text="" />
                 <TableColumn fx:id="nomColumn" prefWidth="200" text="Nom" />
                 <TableColumn fx:id="prenomColumn" prefWidth="300" text="Prénom" /> <!-- Correction orthographe -->
                 <TableColumn fx:id="emailColumn" prefWidth="200" text="Email" />
@@ -28,6 +28,7 @@
 
     <HBox alignment="CENTER" spacing="20">
         <Button onAction="#handleAddParticipant" styleClass="action-button" text="Ajouter Participant" />
+        <Button onAction="#handleExportExcel" styleClass="export-button" text="Exporter Excel" />
 
     </HBox>
 </VBox>

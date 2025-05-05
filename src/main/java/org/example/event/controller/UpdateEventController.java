@@ -19,10 +19,15 @@ public class UpdateEventController {
     @FXML private TextArea descriptionField;
     @FXML private ImageView eventImageView;
 
+
+
+
+
     private eventService eventService = new eventService();
     private Stage dialogStage;
     private event currentEvent;
     private String newImagePath;
+
 
     public void setDialogStage(Stage dialogStage) {
         this.dialogStage = dialogStage;

@@ -162,36 +162,52 @@ public class participantController {
             showErrorAlert("Erreur", "Formulaire inaccessible", e.getMessage());
         }
     }
-   /* @FXML
+    @FXML
     private void handleExportExcel() {
+        // 1. Configurer la boîte de dialogue de sauvegarde
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Exporter vers Excel");
+        fileChooser.setTitle("Enregistrer fichier Excel");
         fileChooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("Fichiers Excel", "*.xlsx"));
 
-        // Nom de fichier par défaut
-        String defaultFileName = "participants_event" + currentEvent.getId() + ".xlsx";
+        String defaultFileName = "participants_event" +
+                (currentEvent != null ? currentEvent.getId() : "") +
+                "_" + System.currentTimeMillis() + ".xlsx";
         fileChooser.setInitialFileName(defaultFileName);
 
         File file = fileChooser.showSaveDialog(participantTable.getScene().getWindow());
 
         if (file != null) {
             try {
-                // Export des données actuelles du TableView
-                participantService.exportToExcel(participantTable.getItems(), file.getAbsolutePath());
+                // . Récupérer la liste actuelle des participants
+                List<participant> participants = participantTable.getItems();
 
+                if (participants == null || participants.isEmpty()) {
+                    showErrorAlert("Erreur", "Export impossible",
+                            "Aucun participant à exporter dans le tableau.");
+                    return;
+                }
+
+                // . Effectuer l'export
+                participantService.exportToExcel(participants, file.getAbsolutePath());
+
+                // . Afficher la confirmation
                 showSuccessAlert("Export réussi",
-                        "Fichier enregistré",
-                        participants.size() + " participants exportés vers:\n" + file.getAbsolutePath());
+                        "Fichier créé : " + file.getName(),
+                        participants.size() + " participants ont été exportés.");
+
             } catch (IOException e) {
-                showErrorAlert("Erreur d'export",
-                        "Échec de l'export",
-                        "Erreur lors de l'export Excel:\n" + e.getMessage());
+                showErrorAlert("Erreur fichier",
+                        "Échec d'écriture",
+                        "Impossible d'écrire le fichier Excel : " + e.getMessage());
+            } catch (Exception e) {
+                showErrorAlert("Erreur",
+                        "Export impossible",
+                        "Erreur inattendue : " + e.getMessage());
             }
         }
     }
 
-*/
 
     private void showSuccessAlert(String title, String header, String content) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
