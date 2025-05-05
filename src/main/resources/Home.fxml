@@ -39,11 +39,8 @@
                             <MenuItem text="Poster un don" fx:id="menuPosterDon"/>
                         </items>
                     </MenuButton>
-                    <MenuButton text="EVALUATION">
-                        <items>
-                            <MenuItem text="Liste des évaluations"/>
-                        </items>
-                    </MenuButton>
+                    <Button fx:id="adminBtn" text=" Espace Admin" />
+                    <Button fx:id="userBtn" text="Espace Utilisateur" />
                     <MenuButton text="BLOG">
                         <items>
                             <MenuItem text="Les Articles" fx:id="menuArticleList"/>

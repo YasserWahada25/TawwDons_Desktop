@@ -6,59 +6,89 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 
-<StackPane fx:id="rootPane" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-           fx:controller="controllers.BrainChessController">
+<StackPane fx:id="rootPane" xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="controllers.BrainChessController"
+           stylesheets="@brainchess.css">
+
     <children>
-        <AnchorPane prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: linear-gradient(to bottom, #1e3c72, #2a5298);">
-            <children>
+        <BorderPane styleClass="main-container">
 
-                <!-- NAVBAR -->
-                <VBox layoutY="0" spacing="8" prefWidth="1000.0" style="-fx-background-color: #3498db; -fx-background-radius: 0 0 15 15;">
-                    <HBox spacing="8" alignment="CENTER_LEFT">
-                        <padding>
-                            <Insets top="8" right="8" bottom="8" left="8"/>
-                        </padding>
+            <!-- Top Bar -->
+            <top>
+                <HBox spacing="10" alignment="CENTER_LEFT" styleClass="navbar">
+                    <padding>
+                        <Insets top="10" right="10" bottom="10" left="10"/>
+                    </padding>
+                    <ImageView fitWidth="28" fitHeight="28" preserveRatio="true">
+                        <image>
+                            <Image url="@/images/tawwa don 3.png"/>
+                        </image>
+                    </ImageView>
+                    <Label fx:id="titleLabel" text="♞ Brain Chess - Mode Knight" styleClass="title"/>
+                    <Pane HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="retourButton" text="↩ Retour" onAction="#retour" styleClass="retour-button"/>
+                </HBox>
+            </top>
 
-                        <ImageView fitHeight="30" fitWidth="30" pickOnBounds="true" preserveRatio="true">
-                            <image>
-                                <Image url="@images/tawwa don 3.png"/>
-                            </image>
-                        </ImageView>
+            <!-- Board -->
+            <center>
+                <StackPane styleClass="board-container">
+                    <GridPane fx:id="board" hgap="1" vgap="1" styleClass="board"/>
+                </StackPane>
+            </center>
 
-                        <Label text="Tawwa Dons - Brain Chess" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: white;"/>
-                        <Pane HBox.hgrow="ALWAYS"/>
+            <!-- Sidebar Right -->
+            <right>
+                <VBox fx:id="sidebar" spacing="15" alignment="TOP_CENTER">
+                    <padding>
+                        <Insets top="20" right="20" bottom="20" left="20"/>
+                    </padding>
 
-                        <Button fx:id="retourButton" text="↩ Retour" onAction="#retour"
-                                style="-fx-background-color: white; -fx-text-fill: #3498db; -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 5 10;"/>
-                    </HBox>
+                    <Label text="Choisir une pièce :" styleClass="label"/>
+
+                    <!-- Les ToggleButtons n'ont pas besoin d'un ToggleGroup déclaré dans le FXML.
+                         Il est correctement attribué dans le contrôleur. -->
+
+                    <ToggleButton fx:id="knightBtn" styleClass="piece-button">
+                        <graphic>
+                            <ImageView fitWidth="40" fitHeight="40">
+                                <image>
+                                    <Image url="@/images/knight.png"/>
+                                </image>
+                            </ImageView>
+                        </graphic>
+                    </ToggleButton>
+
+                    <ToggleButton fx:id="queenBtn" styleClass="piece-button">
+                        <graphic>
+                            <ImageView fitWidth="40" fitHeight="40">
+                                <image>
+                                    <Image url="@/images/queen.png"/>
+                                </image>
+                            </ImageView>
+                        </graphic>
+                    </ToggleButton>
+
+                    <ToggleButton fx:id="pawnBtn" styleClass="piece-button">
+                        <graphic>
+                            <ImageView fitWidth="40" fitHeight="40">
+                                <image>
+                                    <Image url="@/images/pawn.png"/>
+                                </image>
+                            </ImageView>
+                        </graphic>
+                    </ToggleButton>
+
+                    <Separator/>
+
+                    <Label fx:id="scoreLabel" text="🏇 Coups : 0" styleClass="info-label"/>
+                    <Label fx:id="timerLabel" text="⏳ Temps : 120s" styleClass="info-label"/>
+
+                    <Button fx:id="replayButton" text="🔁 Rejouer" styleClass="replay-button"/>
                 </VBox>
+            </right>
 
-                <!-- GAME LAYOUT -->
-                <VBox alignment="CENTER" spacing="20" AnchorPane.topAnchor="70.0" AnchorPane.bottomAnchor="10.0"
-                      AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
-
-                    <Label text="♞ Brain Chess - Mode Cavalier"
-                           style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;"/>
-
-                    <!-- Score et Timer -->
-                    <HBox spacing="20" alignment="CENTER">
-                        <Label fx:id="scoreLabel" text="🏆 Score: 0" style="-fx-text-fill: #2ecc71; -fx-font-size: 16px; -fx-font-weight: bold;"/>
-                        <Label fx:id="timerLabel" text="⏳ Temps: 300s" style="-fx-text-fill: #e74c3c; -fx-font-size: 16px; -fx-font-weight: bold;"/>
-                    </HBox>
-
-                    <!-- Echiquier -->
-                    <StackPane style="-fx-padding: 10; -fx-background-color: rgba(255,255,255,0.1); -fx-background-radius: 15;">
-                        <GridPane fx:id="board" hgap="2" vgap="2" style="-fx-alignment: center;">
-                            <!-- Cases échiquier générées dynamiquement -->
-                        </GridPane>
-                    </StackPane>
-
-                    <!-- Bouton Rejouer -->
-                    <Button fx:id="replayButton" text="🔁 Rejouer"
-                            style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 8 20;"/>
-                </VBox>
-
-            </children>
-        </AnchorPane>
+        </BorderPane>
     </children>
 </StackPane>

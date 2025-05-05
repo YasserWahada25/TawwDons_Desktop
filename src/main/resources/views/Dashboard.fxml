@@ -35,15 +35,18 @@
                 <VBox spacing="30" AnchorPane.topAnchor="80.0" AnchorPane.bottomAnchor="20.0"
                       AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
 
+                    <!-- Statistiques globales -->
                     <HBox spacing="30">
                         <Label fx:id="evalCountLabel" style="-fx-text-fill: white; -fx-font-size: 18px;" />
                         <Label fx:id="userCountLabel" style="-fx-text-fill: white; -fx-font-size: 18px;" />
                         <Label fx:id="accuracyLabel" style="-fx-text-fill: white; -fx-font-size: 18px;" />
+                        <Label fx:id="avgScoreLabel" style="-fx-text-fill: white; -fx-font-size: 18px;" />
                     </HBox>
 
+                    <!-- Graphiques -->
                     <HBox spacing="30">
                         <PieChart fx:id="pieChart" prefWidth="400" />
-                        <BarChart fx:id="barChart" title="Réponses par Évaluation" prefWidth="400" animated="true">
+                        <BarChart fx:id="barChart" title="Réponses par Évaluation" prefWidth="500" animated="true">
                             <xAxis>
                                 <CategoryAxis label="Évaluation"/>
                             </xAxis>
@@ -52,6 +55,16 @@
                             </yAxis>
                         </BarChart>
                     </HBox>
+
+                    <!-- Score par évaluation -->
+                    <BarChart fx:id="barChartScore" title="Score par Évaluation (%)" prefHeight="250">
+                        <xAxis>
+                            <CategoryAxis label="Évaluation"/>
+                        </xAxis>
+                        <yAxis>
+                            <NumberAxis label="Taux (%)"/>
+                        </yAxis>
+                    </BarChart>
 
                 </VBox>
             </children>

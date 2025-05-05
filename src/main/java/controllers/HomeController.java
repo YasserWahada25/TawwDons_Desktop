@@ -1,5 +1,6 @@
 package controllers;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -22,7 +23,11 @@ public class HomeController {
 
     @FXML
     private Button btnHome;
+    @FXML
+    private Button adminBtn;
 
+    @FXML
+    private Button userBtn;
     @FXML
     private MenuItem menuArticleList;
 
@@ -53,7 +58,8 @@ public class HomeController {
 
         // Redirection vers la page Ajouter un Don
         menuPosterDon.setOnAction(event -> Router.navigateTo("/AddDons.fxml"));
-
+        adminBtn.setOnAction(this::goToAdmin);
+        userBtn.setOnAction(this::goToUser);
         btnHome.setOnAction(event -> Router.navigateTo("/Home.fxml"));
 
         menuArticleList.setOnAction(event -> Router.navigateTo("/articleList.fxml"));
@@ -146,6 +152,36 @@ public class HomeController {
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Failed to load Login.fxml");
+        }
+    }
+    @FXML
+    private void goToAdmin(ActionEvent event) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/views/Admin.fxml"));
+            Stage stage = (Stage) adminBtn.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Espace Admin");
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("❌ Erreur lors du chargement de l'interface Admin.");
+        }
+    }
+
+    @FXML
+    private void goToUser(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/User.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) userBtn.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Espace Utilisateur");
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("❌ Erreur lors du chargement de l'interface Utilisateur.");
         }
     }
 }

@@ -1,9 +1,6 @@
 package dao;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -31,6 +28,7 @@ public class BanDAO extends BaseDAO {
             stmt.executeUpdate();
         } catch (SQLException e) {
             System.err.println("Erreur lors du bannissement : " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -40,12 +38,15 @@ public class BanDAO extends BaseDAO {
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, utilisateur);
             try (ResultSet rs = stmt.executeQuery()) {
-                return rs.next() && rs.getInt(1) > 0;
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
             }
         } catch (SQLException e) {
             System.err.println("Erreur lors de la vérification de bannissement : " + e.getMessage());
-            return false;
+            e.printStackTrace();
         }
+        return false;
     }
 
     // 📋 Récupérer tous les utilisateurs bannis
@@ -58,20 +59,30 @@ public class BanDAO extends BaseDAO {
             while (rs.next()) {
                 String utilisateur = rs.getString("utilisateur");
                 String mot = rs.getString("mot_interdit");
-                LocalDateTime date = rs.getTimestamp("date_ban").toLocalDateTime();
+                Timestamp timestamp = rs.getTimestamp("date_ban");
+                LocalDateTime date = timestamp != null ? timestamp.toLocalDateTime() : null;
                 list.add(new BanInfo(utilisateur, mot, date));
             }
         } catch (SQLException e) {
             System.err.println("Erreur lors de la récupération des bannis : " + e.getMessage());
+            e.printStackTrace();
         }
         return list;
     }
 
-    // 🔎 Obtenir uniquement la liste des utilisateurs bannis (pour check rapide)
+    // 🔎 Obtenir uniquement la liste des utilisateurs bannis (optimisé)
     public Set<String> getUtilisateursBannis() {
         Set<String> set = new HashSet<>();
-        for (BanInfo b : getAllBannis()) {
-            set.add(b.utilisateur);
+        String sql = "SELECT utilisateur FROM ban";
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                set.add(rs.getString("utilisateur"));
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la récupération des utilisateurs bannis : " + e.getMessage());
+            e.printStackTrace();
         }
         return set;
     }
@@ -84,19 +95,36 @@ public class BanDAO extends BaseDAO {
             stmt.executeUpdate();
         } catch (SQLException e) {
             System.err.println("Erreur lors du débannissement : " + e.getMessage());
+            e.printStackTrace();
         }
     }
-
-    // ✅ Modèle de données pour stocker les infos d'un bannissement
     public static class BanInfo {
-        public final String utilisateur;
-        public final String mot;
-        public final LocalDateTime date;
+        private final String utilisateur;
+        private final String mot;
+        private final LocalDateTime date;
 
         public BanInfo(String utilisateur, String mot, LocalDateTime date) {
             this.utilisateur = utilisateur;
             this.mot = mot;
             this.date = date;
         }
+
+        public String getUtilisateur() {
+            return utilisateur;
+        }
+
+        public String getMot() {
+            return mot;
+        }
+
+        public LocalDateTime getDate() {
+            return date;
+        }
     }
-}
+
+
+    // ✅ Modèle de données pour stocker les infos d'un bannissement
+
+
+
+    }
