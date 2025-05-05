@@ -1,81 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
 <?import javafx.collections.FXCollections?>
 <?import java.lang.String?>
+<?import javafx.fxml.FXMLLoader?>
 
-<AnchorPane fx:controller="controllers.AddDonsController" prefHeight="650.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
-    <children>
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.dons.AddDonsController"
+            prefWidth="1000" prefHeight="700">
 
-        <!-- NAVBAR -->
-        <VBox layoutY="0" spacing="10.0" style="-fx-background-color: skyblue;" prefWidth="974.0">
-            <HBox spacing="10" alignment="CENTER_LEFT">
-                <padding>
-                    <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
-                </padding>
+    <!-- ✅ NAVBAR FXML INCLUSE -->
+    <top>
+        <fx:include source="/navbar.fxml"/>
+    </top>
 
-                <ImageView fitHeight="40" fitWidth="40" pickOnBounds="true" preserveRatio="true" >
-                    <image>
-                        <Image url="@images/queen.png" />
-                    </image>
-                </ImageView>
-
-                <Label text="Tawwa Dons" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #0066ff;" />
-                <Pane HBox.hgrow="ALWAYS"/>
-                <HBox spacing="20" alignment="CENTER_RIGHT">
-                    <Button fx:id="btnHome"
-                            text="Home"
-                    />
-                    <MenuButton text="SERVICES">
-                        <items>
-                            <MenuItem fx:id="menuListeDons" text="Liste des dons"/>
-                            <MenuItem fx:id="menuPosterDon" text="Poster un don"/>
-                        </items>
-                    </MenuButton>
-                    <MenuButton text="EVALUATION">
-                        <items>
-                            <MenuItem text="Liste des évaluations"/>
-                        </items>
-                    </MenuButton>
-                    <MenuButton text="BLOG">
-                        <items>
-                            <MenuItem fx:id="menuListeArticles" text="Les Articles"/>
-                        </items>
-                    </MenuButton>
-                    <MenuButton text="RECRUTEMENT">
-                        <items>
-                            <MenuItem text="Liste des offres"/>
-                        </items>
-                    </MenuButton>
-                    <MenuButton text="EVENEMENT">
-                        <items>
-                            <MenuItem text="Liste des événements"/>
-                        </items>
-                    </MenuButton>
-                    <Button text="🔔" style="-fx-background-color: transparent;"/>
-                    <Button text="Déconnexion" style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
-                </HBox>
-            </HBox>
-        </VBox>
-
-        <!-- FORMULAIRE -->
-        <VBox spacing="20" alignment="TOP_LEFT" AnchorPane.topAnchor="50.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="40.0">
+    <!-- 🔶 FORMULAIRE -->
+    <center>
+        <VBox spacing="20" alignment="TOP_LEFT">
             <padding>
-                <Insets top="40.0" left="40.0" right="40.0" bottom="40.0"/>
+                <Insets top="40" left="40" right="40" bottom="40"/>
             </padding>
 
-            <Label text="Formulaire de Don" style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #1c2a4d;"/>
+            <Label text="Formulaire de Don"
+                   style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #1c2a4d;"/>
 
             <TextField fx:id="titreField" promptText="Entrez le titre du don" maxWidth="700"/>
-
             <TextArea fx:id="descriptionArea" promptText="Décrivez votre don" prefRowCount="4" maxWidth="700"/>
-
             <DatePicker fx:id="datePicker" promptText="Date de Création" maxWidth="700"/>
-
             <ComboBox fx:id="categorieCombo" promptText="Choisissez une catégorie" maxWidth="700">
                 <items>
                     <FXCollections fx:factory="observableArrayList">
@@ -94,8 +50,8 @@
                 <Label fx:id="imageLabel" text="Aucun fichier choisi"/>
             </HBox>
 
-            <Button fx:id="creerDonBtn" text="Créer le Don" onAction="#creerDon" style="-fx-background-color: #007bff; -fx-text-fill: white;" maxWidth="300"/>
+            <Button fx:id="creerDonBtn" text="Créer le Don" onAction="#creerDon"
+                    style="-fx-background-color: #007bff; -fx-text-fill: white;" maxWidth="300"/>
         </VBox>
-
-    </children>
-</AnchorPane>
+    </center>
+</BorderPane>

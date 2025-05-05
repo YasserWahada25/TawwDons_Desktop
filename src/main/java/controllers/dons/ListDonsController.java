@@ -66,12 +66,12 @@ public class ListDonsController {
         btngererDemandeRecu.setManaged(!isBeneficiaire);
         btngererDemandeRecu.setOnAction(e -> Router.navigateTo("/Dons/ListDemandePourDonneur.fxml"));
 
-        setupNavigation();
+     //   setupNavigation();
         afficherDons();
     }
 
 
-
+/***
     private void setupNavigation() {
         menuListeDons.setOnAction(e -> Router.navigateTo("/Dons/ListDons.fxml"));
         menuPosterDon.setOnAction(e -> Router.navigateTo("/Dons/AddDons.fxml"));
@@ -81,7 +81,7 @@ public class ListDonsController {
         btngererDemandeRecu.setOnAction(e -> Router.navigateTo("/Dons/ListDemandePourDonneur.fxml"));
 
     }
-
+***/
     private void afficherDons() {
         donsContainer.getChildren().clear();
         List<Dons> donsList = donsService.getDonsValidés();

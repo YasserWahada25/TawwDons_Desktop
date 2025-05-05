@@ -9,7 +9,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import models.Dons;
 import services.DonsService;
-import utils.Router;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -22,28 +21,11 @@ public class ListDonsController {
     @FXML private Label popupTitle, popupCategorie, popupDescription, popupDate, popupUser, popupEmail;
     @FXML private ImageView popupImage;
 
-    @FXML private MenuItem menuListeDons;
-    @FXML private MenuItem menuPosterDon;
-    @FXML private MenuItem menuListeArticles;
-    @FXML private Button btnHome;
-
-
     private final DonsService donsService = new DonsService();
 
     @FXML
     public void initialize() {
-        setupNavigation();
         afficherDons();
-    }
-
-    private void setupNavigation() {
-        menuListeDons.setOnAction(e -> Router.navigateTo("/ListDons.fxml"));
-        menuPosterDon.setOnAction(e -> Router.navigateTo("/AddDons.fxml"));
-        menuListeArticles.setOnAction(e -> Router.navigateTo("/article/articleList.fxml"));
-        btnHome.setOnAction(e -> Router.navigateTo("/Home.fxml"));
-
-
-
     }
 
     private void afficherDons() {

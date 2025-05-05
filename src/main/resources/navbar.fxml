@@ -35,7 +35,7 @@
                 <MenuButton text="RECRUTEMENT">
                     <items>
                         <MenuItem fx:id="miListeOffres" text="Liste des offres"/>
-                        <!--   <MenuItem fx:id="miPosterOffre" text="Poster une offre"/> -->
+                        <!--    <MenuItem fx:id="miPosterOffre" text="Poster une offre"/> -->
                        </items>
                    </MenuButton>
                    <Button fx:id="btnEvaluations" text="Évaluations"/>

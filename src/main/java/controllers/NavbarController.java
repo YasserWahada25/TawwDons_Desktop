@@ -12,7 +12,7 @@ public class NavbarController {
     @FXML private MenuItem miPosterDon;
     @FXML private MenuItem miArticleList;
     @FXML private MenuItem miListeOffres;
-   // @FXML private MenuItem miPosterOffre;
+  //  @FXML private MenuItem miPosterOffre;
     @FXML private Button btnEvaluations;
     @FXML private Button btnLogin;
     @FXML private Button btnRegister;
@@ -20,8 +20,8 @@ public class NavbarController {
     @FXML
     public void initialize() {
         btnHome.setOnAction(e       -> Router.navigateTo("/Home.fxml"));
-        miListeDons.setOnAction(e   -> Router.navigateTo("/ListDons.fxml"));
-        miPosterDon.setOnAction(e   -> Router.navigateTo("/AddDons.fxml"));
+        miListeDons.setOnAction(e   -> Router.navigateTo("/Dons/ListDons.fxml"));
+        miPosterDon.setOnAction(e   -> Router.navigateTo("/Dons/AddDons.fxml"));
         miArticleList.setOnAction(e -> Router.navigateTo("/article/articleList.fxml"));
         miListeOffres.setOnAction(e -> Router.navigateTo("/offre/ListOffres.fxml"));
        // miPosterOffre.setOnAction(e -> Router.navigateTo("/offre/AddOffre.fxml"));

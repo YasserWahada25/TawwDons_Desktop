@@ -6,7 +6,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import models.Dons;
 import services.DonsService;
-import utils.Router;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,33 +19,13 @@ public class AddDonsController {
     @FXML private DatePicker datePicker;
     @FXML private ComboBox<String> categorieCombo;
     @FXML private Label imageLabel;
-    @FXML private Button choisirImageBtn;
-    @FXML private Button creerDonBtn;
-    @FXML private MenuItem menuListeDons;
-    @FXML private MenuItem menuPosterDon;
-    @FXML private MenuItem menuListeArticles;
-    @FXML private Button btnHome;
 
-
-    @FXML private File imageFile;
-    @FXML private final DonsService donsService = new DonsService();
+    private File imageFile;
+    private final DonsService donsService = new DonsService();
 
     @FXML
     public void initialize() {
         categorieCombo.getItems().addAll("vetements", "nourriture", "electronique", "meubles", "autre");
-
-        choisirImageBtn.setOnAction(e -> choisirImage());
-        creerDonBtn.setOnAction(e -> creerDon());
-
-        // Routage via Router
-        menuListeDons.setOnAction(e -> Router.navigateTo("/ListDons.fxml"));
-        menuPosterDon.setOnAction(e -> Router.navigateTo("/AddDons.fxml"));
-        menuListeArticles.setOnAction(e -> Router.navigateTo("/article/articleList.fxml"));
-        btnHome.setOnAction(e -> Router.navigateTo("/Home.fxml"));
-
-
-
-
     }
 
     @FXML
@@ -104,7 +83,6 @@ public class AddDonsController {
         }
     }
 
-    @FXML
     private void clearForm() {
         titreField.clear();
         descriptionArea.clear();
@@ -114,7 +92,6 @@ public class AddDonsController {
         imageFile = null;
     }
 
-    @FXML
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
