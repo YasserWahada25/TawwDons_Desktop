@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
@@ -15,81 +16,49 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="750.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21.0.6"
+<AnchorPane prefWidth="1000.0" prefHeight="750.0"
+            xmlns="http://javafx.com/javafx/21.0.6"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="controllers.article.ArticleListController">
 
     <children>
-        <!-- NAVBAR -->
-        <VBox layoutY="0" prefWidth="974.0" spacing="10.0" style="-fx-background-color: skyblue;">
-            <HBox alignment="CENTER_LEFT" prefHeight="62.0" prefWidth="995.0" spacing="10">
-                <padding>
-                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                </padding>
+        <!-- 1. Navbar incluse sans ancrage -->
+        <fx:include source="/navbar.fxml"
+                    layoutX="0.0" layoutY="0.0"
+                    prefWidth="1000.0" prefHeight="62.0" />
 
-                <ImageView fitHeight="40" fitWidth="40" pickOnBounds="true" preserveRatio="true">
-                    <image>
-                        <Image url="@../images/queen.png" />
-                    </image>
-                </ImageView>
+        <!-- 2. ComboBox juste en dessous du navbar -->
+        <ComboBox fx:id="categorieFilterCombo"
+                  layoutX="774.0" layoutY="62.0"
+                  prefWidth="200.0"
+                  promptText="Choisir une catégorie"
+                  style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #ccc; -fx-padding: 2;" />
 
-                <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #0066ff;" text="Tawwa Dons" />
-                <Pane HBox.hgrow="ALWAYS" />
-                <HBox alignment="CENTER_RIGHT" spacing="20">
-                    <Button fx:id="btnHome" prefHeight="26.0" prefWidth="59.0" text="Home" />
-                    <MenuButton prefHeight="26.0" prefWidth="90.0" text="SERVICES">
-                        <items>
-                            <MenuItem fx:id="menuListeDons" text="Liste des dons" />
-                            <MenuItem fx:id="menuPosterDon" text="Poster un don" />
-                        </items>
-                    </MenuButton>
-                    <MenuButton prefHeight="26.0" prefWidth="108.0" text="EVALUATION">
-                        <items>
-                            <MenuItem text="Liste des évaluations" />
-                        </items>
-                    </MenuButton>
-                    <MenuButton prefHeight="26.0" prefWidth="74.0" text="BLOG">
-                        <items>
-                            <MenuItem fx:id="menuListeArticles" text="Les Articles" />
-                        </items>
-                    </MenuButton>
-                    <MenuButton prefHeight="26.0" prefWidth="126.0" text="RECRUTEMENT">
-                        <items>
-                            <MenuItem text="Liste des offres" />
-                        </items>
-                    </MenuButton>
-                    <MenuButton prefHeight="26.0" prefWidth="105.0" text="EVENEMENT">
-                        <items>
-                            <MenuItem text="Liste des événements" />
-                        </items>
-                    </MenuButton>
-                    <Button prefHeight="26.0" prefWidth="34.0" style="-fx-background-color: transparent;" text="🔔" />
-                    <Button prefHeight="26.0" prefWidth="90.0" style="-fx-background-color: #e74c3c; -fx-text-fill: white;" text="Déconnexion" />
-                </HBox>
-            </HBox>
-        </VBox>
-
-        <!-- ComboBox pour filtrer les catégories -->
-        <ComboBox fx:id="categorieFilterCombo" layoutX="774.0" layoutY="61.0" opacity="0.8" prefHeight="10.0" prefWidth="200" promptText="Choisir un categorie" style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #ccc; -fx-padding: 2;" AnchorPane.leftAnchor="774.0" AnchorPane.topAnchor="61.0" />
-
-        <!-- SCROLLPANE avec FlowPane des articles -->
+        <!-- 3. ScrollPane pour les articles -->
         <ScrollPane fitToWidth="true" fitToHeight="false" vbarPolicy="ALWAYS"
-                    AnchorPane.bottomAnchor="60.0"
-                    AnchorPane.leftAnchor="0.0"
-                    AnchorPane.rightAnchor="0.0"
-                    AnchorPane.topAnchor="94.0">            <content>
-                <FlowPane fx:id="articlesFlowPane" hgap="20" prefWidth="1000" style="-fx-background-color: #f9f9f9;" vgap="20">
+                    layoutX="0.0" layoutY="94.0"
+                    prefWidth="1000.0" prefHeight="596.0">
+            <content>
+                <FlowPane fx:id="articlesFlowPane"
+                          hgap="20" vgap="20"
+                          prefWidth="1000.0"
+                          style="-fx-background-color: #f9f9f9;">
                     <padding>
-                        <Insets bottom="20" left="20" right="20" top="20" />
+                        <Insets top="20" right="20" bottom="20" left="20"/>
                     </padding>
                 </FlowPane>
             </content>
         </ScrollPane>
 
-        <!-- Pagination en bas -->
-        <HBox fx:id="paginationBox" alignment="CENTER" prefHeight="50" spacing="10" style="-fx-background-color: #ffffff;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <!-- 4. Pagination en bas -->
+        <HBox fx:id="paginationBox"
+              alignment="CENTER"
+              spacing="10.0"
+              style="-fx-background-color: #ffffff;"
+              layoutX="0.0" layoutY="700.0"
+              prefWidth="1000.0" prefHeight="50.0">
             <padding>
-                <Insets bottom="10" top="10" />
+                <Insets top="10" bottom="10"/>
             </padding>
         </HBox>
     </children>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21.0.6"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controllers.NavbarController"
+      spacing="10" style="-fx-background-color:white;"
+      prefHeight="62.0" prefWidth="1000.0">
+    <children>
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <padding><Insets top="10" bottom="10" left="10" right="10"/></padding>
+            <ImageView fitHeight="40" fitWidth="40" preserveRatio="true">
+                <image><Image url="@/images/queen.png"/></image>
+            </ImageView>
+            <Label text="Tawwa Dons"
+                   style="-fx-font-size:24px; -fx-font-weight:bold; -fx-text-fill:#0066ff;"/>
+            <Pane HBox.hgrow="ALWAYS"/>
+            <HBox spacing="20" alignment="CENTER_RIGHT">
+                <Button fx:id="btnHome" text="Home"/>
+                <MenuButton text="SERVICES">
+                    <items>
+                        <MenuItem fx:id="miListeDons" text="Liste des dons"/>
+                        <MenuItem fx:id="miPosterDon" text="Poster un don"/>
+                    </items>
+                </MenuButton>
+                <MenuButton text="BLOG">
+                    <items>
+                        <MenuItem fx:id="miArticleList" text="Les Articles"/>
+                    </items>
+                </MenuButton>
+                <MenuButton text="RECRUTEMENT">
+                    <items>
+                        <MenuItem fx:id="miListeOffres" text="Liste des offres"/>
+                        <MenuItem fx:id="miPosterOffre" text="Poster une offre"/>
+                    </items>
+                </MenuButton>
+                <Button fx:id="btnLogin" text="Login" style="-fx-background-color:transparent;"/>
+                <Button fx:id="btnRegister" text="Register"
+                        style="-fx-background-color:#6c757d; -fx-text-fill:white;"/>
+            </HBox>
+        </HBox>
+    </children>
+</VBox>

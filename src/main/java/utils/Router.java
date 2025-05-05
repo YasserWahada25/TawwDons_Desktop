@@ -4,7 +4,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 
 public class Router {
@@ -17,14 +16,11 @@ public class Router {
     }
 
     public static void navigateTo(String fxmlPath) {
-        // Séparer le chemin FXML des paramètres
+        // gère les paramètres après “?”
         String[] parts = fxmlPath.split("\\?");
         String path = parts[0];
-        String params = parts.length > 1 ? parts[1] : "";
-        
-        // Mémoriser l'URL complète
         currentUrl = fxmlPath;
-        
+
         try {
             Parent root = FXMLLoader.load(Router.class.getResource(path));
             mainStage.setScene(new Scene(root));
