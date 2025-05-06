@@ -5,71 +5,138 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane fx:controller="controllers.LoginController"
             prefHeight="600.0" prefWidth="800.0"
-            xmlns="http://javafx.com/javafx/8" 
+            style="-fx-background-color: linear-gradient(to bottom right, #f5f7fa, #e8ecf5);"
+            xmlns="http://javafx.com/javafx/8"
             xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <!-- NAVBAR -->
-        <VBox layoutY="0" spacing="10.0" style="-fx-background-color: skyblue;" prefWidth="800.0">
-            <HBox spacing="10" alignment="CENTER_LEFT">
+        <VBox layoutY="0" spacing="10.0" style="-fx-background-color: linear-gradient(to right, #1e3c72, #2a5298); -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 2);" prefWidth="800.0">
+            <HBox spacing="15" alignment="CENTER_LEFT">
                 <padding>
-                    <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
+                    <Insets top="12.0" right="20.0" bottom="12.0" left="20.0"/>
                 </padding>
 
-                <ImageView fitHeight="40" fitWidth="40" pickOnBounds="true" preserveRatio="true" >
+                <ImageView fitHeight="40" fitWidth="40" pickOnBounds="true" preserveRatio="true">
                     <image>
                         <Image url="@images/queen.png" />
                     </image>
+                    <effect>
+                        <javafx.scene.effect.DropShadow radius="5" color="rgba(0,0,0,0.3)" />
+                    </effect>
                 </ImageView>
 
-                <Label text="Tawwa Dons" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #0066ff;" />
+                <Label text="Tawwa Dons" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;">
+                    <effect>
+                        <javafx.scene.effect.DropShadow radius="2" color="rgba(0,0,0,0.3)" />
+                    </effect>
+                </Label>
                 <Pane HBox.hgrow="ALWAYS"/>
             </HBox>
         </VBox>
 
         <!-- LOGIN FORM -->
-        <VBox spacing="20" alignment="CENTER" 
-              AnchorPane.topAnchor="150.0" 
-              AnchorPane.leftAnchor="250.0" 
-              AnchorPane.rightAnchor="250.0"
-              style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 0);">
-            <padding>
-                <Insets top="40.0" right="40.0" bottom="40.0" left="40.0"/>
-            </padding>
+        <HBox AnchorPane.topAnchor="120.0" AnchorPane.bottomAnchor="80.0"
+              AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="150.0">
 
-            <Label text="Connexion" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #1c2a4d;"/>
-            
-            <HBox spacing="10" alignment="CENTER_LEFT">
-                <Label text="Email:" style="-fx-font-size: 14px;" minWidth="80"/>
-                <TextField fx:id="emailField" promptText="Entrez votre email" prefWidth="250"/>
-            </HBox>
-            
-            <HBox spacing="10" alignment="CENTER_LEFT">
-                <Label text="Mot de passe:" style="-fx-font-size: 14px;" minWidth="80"/>
-                <PasswordField fx:id="passwordField" promptText="Entrez votre mot de passe" prefWidth="250"/>
-            </HBox>
-            
-            <Button fx:id="loginButton" onAction="#handleLoginButtonAction" 
-                    text="Se connecter" 
-                    style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-size: 14px;"
-                    prefWidth="180" prefHeight="40"/>
-                    
-            <HBox spacing="5" alignment="CENTER">
-                <Label text="Vous n'avez pas de compte?" style="-fx-font-size: 12px;"/>
-                <Hyperlink fx:id="registerLink" text="S'inscrire" style="-fx-font-size: 12px;" onAction="#navigateToRegister"/>
-            </HBox>
-            
-            <Hyperlink text="Mot de passe oublié?" alignment="CENTER" style="-fx-font-size: 12px;"/>
-        </VBox>
-        
+            <!-- Left Side - Image/Branding -->
+            <VBox alignment="CENTER" style="-fx-background-color: linear-gradient(to bottom, #1e3c72, #2a5298); -fx-background-radius: 10 0 0 10;" HBox.hgrow="ALWAYS" maxWidth="250">
+                <padding>
+                    <Insets top="30.0" right="20.0" bottom="30.0" left="20.0"/>
+                </padding>
+
+                <ImageView fitWidth="150" fitHeight="150" preserveRatio="true">
+                    <image>
+                        <Image url="@images/queen.png" />
+                    </image>
+                </ImageView>
+
+                <Label text="Bienvenue" textAlignment="CENTER" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;">
+                    <VBox.margin>
+                        <Insets top="20.0" />
+                    </VBox.margin>
+                </Label>
+
+                <Label text="Connectez-vous pour accéder à votre compte et gérer vos dons." textAlignment="CENTER" wrapText="true"
+                       style="-fx-font-size: 14px; -fx-text-fill: white; -fx-opacity: 0.9;">
+                    <VBox.margin>
+                        <Insets top="10.0" />
+                    </VBox.margin>
+                </Label>
+            </VBox>
+
+            <!-- Right Side - Login Form -->
+            <VBox fx:id="loginVBox" spacing="20" alignment="CENTER" style="-fx-background-color: white; -fx-background-radius: 0 10 10 0; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);" HBox.hgrow="ALWAYS">
+                <padding>
+                    <Insets top="30.0" right="40.0" bottom="30.0" left="40.0"/>
+                </padding>
+
+                <Label text="Connexion" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #1e3c72;"/>
+
+                <VBox spacing="5">
+                    <Label text="Email" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #495057;"/>
+                    <TextField fx:id="emailField" promptText="Entrez votre email"
+                               style="-fx-background-color: #f8f9fa; -fx-border-color: #e2e6ea; -fx-border-radius: 4; -fx-background-radius: 4; -fx-padding: 10 15;"/>
+                </VBox>
+
+                <VBox spacing="5">
+                    <Label text="Mot de passe" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #495057;"/>
+                    <PasswordField fx:id="passwordField" promptText="Entrez votre mot de passe"
+                                   style="-fx-background-color: #f8f9fa; -fx-border-color: #e2e6ea; -fx-border-radius: 4; -fx-background-radius: 4; -fx-padding: 10 15;"/>
+                </VBox>
+
+                <Button fx:id="loginButton" onAction="#handleLoginButtonAction"
+                        text="Se connecter"
+                        style="-fx-background-color: linear-gradient(to right, #1e3c72, #2a5298); -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 4; -fx-cursor: hand;"
+                        prefWidth="200" prefHeight="45">
+                    <effect>
+                        <javafx.scene.effect.DropShadow radius="5" color="rgba(0,0,0,0.3)" />
+                    </effect>
+                </Button>
+
+                <!-- Division line -->
+                <HBox alignment="CENTER" spacing="10" prefWidth="300">
+                    <Line startX="0" endX="100" stroke="#e2e6ea" />
+                    <Label text="ou" style="-fx-text-fill: #6c757d; -fx-font-size: 12px;" />
+                    <Line startX="0" endX="100" stroke="#e2e6ea" />
+                </HBox>
+
+                <!-- Google Sign-In Button -->
+                <Button fx:id="googleSignInButton" onAction="#handleGoogleSignIn"
+                        style="-fx-background-color: white; -fx-border-color: #e2e6ea; -fx-border-radius: 4; -fx-background-radius: 4; -fx-cursor: hand;"
+                        prefWidth="200" prefHeight="45">
+                    <graphic>
+                        <HBox spacing="10" alignment="CENTER">
+                            <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
+                                <image>
+                                    <Image url="@images/google_logo.png" />
+                                </image>
+                            </ImageView>
+                            <Label text="Connexion avec Google" style="-fx-text-fill: #5f6368; -fx-font-weight: bold;" />
+                        </HBox>
+                    </graphic>
+                </Button>
+
+                <HBox spacing="5" alignment="CENTER">
+                    <Label text="Vous n'avez pas de compte?" style="-fx-font-size: 13px; -fx-text-fill: #6c757d;"/>
+                    <Hyperlink fx:id="registerLink" text="S'inscrire" style="-fx-font-size: 13px; -fx-text-fill: #1e3c72; -fx-font-weight: bold;" onAction="#navigateToRegister"/>
+                </HBox>
+
+                <Hyperlink text="Mot de passe oublié?" alignment="CENTER" style="-fx-font-size: 13px; -fx-text-fill: #1e3c72;" onAction="#navigateToForgotPassword"/>
+            </VBox>
+        </HBox>
+
         <!-- FOOTER -->
-        <HBox alignment="CENTER" 
-              AnchorPane.bottomAnchor="20.0" 
-              AnchorPane.leftAnchor="0.0" 
+        <HBox alignment="CENTER"
+              AnchorPane.bottomAnchor="20.0"
+              AnchorPane.leftAnchor="0.0"
               AnchorPane.rightAnchor="0.0">
-            <Label text="© 2023 Tawwa Dons. Tous droits réservés." style="-fx-font-size: 12px; -fx-text-fill: #6c757d;"/>
+            <Label text=" 2023 Tawwa Dons. Tous droits réservés." style="-fx-font-size: 12px; -fx-text-fill: #6c757d;"/>
         </HBox>
     </children>
-</AnchorPane> 
+</AnchorPane>

@@ -2,36 +2,36 @@ package utils;
 
 import models.User;
 
-/**
- * Gère la session utilisateur à travers l'application.
- * Utilise des méthodes statiques pour stocker l'utilisateur connecté.
- */
-public class SessionManager {
 
+public class SessionManager {
+    private static SessionManager instance;
     private static User currentUser;
 
-    /**
-     * Définit l'utilisateur actuellement connecté.
-     *
-     * @param user l'utilisateur connecté
-     */
+    private SessionManager() {
+        // Private constructor to enforce singleton pattern
+    }
+
+    public static SessionManager getInstance() {
+        if (instance == null) {
+            instance = new SessionManager();
+        }
+        return instance;
+    }
+
+
     public static void setCurrentUser(User user) {
         currentUser = user;
     }
 
-    /**
-     * Récupère l'utilisateur actuellement connecté.
-     *
-     * @return l'utilisateur connecté ou null si aucune session active
-     */
+
     public static User getCurrentUser() {
         return currentUser;
     }
 
-    /**
-     * Réinitialise la session utilisateur.
-     */
     public static void clearSession() {
         currentUser = null;
+    }
+    public boolean isLoggedIn() {
+        return currentUser != null;
     }
 }

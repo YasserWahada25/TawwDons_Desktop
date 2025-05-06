@@ -8,6 +8,8 @@ public class EmailService {
 
     private final Session session;
     private final String fromEmail;
+    private static final String USERNAME = "itstimetoduel01@gmail.com";
+    private static final String PASSWORD = "wyyd cybu ahxr oawi";
 
     public EmailService() {
         var props = new Properties();
@@ -84,9 +86,7 @@ public class EmailService {
         }
     }
 
-    /**
-     * Envoie un email HTML de confirmation d'acceptation de candidature.
-     */
+
     public void sendAcceptanceEmail(String toEmail, String nom, String prenom, String poste) {
         if (toEmail == null || toEmail.isBlank()) {
             System.err.println("❌ Impossible d’envoyer l’email : adresse vide ou null.");
@@ -121,6 +121,102 @@ public class EmailService {
 
         } catch (MessagingException e) {
             System.err.println("❌ Failed to send acceptance email: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+
+    public static void sendWelcomeEmail(String recipientEmail, String name) {
+        try {
+            // Setup mail server properties
+            Properties props = new Properties();
+            props.put("mail.smtp.auth", "true");
+            props.put("mail.smtp.starttls.enable", "true");
+            props.put("mail.smtp.host", "smtp.gmail.com");
+            props.put("mail.smtp.port", "587");
+
+            // Create a session with authentication
+            Session session = Session.getInstance(props, new Authenticator() {
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(USERNAME, PASSWORD);
+                }
+            });
+
+            // Create the email message
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(USERNAME));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
+            message.setSubject("Bienvenue sur TawwDons!");
+
+            // HTML content for the email
+            String htmlContent = String.format(
+                    "<div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>" +
+                            "<h2 style='color: #2C3E50;'>Bienvenue sur TawwDons!</h2>" +
+                            "<p>Bonjour %s,</p>" +
+                            "<p>Merci de vous être inscrit sur notre plateforme. Votre compte a été créé avec succès.</p>" +
+                            "<p>Pour toute question, n'hésitez pas à nous contacter.</p>" +
+                            "<p>Cordialement,<br>L'équipe TawwDons</p>" +
+                            "</div>",
+                    name
+            );
+
+            // Set email content as HTML
+            message.setContent(htmlContent, "text/html; charset=utf-8");
+
+            // Send the email
+            Transport.send(message);
+            System.out.println("Welcome email sent to: " + recipientEmail);
+
+        } catch (MessagingException e) {
+            System.out.println("Failed to send welcome email: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    public static void sendPasswordResetEmail(String recipientEmail, String resetCode) {
+        try {
+            // Setup mail server properties
+            Properties props = new Properties();
+            props.put("mail.smtp.auth", "true");
+            props.put("mail.smtp.starttls.enable", "true");
+            props.put("mail.smtp.host", "smtp.gmail.com");
+            props.put("mail.smtp.port", "587");
+
+            // Create a session with authentication
+            Session session = Session.getInstance(props, new Authenticator() {
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(USERNAME, PASSWORD);
+                }
+            });
+
+            // Create the email message
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(USERNAME));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
+            message.setSubject("Réinitialisation de votre mot de passe TawwDons");
+
+            // HTML content for the email
+            String htmlContent = String.format(
+                    "<div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>" +
+                            "<h2 style='color: #2C3E50;'>Réinitialisation de mot de passe</h2>" +
+                            "<p>Vous avez demandé une réinitialisation de votre mot de passe.</p>" +
+                            "<p>Voici votre code de vérification: <strong>%s</strong></p>" +
+                            "<p>Si vous n'avez pas demandé cette réinitialisation, veuillez ignorer cet email.</p>" +
+                            "<p>Cordialement,<br>L'équipe TawwDons</p>" +
+                            "</div>",
+                    resetCode
+            );
+
+            // Set email content as HTML
+            message.setContent(htmlContent, "text/html; charset=utf-8");
+
+            // Send the email
+            Transport.send(message);
+            System.out.println("Password reset email sent to: " + recipientEmail);
+
+        } catch (MessagingException e) {
+            System.out.println("Failed to send password reset email: " + e.getMessage());
             e.printStackTrace();
         }
     }

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.LoginHistoryController"
+            prefWidth="1000" prefHeight="600"
+            style="-fx-background-color: white;">
+
+    <!-- ========== SIDEBAR ========== -->
+    <left>
+        <VBox spacing="18" alignment="TOP_CENTER"
+              style="-fx-background-color: #ecf0f1; -fx-padding: 25;">
+            <Label text=" Historique" style="-fx-text-fill: #2c3e50; -fx-font-weight: bold; -fx-font-size: 15;" />
+
+            <Button fx:id="btnDashboard" text=" Dashboard" onAction="#navigateToDashboard"
+                    style="-fx-background-color: #3498db; -fx-text-fill: white;
+                           -fx-background-radius: 8; -fx-font-weight: bold;
+                           -fx-pref-width: 200; -fx-pref-height: 35; -fx-font-size: 13px;" />
+
+            <Button fx:id="btnDonsRequests" text=" Dons Requests" onAction="#navigateToDonsRequests"
+                    style="-fx-background-color: #9b59b6; -fx-text-fill: white;
+                           -fx-background-radius: 8; -fx-font-weight: bold;
+                           -fx-pref-width: 200; -fx-pref-height: 35; -fx-font-size: 13px;" />
+
+            <Button fx:id="btnUserList" text=" Liste Utilisateurs" onAction="#navigateToUserList"
+                    style="-fx-background-color: #27ae60; -fx-text-fill: white;
+                           -fx-background-radius: 8; -fx-font-weight: bold;
+                           -fx-pref-width: 200; -fx-pref-height: 35; -fx-font-size: 13px;" />
+
+            <Button text=" Retour" onAction="#goBack"
+                    style="-fx-background-color: #34495e; -fx-text-fill: white;
+                           -fx-background-radius: 8; -fx-font-weight: bold;
+                           -fx-pref-width: 200; -fx-pref-height: 35; -fx-font-size: 13px;" />
+
+            <ImageView fitWidth="150" fitHeight="150" preserveRatio="true">
+                <image>
+                    <Image url="@/images/tawwa don 3.png" />
+                </image>
+                <VBox.margin>
+                    <Insets top="30.0" />
+                </VBox.margin>
+            </ImageView>
+
+            <Label text="Consultez l'historique des connexions des utilisateurs de la plateforme."
+                   textAlignment="CENTER" wrapText="true"
+                   style="-fx-font-size: 13px; -fx-text-fill: #34495e;">
+                <VBox.margin>
+                    <Insets top="20.0" />
+                </VBox.margin>
+            </Label>
+        </VBox>
+    </left>
+
+    <!-- ========== CONTENU PRINCIPAL ========== -->
+    <center>
+        <VBox spacing="20" style="-fx-padding: 25; -fx-background-color: white;">
+
+            <!-- ===== HEADER ===== -->
+            <HBox spacing="20" alignment="CENTER_LEFT">
+                <Label text=" Historique des Connexions"
+                       style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <ComboBox fx:id="userFilterComboBox" promptText=" Filtrer par utilisateur"
+                          style="-fx-background-color: #ecf0f1; -fx-text-fill: black;
+                                 -fx-prompt-text-fill: gray; -fx-background-radius: 6;
+                                 -fx-pref-width: 250;" />
+
+                <Button text=" Rafraîchir" onAction="#refreshData"
+                        style="-fx-background-color: #3498db; -fx-text-fill: white;
+                               -fx-font-weight: bold; -fx-background-radius: 6;
+                               -fx-padding: 8 15; -fx-font-size: 13px;" />
+            </HBox>
+
+            <!-- ===== TABLE VIEW ===== -->
+            <VBox spacing="10" VBox.vgrow="ALWAYS" style="-fx-background-color: #f8f9fa; -fx-padding: 20; -fx-background-radius: 8;">
+                <Label text=" Liste des connexions"
+                       style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+
+                <TableView fx:id="historyTable" VBox.vgrow="ALWAYS" style="-fx-background-color: white; -fx-background-radius: 4;">
+                    <columns>
+                        <TableColumn text="Nom" prefWidth="120" fx:id="nomColumn"/>
+                        <TableColumn text="Prénom" prefWidth="120" fx:id="prenomColumn"/>
+                        <TableColumn text="Email" prefWidth="200" fx:id="emailColumn"/>
+                        <TableColumn text="Type" prefWidth="120" fx:id="typeColumn"/>
+                        <TableColumn text="Dernière connexion" prefWidth="220" fx:id="lastLoginColumn"/>
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                    </columnResizePolicy>
+                </TableView>
+            </VBox>
+
+            <!-- ===== STATISTICS ===== -->
+            <HBox spacing="15" alignment="CENTER">
+                <VBox alignment="CENTER" style="-fx-background-color: #e1f0fa; -fx-padding: 15; -fx-background-radius: 8;" HBox.hgrow="ALWAYS">
+                    <Label text=" Total des connexions" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2980b9;"/>
+                    <Label fx:id="totalLoginsLabel" text="0" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2980b9;"/>
+                </VBox>
+
+                <VBox alignment="CENTER" style="-fx-background-color: #e1fae8; -fx-padding: 15; -fx-background-radius: 8;" HBox.hgrow="ALWAYS">
+                    <Label text=" Dernière connexion" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #27ae60;"/>
+                    <Label fx:id="lastLoginDateLabel" text="--" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #27ae60;"/>
+                </VBox>
+
+                <VBox alignment="CENTER" style="-fx-background-color: #fae1e1; -fx-padding: 15; -fx-background-radius: 8;" HBox.hgrow="ALWAYS">
+                    <Label text=" Utilisateurs inactifs" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #c0392b;"/>
+                    <Label fx:id="inactiveUsersLabel" text="0" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #c0392b;"/>
+                </VBox>
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>

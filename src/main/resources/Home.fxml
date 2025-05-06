@@ -1,46 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.control.Hyperlink?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/21.0.6"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controllers.HomeController"
-            prefWidth="1000.0" prefHeight="600.0">
+<AnchorPane
+        xmlns="http://javafx.com/javafx/23.0.1"
+        xmlns:fx="http://javafx.com/fxml/1"
+        fx:controller="controllers.HomeController"
+        prefHeight="600.0" prefWidth="1000.0">
 
     <children>
-        <!-- inclusion simple du navbar -->
+
+        <!-- NAVBAR  -->
+
+
         <fx:include source="navbar.fxml"/>
 
-        <!-- section héroïque placée 62px sous le haut -->
-        <StackPane layoutX="0.0" layoutY="62.0"
-                   prefWidth="1000.0" prefHeight="538.0">
 
-            <ImageView fitWidth="1000.0" fitHeight="538.0" preserveRatio="false">
+
+        <!-- HERO IMAGE SECTION -->
+        <StackPane layoutY="60" prefHeight="540.0" prefWidth="1200.0">
+            <ImageView fitHeight="540.0" fitWidth="1200.0" preserveRatio="false">
                 <image>
-                    <Image url="@/images/donation2.jpg"/>
+                    <Image url="@/images/donation2.jpg" />
                 </image>
             </ImageView>
 
+            <!-- TEXT OVERLAY -->
             <VBox alignment="CENTER" spacing="15" maxWidth="600">
                 <Label text="DONATE TO TAWWA"
-                       style="-fx-font-size:28px;-fx-font-weight:bold;-fx-text-fill:white;"/>
+                       style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;" />
                 <Label text="Your donation helps support people in need and ensures that no one is left without care or support. Join us to build a better world through kindness."
                        wrapText="true"
-                       style="-fx-font-size:14px;-fx-text-fill:white;-fx-padding:0 40 0 40;"/>
+                       style="-fx-font-size: 14px; -fx-text-fill: white; -fx-padding: 0 40 0 40;" />
+
                 <Hyperlink text="For questions about supporting Tawwa, please contact us"
-                           style="-fx-text-fill:#a4f0a4;"/>
-                <Label wrapText="true" maxWidth="500"
-                       style="-fx-background-color:rgba(255,255,255,0.9);-fx-padding:10;-fx-background-radius:5;-fx-text-fill:#333;">
+                           style="-fx-text-fill: #a4f0a4;"/>
+
+                <Label wrapText="true" style="-fx-background-color: rgba(255,255,255,0.9); -fx-padding: 10; -fx-background-radius: 5; -fx-text-fill: #333;" maxWidth="500">
                     Donations are used to provide support, food, services and more to vulnerable communities. You can donate online or by sending a check to Tawwa Dons, 123 Rue de l'Espoir, Tunis, Tunisia.
                 </Label>
             </VBox>
-
         </StackPane>
+
     </children>
 </AnchorPane>
