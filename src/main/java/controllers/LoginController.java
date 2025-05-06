@@ -494,8 +494,8 @@ public class LoginController {
 
             if (isAdmin) {
                 // If admin, navigate to UserList
-                System.out.println("Google login - Navigating to Admin/ajouterArticle.fxml");
-                loader = new FXMLLoader(getClass().getResource("/Admin/ajouterArticle.fxml"));
+                System.out.println("Google login - Navigating to Admin/UserList.fxml");
+                loader = new FXMLLoader(getClass().getResource("/Admin/UserList.fxml"));
                 root = loader.load();
 
                 // No need to update UI as UserListController handles this
@@ -620,7 +620,7 @@ public class LoginController {
      */
     private void navigateToAdminPanel() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Admin/ajouterArticle.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Admin/UserList.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) emailField.getScene().getWindow();

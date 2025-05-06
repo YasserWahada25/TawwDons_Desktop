@@ -34,4 +34,8 @@ public class SessionManager {
     public boolean isLoggedIn() {
         return currentUser != null;
     }
+
+    public void logout() {
+        clearSession();
+    }
 }

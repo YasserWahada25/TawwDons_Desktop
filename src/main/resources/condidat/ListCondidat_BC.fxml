@@ -11,33 +11,8 @@
 
     <!-- Sidebar gauche -->
     <left>
-        <VBox style="-fx-background-color: #f8f9fa;" spacing="15" prefWidth="200" alignment="TOP_LEFT">
-            <padding>
-                <Insets top="20" right="20" bottom="20" left="20"/>
-            </padding>
-            <Label text="Tawwa Dons" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
-            <Separator/>
-
-            <Button fx:id="btnDashboard" text="Dashboard" maxWidth="Infinity"/>
-            <Button fx:id="btnDonsRequests" text="Dons Requests" maxWidth="Infinity"/>
-            <MenuButton text="Gestion Article" maxWidth="Infinity">
-                <items>
-                    <MenuItem fx:id="menuArticleList" text="Article List"/>
-                    <MenuItem fx:id="menuArticleForm" text="Article Form"/>
-                </items>
-            </MenuButton>
-            <Button fx:id="btnOffre" text="Offre" maxWidth="Infinity"/>
-            <Button fx:id="btnCondidat" text="Condidat" maxWidth="Infinity"/>
-            <Button fx:id="btnEvenement" text="Evenement" maxWidth="Infinity"/>
-            <Button fx:id="btnEvaluation" text="Evaluation" maxWidth="Infinity"/>
-            <Button fx:id="btnParticipant" text="Participant" maxWidth="Infinity"/>
-            <Button fx:id="btnCategorie" text="Catégorie" maxWidth="Infinity"/>
-            <Button fx:id="btnNotifications" text="Notifications" maxWidth="Infinity"/>
-
-            <Label text="Account Pages"
-                   style="-fx-font-weight: bold; -fx-padding: 10 0 0 0;"/>
-            <Button fx:id="btnProfile" text="Profile" maxWidth="Infinity"/>
-        </VBox>
+        <!-- Sidebar gauche -->
+        <fx:include source="/Sidebar.fxml"/>
     </left>
 
     <!-- Top bar -->
