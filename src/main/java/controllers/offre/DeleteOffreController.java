@@ -22,11 +22,11 @@ public class DeleteOffreController {
     public void initialize() {
         // Configuration de la navigation
         setupNavigation();
-        
+
         // Récupérer l'ID passé dans l'URL et charger l'offre correspondante
         String url = Router.getCurrentUrl();
         this.offreId = extractIdFromUrl(url);
-        
+
         System.out.println("URL: " + url);
         System.out.println("ID extrait: " + offreId);
 
@@ -49,7 +49,7 @@ public class DeleteOffreController {
         confirmDeleteBtn.setOnAction(e -> deleteOffre());
         cancelBtn.setOnAction(e -> Router.navigateTo("/offre/ListOffre_BC.fxml"));
     }
-    
+
     private void setupNavigation() {
         menuListeOffres.setOnAction(e -> Router.navigateTo("/offre/ListOffre_BC.fxml"));
         menuPosterOffre.setOnAction(e -> Router.navigateTo("/offre/AddOffre.fxml"));
@@ -59,13 +59,13 @@ public class DeleteOffreController {
         if (url == null || !url.contains("?")) {
             return -1;
         }
-        
+
         // Extraire l'ID du paramètre "id" dans l'URL
         String[] parts = url.split("\\?");
         if (parts.length < 2) {
             return -1;
         }
-        
+
         String[] params = parts[1].split("&");
         for (String param : params) {
             if (param.startsWith("id=")) {

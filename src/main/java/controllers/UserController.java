@@ -19,6 +19,7 @@ import javafx.util.Duration;
 import models.Evaluation;
 import models.Question;
 import models.Reponse;
+import utils.ProfanityFilter;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -220,6 +221,13 @@ public class UserController {
                 continue;
             }
 
+            // NOUVEAU : contrôle de gros mots
+            if (ProfanityFilter.containsBadWord(value)) {
+                banDAO.ban(nom, value);
+                showAlertAndRetourAccueil("Vous avez utilisé un mot interdit. Vous êtes banni.");
+                return;
+            }
+
             Reponse r = new Reponse();
             r.setUtilisateur(nom);
             r.setReponse(value);
@@ -273,7 +281,7 @@ public class UserController {
     @FXML
     private void retourAccueil() {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/MainInterface.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/Home.fxml"));
             Stage stage = (Stage) utilisateurField.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("Accueil");

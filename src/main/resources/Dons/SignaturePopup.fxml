@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.dons.SignaturePopupController"
+            prefWidth="500.0" prefHeight="300.0" style="-fx-background-color: white;">
+
+    <!-- Canvas pour dessiner la signature -->
+    <Canvas fx:id="signatureCanvas" layoutX="25.0" layoutY="25.0" width="450.0" height="200.0"
+            style="-fx-border-color: black; -fx-border-width: 2;" />
+
+    <!-- Bouton pour effacer -->
+    <Button text="Effacer" layoutX="50.0" layoutY="240.0" onAction="#clearCanvas"/>
+
+    <!-- Bouton pour valider et sauvegarder -->
+    <Button text="Valider" layoutX="200.0" layoutY="240.0" onAction="#saveSignature"/>
+
+</AnchorPane>

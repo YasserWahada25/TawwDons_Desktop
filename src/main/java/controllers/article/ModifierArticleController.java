@@ -1,75 +1,83 @@
 package controllers.article;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import models.Article;
 import services.ArticleService;
 
-public class ModifierArticleController {
+import java.net.URL;
+import java.util.Arrays;
+import java.util.ResourceBundle;
 
-    @FXML private TextField titreField;
-    @FXML private TextField categorieField;
-    @FXML private TextArea descriptionField;
-    @FXML private Label errorLabel;
+public class ModifierArticleController implements Initializable {
+
+    @FXML private TextField    titreField;
+    @FXML private ComboBox<String> categorieField;
+    @FXML private TextArea     descriptionField;
+    @FXML private Label        errorLabel;
 
     private Article article;
     private final ArticleService articleService = new ArticleService();
 
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        // 1) Remplir la combo avec vos catégories
+        categorieField.getItems().setAll(
+                "dons", "evenement", "recrutement"
+        );
+    }
+
+    // Appelé par l'écran parent avant d'afficher la fenêtre
     public void setArticle(Article article) {
         this.article = article;
+
+        // 2) Initialiser les champs
         titreField.setText(article.getTitre());
-        categorieField.setText(article.getCategorie());
         descriptionField.setText(article.getDescription());
+        categorieField.setValue(article.getCategorie());
     }
 
     @FXML
     private void handleUpdate() {
-        String titre = titreField.getText();
-        String categorie = categorieField.getText();
+        String titre       = titreField.getText();
         String description = descriptionField.getText();
+        String categorie   = categorieField.getValue();
 
+        // 3) Validation (idem)
         if (titre == null || titre.trim().isEmpty()) {
-            errorLabel.setText("❌ Le titre est obligatoire.");
-            return;
+            errorLabel.setText("❌ Le titre est obligatoire."); return;
         }
         if (titre.length() < 3 || titre.length() > 255) {
-            errorLabel.setText("❌ Le titre doit contenir entre 3 et 255 caractères.");
-            return;
+            errorLabel.setText("❌ Le titre doit contenir entre 3 et 255 caractères."); return;
         }
         if (!titre.matches("^[A-Za-z0-9\\s'.]+$")) {
-            errorLabel.setText("❌ Le titre contient des caractères invalides.");
-            return;
+            errorLabel.setText("❌ Caractères invalides dans le titre."); return;
         }
 
         if (description == null || description.trim().isEmpty()) {
-            errorLabel.setText("❌ La description est obligatoire.");
-            return;
+            errorLabel.setText("❌ La description est obligatoire."); return;
         }
         if (description.length() < 10) {
-            errorLabel.setText("❌ La description doit contenir au moins 10 caractères.");
-            return;
-        }
-        if (!description.matches("^[A-Za-z0-9\\s'.]+$")) {
-            errorLabel.setText("❌ La description contient des caractères invalides.");
-            return;
+            errorLabel.setText("❌ La description doit faire au moins 10 caractères."); return;
         }
 
         if (categorie == null || categorie.trim().isEmpty()) {
-            errorLabel.setText("❌ La catégorie est obligatoire.");
-            return;
+            errorLabel.setText("❌ La catégorie est obligatoire."); return;
         }
-        if (!categorie.matches("^[A-Za-z0-9\\s'.]+$")) {
-            errorLabel.setText("❌ Catégorie invalide.");
-            return;
+        if (!Arrays.asList("dons","evenement","recrutement")
+                .contains(categorie.toLowerCase())) {
+            errorLabel.setText("❌ Catégorie invalide."); return;
         }
 
-        article.setTitre(titre);
+        // 4) Mise à jour de l'objet et en base
+        article.setTitre(titre.trim());
+        article.setDescription(description.trim());
         article.setCategorie(categorie);
-        article.setDescription(description);
-        articleService.update(article); // Méthode existante dans ton service
+        articleService.update(article);
+
+        // 5) Fermer la fenêtre
         closeWindow();
     }
 

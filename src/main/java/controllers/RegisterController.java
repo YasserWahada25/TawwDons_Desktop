@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import services.UserService;
+import services.EmailService;
 import models.User;
 
 import java.io.IOException;
@@ -47,12 +48,12 @@ public class RegisterController {
     private UserService userService = new UserService();
 
     // Email validation pattern
-    private static final Pattern EMAIL_PATTERN = 
-        Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$");
-    
+    private static final Pattern EMAIL_PATTERN =
+            Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$");
+
     // Name validation pattern (letters, spaces, hyphens)
-    private static final Pattern NAME_PATTERN = 
-        Pattern.compile("^[a-zA-ZÀ-ÿ\\s-]+$");
+    private static final Pattern NAME_PATTERN =
+            Pattern.compile("^[a-zA-ZÀ-ÿ\\s-]+$");
 
     @FXML
     private void handleRegisterButtonAction() {
@@ -61,17 +62,17 @@ public class RegisterController {
         prenomField.setStyle("");
         emailField.setStyle("");
         passwordField.setStyle("");
-        
+
         // Get form data
         String nom = nomField.getText().trim();
         String prenom = prenomField.getText().trim();
         String email = emailField.getText().trim();
         String password = passwordField.getText();
-        
+
         // Validate all fields
         boolean isValid = true;
         StringBuilder errorMessage = new StringBuilder("Erreurs de validation:\n");
-        
+
         // Validate nom
         if (nom.isEmpty()) {
             errorMessage.append("- Le nom est requis\n");
@@ -82,7 +83,7 @@ public class RegisterController {
             nomField.setStyle("-fx-border-color: red;");
             isValid = false;
         }
-        
+
         // Validate prenom
         if (prenom.isEmpty()) {
             errorMessage.append("- Le prénom est requis\n");
@@ -93,7 +94,7 @@ public class RegisterController {
             prenomField.setStyle("-fx-border-color: red;");
             isValid = false;
         }
-        
+
         // Validate email
         if (email.isEmpty()) {
             errorMessage.append("- L'email est requis\n");
@@ -108,7 +109,7 @@ public class RegisterController {
             emailField.setStyle("-fx-border-color: red;");
             isValid = false;
         }
-        
+
         // Validate password
         if (password.isEmpty()) {
             errorMessage.append("- Le mot de passe est requis\n");
@@ -119,17 +120,17 @@ public class RegisterController {
             passwordField.setStyle("-fx-border-color: red;");
             isValid = false;
         }
-        
+
         // If validation fails, show error and return
         if (!isValid) {
             showAlert(Alert.AlertType.ERROR, "Erreur de validation", errorMessage.toString());
             return;
         }
-        
+
         // Determine selected user type
         String userType;
         String role;
-        
+
         if (radioDonneur.isSelected()) {
             userType = "donneur";
             role = "[ROLE_DONNEUR]";
@@ -144,33 +145,44 @@ public class RegisterController {
             userType = "donneur";
             role = "[ROLE_DONNEUR]";
         }
-        
+
         // Create user object
         User newUser = new User();
         newUser.setEmail(email);
-        
+
         // Hash the password before storing (like in Symfony)
         newUser.setPassword(hashPassword(password));
-        
+
         newUser.setRoles(role);
         newUser.setNom(nom);
         newUser.setPrenom(prenom);
         newUser.setType_utilisateur(userType);
         newUser.setEtat_compte("verrouillé");
-        
+
         // Register the user
         boolean success = userService.registerUser(newUser);
-        
+
         if (success) {
-            showAlert(Alert.AlertType.INFORMATION, "Inscription réussie", 
-                    "Votre compte a été créé avec succès. Vous pouvez maintenant vous connecter.");
+            // Send welcome email in a new thread to avoid freezing the UI
+            new Thread(() -> {
+                try {
+                    EmailService.sendWelcomeEmail(email, nom + " " + prenom);
+                    System.out.println("Welcome email sent to: " + email);
+                } catch (Exception e) {
+                    System.out.println("Failed to send welcome email: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }).start();
+
+            showAlert(Alert.AlertType.INFORMATION, "Inscription réussie",
+                    "Votre compte a été créé avec succès. Un email de bienvenue a été envoyé à " + email + ".");
             navigateToLogin();
         } else {
-            showAlert(Alert.AlertType.ERROR, "Erreur d'inscription", 
+            showAlert(Alert.AlertType.ERROR, "Erreur d'inscription",
                     "Une erreur s'est produite lors de l'inscription. Veuillez réessayer.");
         }
     }
-    
+
     /**
      * Simple password hashing using SHA-256
      * In production, you would use BCrypt or similar
@@ -179,7 +191,7 @@ public class RegisterController {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hash = digest.digest(password.getBytes());
-            
+
             // Convert to hex string
             StringBuilder hexString = new StringBuilder();
             for (byte b : hash) {
@@ -194,7 +206,7 @@ public class RegisterController {
             return "$2y$13$" + password.hashCode();
         }
     }
-    
+
     @FXML
     private void navigateToLogin() {
         try {
@@ -206,11 +218,11 @@ public class RegisterController {
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Erreur de navigation", 
+            showAlert(Alert.AlertType.ERROR, "Erreur de navigation",
                     "Impossible de charger la page de connexion.");
         }
     }
-    
+
     private void showAlert(Alert.AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
@@ -223,5 +235,19 @@ public class RegisterController {
     private void initialize() {
         // Initialization logic here
         System.out.println("RegisterController initialized");
+    }
+
+    @FXML
+    public void navigateToRegister() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Register.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Failed to load Register.fxml");
+        }
     }
 } 

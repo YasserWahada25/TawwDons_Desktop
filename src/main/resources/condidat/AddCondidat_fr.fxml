@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane fx:controller="controllers.condidat.AddCondidat_fr_Controller"
+            prefHeight="700.0" prefWidth="1000.0"
+            xmlns="http://javafx.com/javafx/21.0.1"
+            xmlns:fx="http://javafx.com/fxml/1">
+
+    <children>
+        <!-- NAVBAR -->
+        <VBox layoutY="0" spacing="10.0" style="-fx-background-color: skyblue;" prefWidth="974.0">
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <padding>
+                    <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
+                </padding>
+
+                <ImageView fitHeight="40" fitWidth="40" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@/images/queen.png"/>
+                    </image>
+                </ImageView>
+
+                <Label text="Tawwa Dons"
+                       style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #0066ff;"/>
+                <Pane HBox.hgrow="ALWAYS"/>
+                <HBox spacing="20" alignment="CENTER_RIGHT">
+                    <Button fx:id="btnHome"
+                            text="Home"
+                    />
+                    <MenuButton text="SERVICES">
+                        <items>
+                            <MenuItem fx:id="menuListeDons" text="Liste des dons"/>
+                            <MenuItem fx:id="menuPosterDon" text="Poster un don"/>
+                        </items>
+                    </MenuButton>
+
+                    <MenuButton text="RECRUTEMENT">
+                        <items>
+                            <MenuItem fx:id="menuListeOffres" text="Liste des offres"/>
+                            <MenuItem fx:id="menuPosterOffre" text="Poster une offre"/>
+                        </items>
+                    </MenuButton>
+
+                    <Button text="🔔" style="-fx-background-color: transparent;"/>
+                    <Button text="Déconnexion" style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
+                </HBox>
+            </HBox>
+        </VBox>
+
+        <!-- CONTENU PRINCIPAL -->
+        <VBox layoutY="100" spacing="20"
+              AnchorPane.leftAnchor="20.0"
+              AnchorPane.rightAnchor="20.0"
+              AnchorPane.topAnchor="80.0">
+            <padding>
+                <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
+            </padding>
+
+            <Label text="Postuler à l'offre"
+                   style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #1c2a4d;"/>
+
+            <GridPane vgap="20" hgap="20">
+                <padding>
+                    <Insets top="20"/>
+                </padding>
+
+                <!-- Nom -->
+                <Label text="Nom :" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                <TextField fx:id="nomField" prefWidth="300" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                <!-- Prénom -->
+                <Label text="Prénom :" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                <TextField fx:id="prenomField" prefWidth="300" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                <!-- Email -->
+                <Label text="Email :" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                <TextField fx:id="emailField" prefWidth="300" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                <!-- Téléphone -->
+                <Label text="Téléphone :" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                <TextField fx:id="telephoneField" prefWidth="300" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                <!-- CV -->
+                <Label text="CV :" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                <HBox spacing="10" GridPane.rowIndex="4" GridPane.columnIndex="1">
+                    <TextField fx:id="cvField" prefWidth="250" editable="false"/>
+                    <Button fx:id="browseButton" text="Parcourir" onAction="#handleBrowseButtonClick"/>
+                </HBox>
+            </GridPane>
+
+            <!-- Boutons d'action -->
+            <HBox spacing="20" alignment="CENTER_RIGHT">
+                <padding>
+                    <Insets top="30"/>
+                </padding>
+                <Button fx:id="cancelButton" text="Annuler" onAction="#handleCancelButtonClick"
+                        style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-padding: 8 15;"/>
+                <Button fx:id="saveButton" text="Postuler" onAction="#handleSaveButtonClick"
+                        style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-padding: 8 15;"/>
+            </HBox>
+        </VBox>
+    </children>
+</AnchorPane>

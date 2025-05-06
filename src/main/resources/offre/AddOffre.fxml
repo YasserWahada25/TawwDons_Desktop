@@ -8,35 +8,10 @@
             xmlns="http://javafx.com/javafx/23.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
             prefWidth="1200" prefHeight="700">
-
-    <!-- Sidebar gauche -->
     <left>
-        <VBox style="-fx-background-color: #f8f9fa;" spacing="15" prefWidth="200" alignment="TOP_LEFT">
-            <padding>
-                <Insets top="20" right="20" bottom="20" left="20"/>
-            </padding>
-            <Label text="Tawwa Dons" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
-            <Separator/>
-            <Button text="Dashboard" maxWidth="Infinity"/>
-            <Button text="Dons Requests" maxWidth="Infinity"/>
-            <MenuButton text="Gestion Article" maxWidth="Infinity">
-                <items>
-                    <MenuItem text="Article List"/>
-                    <MenuItem text="Article Form"/>
-                </items>
-            </MenuButton>
-            <Button fx:id="offreBtn" text="Offre" maxWidth="Infinity" onAction="#handleOffreButtonClick"/>
-            <Button text="Condidat" maxWidth="Infinity"/>
-            <Button text="Evenement" maxWidth="Infinity"/>
-            <Button text="Evaluation" maxWidth="Infinity"/>
-            <Button text="Participant" maxWidth="Infinity"/>
-            <Button text="Catégorie" maxWidth="Infinity"/>
-            <Button text="Notifications" maxWidth="Infinity"/>
-            <Label text="Account Pages" style="-fx-font-weight: bold; -fx-padding: 10 0 0 0;"/>
-            <Button text="Profile" maxWidth="Infinity"/>
-        </VBox>
+    <!-- Sidebar gauche -->
+    <fx:include source="/Sidebar.fxml"/>
     </left>
-
     <!-- Top bar -->
     <top>
         <HBox spacing="20" alignment="CENTER_RIGHT" style="-fx-background-color: #ffffff;">
@@ -72,10 +47,16 @@
                       promptText="Décrivez l'offre"
                       prefRowCount="4"
                       maxWidth="700"/>
-            <Button fx:id="creerOffreBtn"
-                    text="Créer l'Offre"
-                    style="-fx-background-color: #007bff; -fx-text-fill: white;"
-                    maxWidth="300"/>
+            <HBox spacing="20" alignment="CENTER_LEFT">
+                <Button fx:id="creerOffreBtn"
+                        text="Créer l'Offre"
+                        style="-fx-background-color: #007bff; -fx-text-fill: white;"
+                        maxWidth="300"/>
+                <Button fx:id="assistantBtn"
+                        text="Assistant AI"
+                        style="-fx-background-color: #6c5ce7; -fx-text-fill: white;"
+                        onAction="#handleAssistantButtonClick"/>
+            </HBox>
         </VBox>
     </center>
 </BorderPane>

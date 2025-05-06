@@ -7,14 +7,14 @@ import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import models.MiniJeuScore;
 import models.QuestionQCM;
 
+
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class MiniJeuController {
 
@@ -23,6 +23,10 @@ public class MiniJeuController {
     @FXML private ComboBox<String> niveauBox;
     @FXML private Button commencerButton, validerButton;
     @FXML private GridPane choixBox;
+    @FXML private VBox scorePane;
+    @FXML private Label resultatLabel, meilleurScoreLabel, classementLabel;
+    @FXML private Label finScoreLabel;
+    @FXML private Label moyenneScoreLabel;
 
     private final List<QuestionQCM> toutesQuestions = new ArrayList<>();
     private final MiniJeuScoreDAO scoreDAO = new MiniJeuScoreDAO();
@@ -33,6 +37,8 @@ public class MiniJeuController {
     private ToggleGroup choixGroup;
     private Timeline timer;
 
+    private final Set<String> niveauxJoues = new HashSet<>();
+
     @FXML
     public void initialize() {
         niveauBox.getItems().addAll("Facile", "Moyen", "Difficile");
@@ -40,20 +46,30 @@ public class MiniJeuController {
         chronoLabel.setText("");
         scoreLabel.setText("\uD83E\uDDE0 Score : 0");
         chargerQuestionsStatiques();
+        scorePane.setVisible(false);
     }
 
     @FXML
     private void demarrerJeu() {
         niveau = niveauBox.getValue();
-        if (niveau == null || joueurField.getText().isBlank()) {
+        String joueur = joueurField.getText().trim();
+
+        if (niveau == null || joueur.isBlank()) {
             showAlert("⚠ Veuillez entrer votre nom et choisir un niveau !");
             return;
         }
 
-        questions = toutesQuestions.stream()
-                .filter(q -> q.getNiveau().equals(niveau))
-                .toList();
-        questions = new ArrayList<>(questions);
+        if (scoreDAO.aDejaJoueCeNiveau(joueur, niveau)) {
+            showAlert("❌ Vous avez déjà joué ce niveau. Choisissez un autre !");
+            return;
+        }
+
+        // ✅ Convertir en ArrayList pour permettre le shuffle
+        questions = new ArrayList<>(
+                toutesQuestions.stream()
+                        .filter(q -> q.getNiveau().equals(niveau))
+                        .toList()
+        );
         Collections.shuffle(questions);
         questions = questions.subList(0, Math.min(10, questions.size()));
 
@@ -77,14 +93,10 @@ public class MiniJeuController {
         choixBox.setAlignment(Pos.CENTER);
 
         for (int i = 0; i < q.getChoix().size(); i++) {
-            String opt = q.getChoix().get(i);
-            RadioButton rb = new RadioButton(opt);
+            RadioButton rb = new RadioButton(q.getChoix().get(i));
             rb.setToggleGroup(choixGroup);
             rb.getStyleClass().add("choice-button");
-
-            int row = i / 2;
-            int col = i % 2;
-            choixBox.add(rb, col, row);
+            choixBox.add(rb, i % 2, i / 2);
         }
 
         validerButton.setDisable(false);
@@ -120,7 +132,6 @@ public class MiniJeuController {
         timer = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
             secondesRestantes--;
             chronoLabel.setText("⏳ Temps restant : " + secondesRestantes + "s");
-
             if (secondesRestantes <= 0) {
                 timer.stop();
                 showAlert("⏳ Temps écoulé pour cette question !");
@@ -136,12 +147,16 @@ public class MiniJeuController {
         MiniJeuScore result = new MiniJeuScore(nom, score, niveau, LocalDateTime.now());
         scoreDAO.enregistrer(result);
 
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("\uD83C\uDF89 Fin du Jeu");
-        alert.setHeaderText("Bravo " + nom + " !");
-        alert.setContentText("Ton score est : " + score + " / " + questions.size());
-        alert.showAndWait();
+        int meilleur = scoreDAO.getMeilleurScore(niveau);
+        double moyenne = scoreDAO.getMoyenneScore(niveau);
+
+        finScoreLabel.setText("Ton score : " + score + " / " + questions.size());
+        meilleurScoreLabel.setText("🎯 Meilleur score (" + niveau + ") : " + meilleur);
+        moyenneScoreLabel.setText("📊 Moyenne des scores : " + String.format("%.2f", moyenne));
+
+        scorePane.setVisible(true);
     }
+
 
     private void showAlert(String msg) {
         Alert a = new Alert(Alert.AlertType.WARNING);
@@ -150,7 +165,8 @@ public class MiniJeuController {
         a.showAndWait();
     }
 
-private void chargerQuestionsStatiques() {
+
+    private void chargerQuestionsStatiques() {
         // ✅ Facile
         toutesQuestions.add(new QuestionQCM("Combien de verres d'eau faut-il boire par jour ?", List.of("4", "6", "8", "12"), "8", "Facile"));
         toutesQuestions.add(new QuestionQCM("Quel organe pompe le sang ?", List.of("Foie", "Cerveau", "Cœur", "Estomac"), "Cœur", "Facile"));

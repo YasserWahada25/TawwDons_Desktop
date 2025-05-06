@@ -216,8 +216,8 @@ public class UpdateCondidatController implements Initializable {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Sélectionner un CV");
         fileChooser.getExtensionFilters().addAll(
-            new FileChooser.ExtensionFilter("PDF Files", "*.pdf"),
-            new FileChooser.ExtensionFilter("Word Documents", "*.doc", "*.docx")
+                new FileChooser.ExtensionFilter("PDF Files", "*.pdf"),
+                new FileChooser.ExtensionFilter("Word Documents", "*.doc", "*.docx")
         );
 
         selectedCvFile = fileChooser.showOpenDialog(browseButton.getScene().getWindow());
@@ -234,11 +234,11 @@ public class UpdateCondidatController implements Initializable {
                 condidatToUpdate.setPrenom(prenomField.getText().trim());
                 condidatToUpdate.setEmail(emailField.getText().trim());
                 condidatToUpdate.setTelephone(Integer.parseInt(telephoneField.getText().trim()));
-                
+
                 if (offreComboBox.getValue() != null) {
                     condidatToUpdate.setOffreId(offreComboBox.getValue().getId());
                 }
-                
+
                 if (selectedCvFile != null) {
                     condidatToUpdate.setCv(selectedCvFile.getAbsolutePath());
                 }

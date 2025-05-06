@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.dons.ListDemandePourBeneficiaire"
+            prefHeight="600" prefWidth="950"
+            style="-fx-background-color: linear-gradient(to bottom, #ffffff, #f4f4f4);">
+
+    <VBox spacing="25" alignment="TOP_CENTER" layoutX="20" layoutY="10" prefWidth="910">
+        <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+        <!-- Logo + Titre -->
+        <HBox spacing="15" alignment="CENTER">
+            <ImageView fitHeight="50" fitWidth="50" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="@/images/talk.png"/>
+                </image>
+            </ImageView>
+            <Label text="Mes Demandes de Dons"
+                   style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+        </HBox>
+
+        <!-- Bouton Retour -->
+        <HBox alignment="TOP_LEFT" prefWidth="900">
+            <Button fx:id="btnRetour" text="← Retour"
+                    style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold;"/>
+        </HBox>
+
+        <!-- Table -->
+        <TableView fx:id="tableDemandes" prefHeight="500" prefWidth="900"
+                   style="-fx-background-color: white; -fx-border-color: #ccc;">
+            <columns>
+                <TableColumn fx:id="colDon" text="📦 Don" prefWidth="180" />
+                <TableColumn fx:id="colDate" text="📅 Date de Demande" prefWidth="200"/>
+                <TableColumn fx:id="colStatut" text="📌 Statut" prefWidth="200"/>
+                <TableColumn fx:id="colAction" text="⚙️ Actions" prefWidth="200"/>
+            </columns>
+        </TableView>
+    </VBox>
+</AnchorPane>

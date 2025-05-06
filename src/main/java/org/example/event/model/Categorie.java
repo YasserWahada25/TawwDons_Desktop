@@ -5,7 +5,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public class categorie  {
+public class Categorie   {
     private final IntegerProperty id = new SimpleIntegerProperty();
     private final StringProperty type = new SimpleStringProperty();
 
@@ -24,14 +24,14 @@ public class categorie  {
     }
 
 
-    public categorie(int id, String type) {
+    public Categorie(int id, String type) {
         setId(id);
         setType(type);
     }
 
     @Override
     public String toString() {
-        return "categorie{" +
+        return "Categorie{" +
                 "id=" + id +
                 ", type=" + type +
                 '}';

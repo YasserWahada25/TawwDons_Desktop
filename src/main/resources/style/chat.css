@@ -1,0 +1,33 @@
+/* espace entre chaque ligne de message */
+.messages-box {
+    -fx-spacing: 8;
+    -fx-padding: 10;
+}
+
+/* style générique des bulles */
+.bubble {
+    -fx-background-radius: 12px;
+    -fx-padding: 8px 12px;
+    -fx-wrap-text: true;
+    -fx-font-size: 14px;
+}
+
+/* bulle de l’autre (gauche) */
+.bubble-received {
+    -fx-background-color: #E4E6EB;
+    -fx-text-fill: black;
+}
+
+/* bulle envoyée (droite) */
+.bubble-sent {
+    -fx-background-color: #0084FF;
+    -fx-text-fill: white;
+}
+
+/* alignement des conteneurs de messages */
+.message-container-received {
+    -fx-alignment: CENTER-LEFT;
+}
+.message-container-sent {
+    -fx-alignment: CENTER-RIGHT;
+}

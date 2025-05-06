@@ -1,103 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:controller="controllers.offre.ListOffresController"
-            prefHeight="700.0" prefWidth="1000.0"
-            xmlns="http://javafx.com/javafx/23.0.1"
-            xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.offre.ListOffresController">
 
     <children>
 
         <!-- NAVBAR -->
-        <VBox layoutY="0" spacing="10.0" style="-fx-background-color: skyblue;" prefWidth="974.0">
-            <HBox spacing="10" alignment="CENTER_LEFT">
-                <padding>
-                    <Insets top="10.0" right="10.0" bottom="10.0" left="10.0"/>
-                </padding>
 
-                <ImageView fitHeight="40" fitWidth="40" pickOnBounds="true" preserveRatio="true">
-                    <image>
-                        <Image url="@/images/tawwa don 3.png"/>
-                    </image>
-                </ImageView>
-
-                <Label text="Tawwa Dons"
-                       style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #0066ff;"/>
-                <Pane HBox.hgrow="ALWAYS"/>
-                <HBox spacing="20" alignment="CENTER_RIGHT">
-                    <Button fx:id="btnHome"
-                            text="Home"
-                    />
-                    <MenuButton text="SERVICES">
-                        <items>
-                            <MenuItem fx:id="menuListeDons" text="Liste des dons"/>
-                            <MenuItem fx:id="menuPosterDon" text="Poster un don"/>
-                        </items>
-                    </MenuButton>
-
-                    <MenuButton text="RECRUTEMENT">
-                        <items>
-                            <MenuItem fx:id="menuListeOffres" text="Liste des offres"/>
-                            <MenuItem fx:id="menuPosterOffre" text="Poster une offre"/>
-                        </items>
-                    </MenuButton>
-
-                    <Button text="🔔" style="-fx-background-color: transparent;"/>
-                    <Button text="Déconnexion" style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
-                </HBox>
-            </HBox>
-        </VBox>
-
+        <fx:include source="/navbar.fxml"/>
         <!-- TITRE + FILTRE -->
-        <VBox layoutY="100" spacing="20"
-              AnchorPane.leftAnchor="20.0"
-              AnchorPane.rightAnchor="20.0"
-              AnchorPane.topAnchor="80.0">
+        <VBox layoutY="100" spacing="20" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="80.0">
             <padding>
-                <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
             </padding>
 
-            <Label text="Liste des Offres Disponibles"
-                   style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #1c2a4d;"/>
+            <Label style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #1c2a4d;" text="Liste des Offres Disponibles" />
 
             <HBox spacing="10">
-                <TextField promptText="Rechercher une offre..." />
-                <Button text="Gérer les demandes reçues"
-                        style="-fx-background-color: #ffc107;"/>
+                <TextField fx:id="searchField" prefWidth="300" promptText="Rechercher une offre..." />
             </HBox>
 
             <!-- CONTAINER DYNAMIQUE -->
             <FlowPane fx:id="offresContainer" hgap="20" vgap="20">
                 <padding>
-                    <Insets top="10" right="10" bottom="10" left="10"/>
+                    <Insets bottom="10" left="10" right="10" top="10" />
                 </padding>
             </FlowPane>
         </VBox>
 
         <!-- POPUP DETAILS -->
-        <StackPane fx:id="popupPane" visible="false"
-                   style="-fx-background-color: rgba(0,0,0,0.4);"
-                   AnchorPane.topAnchor="0.0"
-                   AnchorPane.bottomAnchor="0.0"
-                   AnchorPane.leftAnchor="0.0"
-                   AnchorPane.rightAnchor="0.0">
+        <StackPane fx:id="popupPane" style="-fx-background-color: rgba(0,0,0,0.4);" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
-            <VBox fx:id="popupContent" alignment="CENTER" spacing="15"
-                  style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10;"
-                  maxWidth="400" maxHeight="300">
+            <VBox fx:id="popupContent" alignment="CENTER" maxHeight="300" maxWidth="400" spacing="15" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10;">
 
-                <Label fx:id="popupTitle" text="Titre de l'Offre"
-                       style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+                <Label fx:id="popupTitle" style="-fx-font-size: 20px; -fx-font-weight: bold;" text="Titre de l'Offre" />
 
-                <Label fx:id="popupDescription" text="Description : ..." wrapText="true"/>
+                <Label fx:id="popupDescription" text="Description : ..." wrapText="true" />
 
-                <Button text="Fermer" onAction="#closePopup"
-                        style="-fx-background-color: #6c757d; -fx-text-fill: white;"/>
+                <Button onAction="#closePopup" style="-fx-background-color: #6c757d; -fx-text-fill: white;" text="Fermer" />
             </VBox>
         </StackPane>
 

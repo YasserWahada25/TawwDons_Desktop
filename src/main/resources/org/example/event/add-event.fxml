@@ -5,50 +5,73 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 
-<GridPane xmlns:fx="http://javafx.com/fxml"
-          stylesheets="@stylesheet.css"
-          fx:controller="org.example.event.controller.AddEventController"
-          styleClass="add-form"
-          hgap="10" vgap="10" alignment="CENTER">
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.event.controller.AddEventController"
+            prefWidth="1200" prefHeight="800">
 
-    <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
-    </padding>
+    <!-- ✅ SIDEBAR -->
+    <left>
+        <fx:include source="/Sidebar.fxml"/>
+    </left>
 
-    <!-- Nom de l'événement -->
-    <Label text="Nom:" GridPane.columnIndex="0" GridPane.rowIndex="0" styleClass="form-label"/>
-    <TextField fx:id="nomField" GridPane.columnIndex="1" GridPane.rowIndex="0" styleClass="form-field"/>
+    <!-- ✅ CONTENU FORMULAIRE -->
+    <center>
+        <GridPane stylesheets="@stylesheet.css"
+                  styleClass="add-form"
+                  hgap="10" vgap="15" alignment="TOP_LEFT">
 
-    <!-- Sélection de catégorie -->
-    <Label text="Catégorie:" GridPane.columnIndex="0" GridPane.rowIndex="1" styleClass="form-label"/>
-    <ComboBox fx:id="categorieComboBox" GridPane.columnIndex="1" GridPane.rowIndex="1" styleClass="form-field"/>
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
 
-    <!-- Sélection d'image -->
-    <Label text="Image:" GridPane.columnIndex="0" GridPane.rowIndex="2" styleClass="form-label"/>
-    <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="2">
-        <ImageView fx:id="eventImageView"
-                   fitHeight="100"
-                   fitWidth="100"
-                   preserveRatio="true"
-                   styleClass="image-preview"/>
-        <Button text="Choisir Image"
-                onAction="#handleChooseImage"
-                styleClass="choose-btn"/>
-    </HBox>
+            <Label text="Nom:" GridPane.columnIndex="0" GridPane.rowIndex="0" styleClass="form-label"/>
+            <TextField fx:id="nomField" GridPane.columnIndex="1" GridPane.rowIndex="0" styleClass="form-field"/>
 
-    <!-- Description -->
-    <Label text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="3" styleClass="form-label"/>
-    <TextArea fx:id="descriptionField"
-              GridPane.columnIndex="1"
-              GridPane.rowIndex="3"
-              wrapText="true"
-              prefRowCount="4"
-              styleClass="form-textarea"/>
+            <Label text="Catégorie:" GridPane.columnIndex="0" GridPane.rowIndex="1" styleClass="form-label"/>
+            <ComboBox fx:id="categorieComboBox" GridPane.columnIndex="1" GridPane.rowIndex="1" styleClass="form-field"/>
 
-    <!-- Boutons -->
-    <HBox spacing="10" alignment="CENTER_RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="4">
-        <Button text="Annuler" onAction="#handleCancel" styleClass="cancel-btn"/>
-        <Button text="Ajouter" onAction="#handleAdd" styleClass="submit-btn"/>
-    </HBox>
+            <Label text="Date:" GridPane.columnIndex="0" GridPane.rowIndex="2" styleClass="form-label"/>
+            <DatePicker fx:id="datePicker" GridPane.columnIndex="1" GridPane.rowIndex="2" styleClass="form-field"/>
 
-</GridPane>
+            <Label text="Lieu:" GridPane.columnIndex="0" GridPane.rowIndex="3" styleClass="form-label"/>
+            <GridPane GridPane.columnIndex="1" GridPane.rowIndex="3" hgap="5">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="ALWAYS"/>
+                    <ColumnConstraints prefWidth="150"/>
+                </columnConstraints>
+                <TextField fx:id="locationField" styleClass="form-field" GridPane.columnIndex="0"/>
+                <Button text="Carte" onAction="#handleMapSelection" GridPane.columnIndex="1" styleClass="map-btn"/>
+            </GridPane>
+
+            <Label text="Image:" GridPane.columnIndex="0" GridPane.rowIndex="4" styleClass="form-label"/>
+            <VBox GridPane.columnIndex="1" GridPane.rowIndex="4" spacing="5">
+                <ImageView fx:id="eventImageView"
+                           fitHeight="150" fitWidth="150"
+                           preserveRatio="true"
+                           styleClass="image-preview"/>
+                <Button text="Choisir Image"
+                        onAction="#handleChooseImage"
+                        styleClass="choose-btn"/>
+            </VBox>
+
+            <Label text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="5" styleClass="form-label"/>
+            <VBox GridPane.columnIndex="1" GridPane.rowIndex="5" spacing="5">
+                <TextArea fx:id="descriptionField"
+                          wrapText="true"
+                          prefRowCount="5"
+                          styleClass="form-textarea"/>
+                <Button text="Générer automatiquement"
+                        fx:id="generateBtn"
+                        onAction="#handleGenerateDescription"
+                        styleClass="generate-btn"/>
+            </VBox>
+
+            <HBox GridPane.columnIndex="1" GridPane.rowIndex="6" spacing="10" alignment="CENTER_RIGHT">
+                <Button text="Annuler" onAction="#handleCancel" styleClass="cancel-btn"/>
+                <Button text="Ajouter" onAction="#handleAdd" styleClass="submit-btn"/>
+            </HBox>
+
+        </GridPane>
+    </center>
+
+</BorderPane>

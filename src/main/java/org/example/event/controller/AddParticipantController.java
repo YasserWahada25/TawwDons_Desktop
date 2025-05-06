@@ -19,9 +19,9 @@ public class AddParticipantController {
 
     private Stage dialogStage;
     private final participantService participantService = new participantService();
-public void setEventId(int eventId) {
-    this.eventId=eventId;
-}
+    public void setEventId(int eventId) {
+        this.eventId=eventId;
+    }
     public void setDialogStage(Stage dialogStage) {
         this.dialogStage = dialogStage;
     }

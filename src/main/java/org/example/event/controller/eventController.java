@@ -1,8 +1,14 @@
 package org.example.event.controller;
 
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -22,9 +28,13 @@ import javafx.stage.Stage;
 import org.example.event.model.event;
 import org.example.event.service.eventService;
 import org.example.event.service.participantService;
+import org.example.event.service.WeatherService;
+import org.example.event.service.WeatherService.WeatherData;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -38,15 +48,20 @@ public class eventController {
     @FXML private TableColumn<event, String> imageColumn;
     @FXML private TableColumn<event, String> descriptionColumn;
     @FXML private TableColumn<event, Integer> categorieColumn;
+    @FXML private TableColumn<event, String> dateColumn;
+    @FXML private TableColumn<event, String> locationColumn;
+
     @FXML private TableColumn<event, Void> actionsColumn;
     @FXML private ImageView imageView;
     @FXML private TextArea descriptionTextArea;
     @FXML private TextField searchField;
     @FXML private TableColumn<event, String> participantsCountColumn;
-
+    @FXML private Label temperatureLabel;
 
     private final ObservableList<event> eventData = FXCollections.observableArrayList();
     private final eventService eventService = new eventService();
+    private final WeatherService weatherService = new WeatherService();
+    private final participantService participantService = new participantService();
 
     @FXML
     public void initialize() {
@@ -66,9 +81,14 @@ public class eventController {
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         nomColumn.setCellValueFactory(new PropertyValueFactory<>("nom"));
         descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
-        categorieColumn.setCellValueFactory(new PropertyValueFactory<>("categorieId"));
+        categorieColumn.setCellValueFactory(new PropertyValueFactory<>("categorie_id"));
         imageColumn.setCellValueFactory(new PropertyValueFactory<>("image"));
-
+        dateColumn.setCellValueFactory(cellData -> {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate date = cellData.getValue().getDate();
+            return new SimpleStringProperty(date != null ? date.format(formatter) : "Non définie");
+        });
+        locationColumn.setCellValueFactory(new PropertyValueFactory<>("location"));
 
         // Configuration personnalisée pour l'image
         imageColumn.setCellFactory(column -> new TableCell<event, String>() {
@@ -79,6 +99,7 @@ public class eventController {
                 imageView.setFitWidth(50);
                 imageView.setPreserveRatio(true);
             }
+
 
             @Override
             protected void updateItem(String imagePath, boolean empty) {
@@ -98,6 +119,66 @@ public class eventController {
             }
         });
     }
+    @FXML
+    private void checkWeatherForAllEvents(ActionEvent event) {
+        event selectedEvent = eventTable.getSelectionModel().getSelectedItem();
+
+        if (selectedEvent == null) {
+            showErrorAlert("Aucune sélection", "Veuillez sélectionner un événement dans le tableau.");
+            return;
+        }
+
+        LocalDate eventDate = selectedEvent.getDate();
+        String location = selectedEvent.getLocation();
+
+        // Validate required fields
+        if (eventDate == null) {
+            showErrorAlert("Erreur de date", "L'événement sélectionné n'a pas de date définie.");
+            return;
+        }
+
+        if (location == null || location.trim().isEmpty()) {
+            showErrorAlert("Erreur de lieu", "L'événement sélectionné n'a pas de lieu défini.");
+            return;
+        }
+
+        try {
+            String[] coords = selectedEvent.getLocation().split(",");
+            double lat = Double.parseDouble(coords[0].trim());
+            double lng = Double.parseDouble(coords[1].trim());
+
+            WeatherService.WeatherData weatherData = weatherService.getWeatherData(lat, lng, eventDate);
+            String formattedDate = eventDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            String weatherInfo = String.format(
+                    "Événement: %s\nDate: %s\nLieu: %s\nTempérature: %.1f°C\nConditions: %s",
+                    selectedEvent.getNom(),
+                    formattedDate,
+                    location,
+                    weatherData.temperature,
+                    weatherData.condition
+            );
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Météo de l'événement");
+            alert.setHeaderText("Conditions actuelles");
+            alert.setContentText(weatherInfo);
+            alert.getDialogPane().setPrefSize(350, 200);
+            alert.showAndWait();
+
+        } catch (Exception e) {
+            showErrorAlert("Erreur technique", "Impossible de récupérer les données météo", e.getMessage());
+        }
+
+    }
+
+    private void showErrorAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
     private void setupStatisticsColumn() {
         participantsCountColumn.setCellValueFactory(cellData -> {
             try {
@@ -238,7 +319,36 @@ public class eventController {
     private void handleSearch() {
         filterEventsByName(searchField.getText());
     }
+    @FXML
+    private void handleOpenMap(ActionEvent event) {
+        event selectedEvent = eventTable.getSelectionModel().getSelectedItem();
+        if (selectedEvent != null) {
+            openMap(selectedEvent);
+        } else {
+            showErrorAlert("Aucune sélection", "Veuillez sélectionner un événement.");
+        }
+    }
 
+    private void openMap(event event) {
+        try {
+            String encodedAddress = URLEncoder.encode(event.getLocation(), StandardCharsets.UTF_8.toString());
+            String url = "https://www.google.com/maps/search/?api=1&query=" + encodedAddress;
+
+            WebView webView = new WebView();
+            WebEngine engine = webView.getEngine();
+            engine.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36");
+
+            Stage mapStage = new Stage();
+            mapStage.setTitle("Localisation: " + event.getNom());
+            webView.setPrefSize(800, 600);
+            mapStage.setScene(new Scene(webView));
+            engine.load(url);
+            mapStage.show();
+
+        } catch (Exception e) {
+            showErrorAlert("Erreur", "Impossible d'ouvrir la carte", e.getMessage());
+        }
+    }
     private void filterEventsByName(String name) {
         if (name == null || name.isEmpty()) {
             eventTable.setItems(eventData);
@@ -289,6 +399,22 @@ public class eventController {
             imageView.setImage(new Image(event.getImage()));
         }
         descriptionTextArea.setText(event.getDescription());
+        try {
+            WeatherService.WeatherData weather = weatherService.getWeatherData(
+                    event.getLocation(),
+                    event.getDate()
+            );
+
+            String tempText = (weather.temperature != -1)
+                    ? String.format("🌡 %.1f°C | ☁ %s", weather.temperature, weather.condition)
+                    : "Météo non disponible";
+
+            temperatureLabel.setText(tempText);
+
+        } catch (Exception e) {
+            temperatureLabel.setText("Erreur de chargement météo");
+        }
+
     }
 
     @FXML

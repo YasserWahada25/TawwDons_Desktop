@@ -252,3 +252,258 @@
 .sidebar-btn.warning {
     -fx-background-color: #f39c12;
 }
+.root {
+    -fx-background-color: linear-gradient(to bottom right, #121212, #1f1f1f);
+    -fx-font-family: "Segoe UI", sans-serif;
+}
+
+.sidebar {
+    -fx-background-color: #1e1e1e;
+    -fx-padding: 20;
+    -fx-pref-width: 200;
+}
+
+.sidebar-title {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 0 20 0;
+}
+
+.sidebar-btn {
+    -fx-background-color: #292929;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 14px;
+    -fx-padding: 10;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+.sidebar-btn:hover {
+    -fx-background-color: #3a3a3a;
+}
+
+.main-panel {
+    -fx-alignment: center;
+    -fx-padding: 40;
+}
+
+.main-title {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+.main-subtitle {
+    -fx-text-fill: #bbbbbb;
+    -fx-font-size: 14px;
+}
+/* TextFields / ComboBoxes */
+.dark-input {
+    -fx-background-color: #2c2c2c;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #888;
+    -fx-background-radius: 6;
+    -fx-border-color: transparent;
+    -fx-padding: 6 10;
+}
+
+/* Boutons stylisés */
+.button {
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+    -fx-padding: 8 16;
+}
+
+.green-btn {
+    -fx-background-color: #27ae60;
+}
+
+.green-btn:hover {
+    -fx-background-color: #2ecc71;
+}
+
+.blue-btn {
+    -fx-background-color: #2980b9;
+}
+
+.blue-btn:hover {
+    -fx-background-color: #3498db;
+}
+
+.purple-btn {
+    -fx-background-color: #8e44ad;
+}
+
+.purple-btn:hover {
+    -fx-background-color: #9b59b6;
+}
+
+.orange-btn {
+    -fx-background-color: #f39c12;
+}
+
+.orange-btn:hover {
+    -fx-background-color: #f1c40f;
+}
+
+.red-btn {
+    -fx-background-color: #e74c3c;
+}
+
+.red-btn:hover {
+    -fx-background-color: #c0392b;
+}
+
+.grey-btn {
+    -fx-background-color: #7f8c8d;
+}
+
+.grey-btn:hover {
+    -fx-background-color: #95a5a6;
+}
+/* ==== TABLE BASE ==== */
+.table-view {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 10;
+    -fx-table-cell-border-color: transparent;
+}
+
+/* ==== ROW STYLING ==== */
+.table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: #dddddd;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 5;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 4, 0.2, 0, 2);
+    -fx-margin: 6;
+}
+
+.table-row-cell:filled:selected {
+    -fx-background-color: #eaf6ff;
+}
+
+/* ==== CELL TEXT ==== */
+.table-cell {
+    -fx-font-size: 13px;
+    -fx-text-fill: #2c3e50;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 10;
+    -fx-border-insets: 0;
+}
+
+/* ==== HEADER ==== */
+.column-header-background {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+}
+
+/* ==== SCROLLBAR ==== */
+.table-view .scroll-bar {
+    -fx-background-color: transparent;
+}
+.root {
+    -fx-font-family: "Segoe UI", sans-serif;
+}
+
+/* ComboBox et TextField stylisés */
+.combo-box, .text-field {
+    -fx-background-color: #2c2c2c;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #888;
+    -fx-background-radius: 6;
+    -fx-border-color: transparent;
+    -fx-font-size: 14px;
+}
+
+.combo-box:hover, .text-field:hover {
+    -fx-border-color: #3498db;
+}
+
+.combo-box:focused, .text-field:focused {
+    -fx-border-color: #3498db;
+    -fx-border-width: 2;
+}
+
+/* Bouton principal (Soumettre) */
+.button {
+    -fx-background-radius: 6;
+    -fx-padding: 8 20;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.button:hover {
+    -fx-opacity: 0.9;
+}
+
+/* Bouton vert */
+.button-green {
+    -fx-background-color: #2ecc71;
+    -fx-text-fill: white;
+}
+
+.button-green:hover {
+    -fx-background-color: #27ae60;
+}
+
+/* Zone de question en carte */
+.question-card {
+    -fx-background-color: #f0f0f0;
+    -fx-padding: 15;
+    -fx-background-radius: 10;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0.2, 0, 2);
+}
+.scroll-pane,
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+.button {
+    -fx-background-color: #2980b9;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-padding: 8 16;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 4, 0.1, 0, 1);
+}
+
+.button:hover {
+    -fx-background-color: #3498db;
+}
+.sidebar-btn {
+    -fx-background-color: #2980b9;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-pref-width: 160;
+}
+
+.sidebar-btn.gray {
+    -fx-background-color: #7f8c8d;
+}
+
+.sidebar-btn.danger {
+    -fx-background-color: #e74c3c;
+}
+
+.sidebar-btn.warning {
+    -fx-background-color: #f39c12;
+}
+

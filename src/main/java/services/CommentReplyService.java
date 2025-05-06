@@ -14,30 +14,24 @@ public class CommentReplyService {
 
     private final UserService userService = new UserService();
 
+    /**
+     * Récupère la liste des réponses pour un commentaire.
+     */
     public List<CommentReply> getRepliesByCommentId(int commentId) {
         List<CommentReply> replies = new ArrayList<>();
-        List<Integer> userIds = new ArrayList<>();
-
         String sql = """
-            SELECT cr.id,
-                   cr.content,
-                   cr.created_at,
-                   cr.etat,
-                   cr.comment_id,
-                   cr.user_id
-              FROM comment_reply cr
-             WHERE cr.comment_id = ?
-          ORDER BY cr.created_at ASC
+            SELECT id, content, created_at, etat, comment_id, user_id
+              FROM comment_reply
+             WHERE comment_id = ?
+          ORDER BY created_at ASC
         """;
 
         try (Connection conn = MyDataBase.getInstance().getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-
             ps.setInt(1, commentId);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     CommentReply r = new CommentReply();
-
                     r.setId(rs.getInt("id"));
                     r.setContent(rs.getString("content"));
                     r.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
@@ -47,30 +41,26 @@ public class CommentReplyService {
                     parent.setId(rs.getInt("comment_id"));
                     r.setCommentaire(parent);
 
-                    // Stocker temporairement l'ID utilisateur
-                    int userId = rs.getInt("user_id");
                     User tempUser = new User();
-                    tempUser.setId(userId);
+                    tempUser.setId(rs.getInt("user_id"));
                     r.setUser(tempUser);
-                    userIds.add(userId);
-
                     replies.add(r);
                 }
             }
-
-            // 🔁 Après avoir fermé le ResultSet, charger les utilisateurs
+            // Charger les utilisateurs après
             for (CommentReply r : replies) {
                 User fullUser = userService.findById(r.getUser().getId());
                 r.setUser(fullUser);
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return replies;
     }
 
+    /**
+     * Ajoute une nouvelle réponse.
+     */
     public void add(CommentReply reply) {
         String sql = "INSERT INTO comment_reply (comment_id, user_id, content, created_at, etat) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = MyDataBase.getInstance().getConnection();
@@ -93,6 +83,9 @@ public class CommentReplyService {
         }
     }
 
+    /**
+     * Met à jour une réponse existante.
+     */
     public void update(CommentReply reply) {
         String sql = "UPDATE comment_reply SET content = ?, etat = ? WHERE id = ?";
         try (Connection conn = MyDataBase.getInstance().getConnection();
@@ -107,6 +100,9 @@ public class CommentReplyService {
         }
     }
 
+    /**
+     * Supprime une réponse par son ID.
+     */
     public void delete(int replyId) {
         String sql = "DELETE FROM comment_reply WHERE id = ?";
         try (Connection conn = MyDataBase.getInstance().getConnection();
@@ -119,6 +115,9 @@ public class CommentReplyService {
         }
     }
 
+    /**
+     * Compte le nombre de réponses pour un utilisateur et un commentaire.
+     */
     public int countByUserAndComment(int userId, int commentId) {
         String sql = "SELECT COUNT(*) FROM comment_reply WHERE user_id = ? AND comment_id = ?";
         try (Connection conn = MyDataBase.getInstance().getConnection();
@@ -135,5 +134,26 @@ public class CommentReplyService {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    /**
+     * Indique s'il existe au moins une réponse pour ce commentaire.
+     */
+    public boolean hasReplies(int commentId) {
+        return !getRepliesByCommentId(commentId).isEmpty();
+    }
+
+    /**
+     * Supprime toutes les réponses liées à un commentaire.
+     */
+    public void deleteByCommentId(int commentId) {
+        String sql = "DELETE FROM comment_reply WHERE comment_id = ?";
+        try (Connection conn = MyDataBase.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, commentId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
