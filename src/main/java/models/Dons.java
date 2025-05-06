@@ -12,6 +12,8 @@ public class Dons {
     private boolean valide;
     private String imageUrl;
     private String categorie;
+    private String nomDonneur;
+    private String emailDonneur;
 
     public Dons() {
         this.dateCreation = LocalDate.now();
@@ -135,5 +137,11 @@ public class Dons {
     public void setCategorie(String categorie) {
         this.categorie = categorie;
     }
+
+    public String getNomDonneur() { return nomDonneur; }
+    public void setNomDonneur(String nomDonneur) { this.nomDonneur = nomDonneur; }
+
+    public String getEmailDonneur() { return emailDonneur; }
+    public void setEmailDonneur(String emailDonneur) { this.emailDonneur = emailDonneur; }
 }
 

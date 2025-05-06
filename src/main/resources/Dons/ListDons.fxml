@@ -32,8 +32,8 @@
                     style="-fx-background-color: #00cfff; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 16; -fx-background-radius: 10;" />
 
             <HBox spacing="10">
-                <ComboBox promptText="Toutes les catégories"/>
-                <TextField promptText="Rechercher un don..."/>
+                <ComboBox promptText="Toutes les catégories" fx:id="categorieFilter"/>
+                <TextField promptText="Rechercher un don..." fx:id="searchField"/>
                 <Button fx:id="btngererDemandeRecu" text="Gérer les demandes reçues"
                         style="-fx-background-color: #ffc107;"/>
             </HBox>

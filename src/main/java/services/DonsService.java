@@ -79,9 +79,16 @@ public class DonsService {
     }
 
 
+
     public List<Dons> getDonsValidés() {
         List<Dons> list = new ArrayList<>();
-        String sql = "SELECT * FROM dons WHERE valide = true";
+        String sql = """
+        SELECT d.*, u.nom AS nomDonneur, u.email AS emailDonneur
+        FROM dons d
+        JOIN user u ON d.donneur_id = u.id
+        WHERE d.valide = true
+    """;
+
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
@@ -92,6 +99,13 @@ public class DonsService {
                 don.setDateCreation(rs.getDate("date_creation").toLocalDate());
                 don.setCategorie(rs.getString("categorie"));
                 don.setImageUrl(rs.getString("image_url"));
+                don.setDonneurId(rs.getInt("donneur_id"));
+                don.setValide(rs.getBoolean("valide"));
+
+                // 🔥 Récupération du nom et de l'email du donneur
+                don.setNomDonneur(rs.getString("nomDonneur"));
+                don.setEmailDonneur(rs.getString("emailDonneur"));
+
                 list.add(don);
             }
         } catch (SQLException e) {
