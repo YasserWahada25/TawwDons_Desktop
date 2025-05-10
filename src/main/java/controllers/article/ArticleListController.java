@@ -44,7 +44,6 @@ public class ArticleListController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        setupNavigation();
 
         allArticles = articleService.getAll();
 
@@ -60,16 +59,7 @@ public class ArticleListController implements Initializable {
         buildPagination();
     }
 
-    private void setupNavigation() {
-        if (menuListeDons != null)
-            menuListeDons.setOnAction(e -> Router.navigateTo("/ListDons.fxml"));
-        if (menuPosterDon != null)
-            menuPosterDon.setOnAction(e -> Router.navigateTo("/AddDons.fxml"));
-        if (menuListeArticles != null)
-            menuListeArticles.setOnAction(e -> Router.navigateTo("/article/articleList.fxml"));
-        if (btnHome != null)
-            btnHome.setOnAction(e -> Router.navigateTo("/Home.fxml"));
-    }
+
 
     private void showCurrentPage() {
         articlesFlowPane.getChildren().clear();
@@ -129,10 +119,14 @@ public class ArticleListController implements Initializable {
         imageView.setFitHeight(160);
         imageView.setPreserveRatio(true);
         if (article.getImage() != null) {
-            File imageFile = new File("images/" + article.getImage());
-            if (imageFile.exists()) {
-                imageView.setImage(new Image(imageFile.toURI().toString()));
-            }
+            String imageFile = "http://localhost:8000/uploads/images/" + article.getImage();
+            Image image = new Image(imageFile, true);
+            imageView.setImage(image);
+          //  File imageFile = new File("images/" + article.getImage());
+
+            //    if (imageFile.exists()) {
+          //      imageView.setImage(new Image(imageFile.toURI().toString()));
+          //  }
         }
 
         // Titre

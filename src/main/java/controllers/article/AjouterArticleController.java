@@ -23,32 +23,20 @@ public class AjouterArticleController {
     @FXML private Button ajouterBtn;
     @FXML private ImageView imagePreview;
 
-    // 🧭 Routage via sidebar
-    @FXML private MenuItem menuArticleForm;
-    @FXML private MenuItem menuArticleList;
-    @FXML private Button btnDonsRequests;
-    @FXML private Button btnDashboard;
-
     private File selectedFile;
     private final ArticleService articleService = new ArticleService();
 
     @FXML
     public void initialize() {
-        categorieField.getItems().clear();
-        categorieField.getItems().addAll("dons", "evenement", "recrutement");
+        // Préparation des catégories
+        categorieField.getItems().setAll("dons", "evenement", "recrutement");
         categorieField.setPromptText("Sélectionner une catégorie");
-        chooseFileButton.setOnAction(event -> handleChooseFile());
-        ajouterBtn.setOnAction(event -> handleAjoutArticle());
 
-        // Routage sidebar
-        if (menuArticleForm != null)
-            menuArticleForm.setOnAction(e -> Router.navigateTo("/Admin/ajouterArticle.fxml"));
-        if (menuArticleList != null)
-            menuArticleList.setOnAction(e -> Router.navigateTo("/Admin/adminArticleList.fxml"));
-        if (btnDonsRequests != null)
-            btnDonsRequests.setOnAction(e -> Router.navigateTo("/Admin/RequestAddDons.fxml"));
-        if (btnDashboard != null)
-            btnDashboard.setOnAction(e -> System.out.println("Dashboard (à venir)"));
+        // Choix de fichier
+        chooseFileButton.setOnAction(event -> handleChooseFile());
+
+        // Ajout article
+        ajouterBtn.setOnAction(event -> handleAjoutArticle());
     }
 
     private void handleChooseFile() {
@@ -71,11 +59,14 @@ public class AjouterArticleController {
     }
 
     private void handleAjoutArticle() {
-        String titre = titreField.getText();
-        String description = contenuField.getText();
+        errorLabel.setStyle("-fx-text-fill: red;");
+
+        String titre = titreField.getText().trim();
+        String description = contenuField.getText().trim();
         String categorie = categorieField.getValue();
 
-        if (titre == null || titre.trim().isEmpty()) {
+        // Validations
+        if (titre.isEmpty()) {
             errorLabel.setText("❌ Le titre est obligatoire.");
             return;
         }
@@ -83,12 +74,12 @@ public class AjouterArticleController {
             errorLabel.setText("❌ Le titre doit contenir entre 3 et 255 caractères.");
             return;
         }
-        if (!titre.matches("^[A-Za-z0-9\\s'.]+$")) {
+        if (!titre.matches("^[A-Za-z0-9\\s'.-]+$")) {
             errorLabel.setText("❌ Le titre contient des caractères invalides.");
             return;
         }
 
-        if (description == null || description.trim().isEmpty()) {
+        if (description.isEmpty()) {
             errorLabel.setText("❌ La description est obligatoire.");
             return;
         }
@@ -96,7 +87,7 @@ public class AjouterArticleController {
             errorLabel.setText("❌ La description doit contenir au moins 10 caractères.");
             return;
         }
-        if (!description.matches("^[A-Za-z0-9\\s'.]+$")) {
+        if (!description.matches("^[A-Za-z0-9\\s'.-]+$")) {
             errorLabel.setText("❌ La description contient des caractères invalides.");
             return;
         }
@@ -117,7 +108,7 @@ public class AjouterArticleController {
             return;
         }
 
-        // ✅ Tous les champs sont valides
+        // Création de l'article
         Article article = new Article();
         article.setTitre(titre);
         article.setDescription(description);
@@ -126,13 +117,15 @@ public class AjouterArticleController {
         article.setCreated_at(new Date());
 
         try {
+            // Appel du service pour enregistrer en DB + uploader l’image
             articleService.create(article, selectedFile);
+
             errorLabel.setStyle("-fx-text-fill: green;");
             errorLabel.setText("✅ Article ajouté avec succès !");
             resetForm();
+
         } catch (Exception e) {
-            errorLabel.setStyle("-fx-text-fill: red;");
-            errorLabel.setText("Erreur : " + e.getMessage());
+            errorLabel.setText("Erreur lors de l’ajout : " + e.getMessage());
             e.printStackTrace();
         }
     }

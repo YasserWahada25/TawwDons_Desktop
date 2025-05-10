@@ -40,4 +40,8 @@ public class Article {
 
     public int getDislikes() { return dislikes; }
     public void setDislikes(int dislikes) { this.dislikes = dislikes; }
+
+    public String getImageUrl() {
+        return image != null ? "http://localhost:8000/uploads/images/" + image : null;
+    }
 }
