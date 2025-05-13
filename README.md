@@ -61,26 +61,26 @@ les bénéficiaires en besoin médicals.
 - [x] CRUD Questions  
 - [x] CRUD Évaluations  
 - [x] CRUD Réponses  
-- [x] Métier : Bannir / Débannir utilisateur après évaluation  
-- [x] API + Métier : Mini-jeu intégré (Échecs)  
+- [x] Métier : Bannir / Débannir utilisateur après évaluation  + Chat Bot
+- [x] API + Métier : Mini-jeu intégré (Échecs)  + Q&A jeu
 
 ---
 
 ## 📋 6. Gestion du Recrutement
 
 - [x] CRUD Offres de recrutement  
-- [x] CRUD Candidatures / Participants  
+- [x] CRUD Candidatures  
 - [x] API : Analyse automatique de CV  
-- [x] Métier : Génération automatique de description de profil  
+- [x] Métier : Chat Bot ( Gemini )
 
 ---
 
 ## 📦 Stack technique
 
-- **Backend** : Symfony / WebSocket Server  
+- **Backend** : Symfony   
 - **Frontend** : JavaFX / Symfony  
 - **Base de données** : MySQL  
-- **Cloud & Services** :  Google Maps API, reCAPTCHA, SMTP, IA Text Analysis  
+- **Cloud & Services** :  Google Maps API, reCAPTCHA, SMTP, IA Text Analysis ,  WebSocket Server
 
 ---
 ## 👥 Équipe
