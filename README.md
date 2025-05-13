@@ -83,13 +83,13 @@ les bénéficiaires en besoin médicals.
 - **Cloud & Services** :  Google Maps API, reCAPTCHA, SMTP, IA Text Analysis  
 
 ---
-
 ## 👥 Équipe
 
-Projet réalisé par
-Hariz Mohammed Oussama
-Degani Omar
-Wahada yasser
-Saidi Balkis
-Rahouej Mohammed Aziz
-Amiri Ayoub
+Projet réalisé par :
+
+- Hariz Mohammed Oussama  
+- Degani Omar  
+- Wahada Yasser  
+- Saidi Balkis  
+- Rahouej Mohammed Aziz  
+- Amiri Ayoub
