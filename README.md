@@ -70,8 +70,9 @@ les bénéficiaires en besoin médicals.
 
 - [x] CRUD Offres de recrutement  
 - [x] CRUD Candidatures  
-- [x] API : Analyse automatique de CV  
-- [x] Métier : Chat Bot ( Gemini )
+- [x] API : Analyse automatique de CV
+- [x] API : Envoie un Email d'acceptation
+- [x] Métier : Chat Bot ( Gemini ) 
 
 ---
 
