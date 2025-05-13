@@ -97,8 +97,8 @@ public class ArticleDetailsController implements Initializable {
         likesLabel.setText(String.valueOf(article.getLikes()));
         dislikesLabel.setText(String.valueOf(article.getDislikes()));
         if (article.getImage() != null) {
-            File f = new File("images/" + article.getImage());
-            imageView.setImage(f.exists() ? new Image(f.toURI().toString()) : null);
+            String imageUrl = "http://localhost:8000/uploads/images/" + article.getImage();
+            imageView.setImage(new Image(imageUrl, true));
         } else {
             imageView.setImage(null);
         }
@@ -201,7 +201,23 @@ public class ArticleDetailsController implements Initializable {
         // Actions sur le commentaire
         Button btnMod = new Button("Modifier");
         btnMod.setStyle("-fx-background-color:transparent; -fx-text-fill:#2980b9;");
-        btnMod.setOnAction(e -> { /* ouvrir le popup d'édition */ });
+        btnMod.setOnAction(e -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/article/editComment.fxml"));
+                Parent pane = loader.load();
+                EditCommentController ctrl = loader.getController();
+                ctrl.init(c, this::afficherCommentaires);
+                Stage stage = new Stage();
+                stage.initOwner(container.getScene().getWindow());
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setScene(new Scene(pane));
+                stage.setTitle("Modifier le commentaire");
+                stage.show();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+
 
         Button btnDel = new Button("Supprimer");
         btnDel.setStyle("-fx-background-color:transparent; -fx-text-fill:#c0392b;");

@@ -2,19 +2,17 @@ package models;
 
 import java.time.LocalDateTime;
 
-/**
- * Modèle Commentaire, associant dynamiquement un User à chaque instance.
- */
+
 public class Commentaire {
     private int id;
     private String content;
     private String etat;
     private LocalDateTime createdAt;
     private Article article;
-    private User user; // Utilisateur associé dynamiquement
+    private User user;
 
     public Commentaire() {
-        // constructeur vide
+
     }
 
     public Commentaire(int id,
@@ -66,16 +64,10 @@ public class Commentaire {
         this.article = article;
     }
 
-    /**
-     * Retourne l'utilisateur associé à ce commentaire.
-     */
     public User getUser() {
         return user;
     }
 
-    /**
-     * Assigne l'utilisateur à ce commentaire.
-     */
     public void setUser(User user) {
         this.user = user;
     }

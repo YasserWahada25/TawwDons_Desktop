@@ -18,37 +18,47 @@
             <ImageView fitHeight="40" fitWidth="40" preserveRatio="true">
                 <image><Image url="@/images/queen.png"/></image>
             </ImageView>
+            <!--
+                        <Label text="Tawwa Dons"
+                               style="-fx-font-size:24px; -fx-font-weight:bold; -fx-text-fill:#0066ff;"/>
+                        <Pane HBox.hgrow="ALWAYS"/>-->
 
-            <Label text="Tawwa Dons"
-                   style="-fx-font-size:24px; -fx-font-weight:bold; -fx-text-fill:#0066ff;"/>
-            <Pane HBox.hgrow="ALWAYS"/>
+                        <!-- Nouveau bouton "Événements" ajouté avant le bloc principal -->
+            <!--       <Button fx:id="btnEvenement" text="Événements" style="-fx-background-color: transparent;"/>-->
 
-            <HBox spacing="20" alignment="CENTER_RIGHT">
+                  <HBox spacing="20" alignment="CENTER_RIGHT">
 
-                <Button fx:id="btnHome" text="Home"/>
+                      <Button fx:id="btnHome" text="Home"/>
 
-                <MenuButton text="SERVICES">
-                    <items>
-                        <MenuItem fx:id="miListeDons" text="Liste des dons"/>
-                        <MenuItem fx:id="miPosterDon" text="Poster un don"/>
-                    </items>
-                </MenuButton>
+                      <MenuButton text="SERVICES">
+                          <items>
+                              <MenuItem fx:id="miListeDons" text="Liste des dons"/>
+                              <MenuItem fx:id="miPosterDon" text="Poster un don"/>
+                          </items>
+                      </MenuButton>
 
-                <MenuButton text="BLOG">
-                    <items>
-                        <MenuItem fx:id="miArticleList" text="Les Articles"/>
-                    </items>
-                </MenuButton>
+                      <MenuButton text="BLOG">
+                          <items>
+                              <MenuItem fx:id="miArticleList" text="Les Articles"/>
+                          </items>
+                      </MenuButton>
 
-                <MenuButton text="RECRUTEMENT">
-                    <items>
-                        <MenuItem fx:id="miListeOffres" text="Liste des offres"/>
-                    </items>
-                </MenuButton>
 
-                <Button fx:id="btnEvaluations" text="Évaluations"/>
+                      <MenuButton text="Événements">
+                          <items>
+                              <MenuItem fx:id="btnEvenement" text="Événements"/>
+                          </items>
+                      </MenuButton>
 
-                <!-- Bouton Notifications (toujours visible) -->
+                      <MenuButton text="RECRUTEMENT">
+                          <items>
+                              <MenuItem fx:id="miListeOffres" text="Liste des offres"/>
+                          </items>
+                      </MenuButton>
+
+                      <Button fx:id="btnEvaluations" text="Évaluations"/>
+
+                      <!-- Bouton Notifications (toujours visible) -->
                 <Button fx:id="btnNotif" text="🔔" style="-fx-background-color: transparent;"/>
 
                 <!-- Affiché si l'utilisateur n'est PAS connecté -->

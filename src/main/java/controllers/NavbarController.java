@@ -24,6 +24,7 @@ public class NavbarController {
     @FXML private MenuButton userMenu;
     @FXML private MenuItem miEditProfile;
     @FXML private MenuItem miLogout;
+    @FXML private MenuItem btnEvenement;
 
     @FXML
     public void initialize() {
@@ -32,8 +33,10 @@ public class NavbarController {
         miListeDons.setOnAction(e   -> Router.navigateTo("/Dons/ListDons.fxml"));
         miPosterDon.setOnAction(e   -> Router.navigateTo("/Dons/AddDons.fxml"));
         miArticleList.setOnAction(e -> Router.navigateTo("/article/articleList.fxml"));
+        btnEvenement.setOnAction(e  -> Router.navigateTo("/org/example/event/event-view.fxml"));
         miListeOffres.setOnAction(e -> Router.navigateTo("/offre/ListOffres.fxml"));
         btnEvaluations.setOnAction(e -> Router.navigateTo("/views/user.fxml"));
+
 
         // Notification (🔔)
         btnNotif.setOnAction(e -> {

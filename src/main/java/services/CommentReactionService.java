@@ -13,10 +13,7 @@ public class CommentReactionService {
     // DAO pour accéder aux données
     private final CommentReactionDAO dao = new CommentReactionDAO();
 
-    /**
-     * Cherche la réaction d'un utilisateur sur un commentaire donné.
-     * @return l'objet CommentReaction ou null si aucune réaction
-     */
+/***
     public CommentReaction find(int userId, int commentaireId) {
         String sql = """
             SELECT id, `type`, created_at
@@ -46,13 +43,44 @@ public class CommentReactionService {
         }
         return null;
     }
+***/
+public CommentReaction find(int userId, int commentaireId) {
+    String sql = """
+        SELECT id, `type`, created_at
+        FROM comment_reaction
+        WHERE user_id = ? AND commentaire_id = ?
+        """;
+    try (Connection c = MyDataBase.getInstance().getConnection();
+         PreparedStatement ps = c.prepareStatement(sql)) {
 
-    /**
-     * Toggle de la réaction :
-     * - si aucune réaction : insertion
-     * - si même type choisi : suppression
-     * - si type différent : mise à jour
-     */
+        ps.setInt(1, userId);
+        ps.setInt(2, commentaireId);
+
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                CommentReaction cr = new CommentReaction();
+                cr.setId(rs.getInt("id"));
+                cr.setUserId(userId);
+                cr.setCommentaireId(commentaireId);
+                cr.setType(rs.getString("type"));
+
+                Timestamp ts = rs.getTimestamp("created_at");
+                if (ts != null) {
+                    cr.setCreatedAt(ts.toLocalDateTime());
+                } else {
+                    cr.setCreatedAt(null); // ou LocalDateTime.now()
+                }
+
+                return cr;
+            }
+        }
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+    }
+    return null;
+}
+
+
     public void react(int userId, int commentaireId, String type) {
         CommentReaction exist = find(userId, commentaireId);
 
